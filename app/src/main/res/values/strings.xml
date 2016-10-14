@@ -16,4 +16,15 @@
     </string>
     <string name="title_spot_list">Spots</string>
     <string name="title_spot_detail">Spot Detail</string>
+    <string name="title_activity_filter_search_results">FilterSearchResults</string>
+
+    <!--filter search results-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="filter_search_results_title">Filter Search Results</string>
+    <string name="owner_rating_label">Owner Rating</string>
+    <string name="spot_rating_label">Spot Rating</string>
+    <string name="car_type_label">Car Type</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
