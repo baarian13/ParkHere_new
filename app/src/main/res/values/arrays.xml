@@ -14,4 +14,9 @@
         <item>Truck</item>
     </string-array>
 
+    <string-array name="yes_no">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+
 </resources>

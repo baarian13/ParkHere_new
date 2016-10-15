@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">ParkHere</string>
-    <string name="title_activity_login">Sign In</string>
+    <string name="submit">Submit</string>
 
     <!-- Strings related to login -->
+    <string name="title_activity_login">Sign In</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
@@ -25,6 +26,24 @@
     <string name="owner_rating_label">Owner Rating</string>
     <string name="spot_rating_label">Spot Rating</string>
     <string name="car_type_label">Car Type</string>
+    <string name="date_range_label">Date Range</string>
+    <string name="price_range_label">Price Range</string>
+    <string name="covered_label">Covered</string>
+    <string name="distance_label">Distance from Location</string>
+    <string name="prompt_distance">Meters</string>
 
+    <!--add review-->
+    <string name="add_review_title">Add Review</string>
+    <string name="comment_label">Comment(Optional)</string>
     <string name="action_settings">Settings</string>
+
+    <!--search-->
+    <string name="search_title">Search</string>
+    <string name="address_label">Address</string>
+    <string name="coordinates_label">Coordinates</string>
+    <string name="prompt_coorX">X</string>
+    <string name="prompt_coorY">Y</string>
+    <string name="date_label">Date</string>
+    <string name="time_slot_label">Time Slot</string>
+    <string name="search_button_label">Search</string>
 </resources>

@@ -39,7 +39,9 @@
         <activity
             android:name=".FilterSearchResults"
             android:label="@string/title_activity_filter_search_results"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".AddReview" />
+        <activity android:name=".Search"></activity>
     </application>
 
 </manifest>
