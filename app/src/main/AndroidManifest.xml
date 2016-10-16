@@ -7,6 +7,14 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+    <!--To allow the app to save a photo-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- To allow the owner to take photos.
+        Be sure to call hasSystemFeature(PackageManager.FEATURE_CAMERA at runtime.
+        If a camera is not available, disable camera features.-->
+    <uses-feature android:name="android.hardware.camera"
+                  android:required="false"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
