@@ -46,4 +46,16 @@
     <string name="date_label">Date</string>
     <string name="time_slot_label">Time Slot</string>
     <string name="search_button_label">Search</string>
+
+    <!--parking spot-->
+    <string name="back_button">Back</string>
+    <string name="photos_label">Photos</string>
+    <string name="photos_contentDescription">A photo of the parking spot.</string>
+    <string name="owner_label">Owner</string>
+    <string name="owner_phonenum_label">Phone Number</string>
+    <string name="previous_renters_label">Previous Renters</string>
+    <string name="price_label">Price</string>
+    <string name="description_label">Description</string>
+    <string name="average_rating_label">Average Rating</string>
+    <string name="previous_ratings_label">Previous Ratings</string>
 </resources>
