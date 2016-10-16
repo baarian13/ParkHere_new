@@ -66,4 +66,10 @@
     <string name="description_label">Description</string>
     <string name="average_rating_label">Average Rating</string>
     <string name="previous_ratings_label">Previous Ratings</string>
+
+    <!--payment-->
+    <string name="payment_info_label">Transaction Information</string>
+    <string name="complete_payment_button_label">Complete Payment</string>
+    <string name="pay_by_paypal_label">Pay by Paypal</string>
+    <string name="pay_by_credit_card_label">Pay by Credit Card</string>
 </resources>
