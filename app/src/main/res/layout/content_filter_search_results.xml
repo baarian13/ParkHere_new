@@ -94,7 +94,21 @@
                     android:layout_height="wrap_content"
                     android:text="@string/date_range_label"
                     />
-                <TextView android:text="Choose Date Here"></TextView>
+                <LinearLayout
+                    android:orientation="horizontal">
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/select"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="~"/>
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/select"/>
+                </LinearLayout>
             </TableRow>
             <TableRow>
                 <TextView

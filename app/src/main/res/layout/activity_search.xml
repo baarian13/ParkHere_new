@@ -60,13 +60,40 @@
             <TableRow>
                 <TextView
                     android:text="@string/date_label"/>
-                <TextView android:text="Select Date"/>
+                <LinearLayout
+                    android:orientation="horizontal">
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/select"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="~"/>
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/select"/>
+                </LinearLayout>
             </TableRow>
             <TableRow>
                 <TextView
                     android:text="@string/time_slot_label"/>
-                <TextView
-                    android:text="Select Time"/>
+                <LinearLayout
+                    android:orientation="horizontal">
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/select"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="~"/>
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/select"/>
+                </LinearLayout>
             </TableRow>
 
         </TableLayout>
