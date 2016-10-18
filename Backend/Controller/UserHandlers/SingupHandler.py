@@ -37,14 +37,13 @@ class SignUpHandler(AbstractUserHandler):
                 'phone'      : self.get_argument("phone", ""),
                 'seeker'     : self.get_argument("seeker", ""),
                 'owner'      : self.get_argument("owner", "")}
+        (userId, success) = self.db.createUser(**args)
+        
         profilePic = self.get_argument("profilePic", "") # TODO
-        userId, success = self.db.createUser(**args)
-        if not success:
-            result = 'failure'
+        if not success: result = 'failure'
         elif profilePic: # profile picture support not implemented
-            picId, success = self.db.submitPicture(userId, profilePic)
-            if success:
-                self.db.addUserPicture(userId, picId)
-            else:
-                result = 'partial'
+            (picId, success) = self.db.submitPicture(userId, profilePic)
+            
+            if success: self.db.addUserPicture(userId, picId)
+            else: result = 'partial'
         self.write(result)
