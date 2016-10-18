@@ -11,7 +11,7 @@ from DataObjects.User import User
 class SQLUserDatabaseManager(SQLDatabaseManager):
     DB_OBJECT_CLASS = User
     
-    def __init__(self, host, user, password, port, db, userType):
+    def __init__(self, host, user, password, port, db):
         '''
         :type host: str
         :type user: str
@@ -20,20 +20,25 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         :type db: str
         '''
         super(SQLUserDatabaseManager, self).__init__(host, user, password,
-                                                 port, db, userType)
+                                                 port, db, User)
+
+    def authenticate(self, email, password):
+        '''
+        :type email: str
+        :type password: str
+        '''
+        saltedPwd = self.hash(password, self.getSalt(email))
+        self.cursor.execute(User.getUserInfoQuery(email, saltedPwd))
+        return len(self.cursor.fetchall()) > 0
 
     def createSalt(self):
         return createSalt()
     
-    def getSalt(self, username):
+    def getSalt(self, email):
         '''
-        :type username: str
+        :type email: str
         '''
-        query = '''select salt from {0}
-                    where {1} = \'{2}\''''.format(self.dbObject.tableName,
-                                                  self.dbObject.PRIMARY_KEY_NAME,
-                                                  username)
-        self.cursor.execute(query)
+        self.cursor.execute(User.getSaltQuery(email))
         return self.cursor.fetchall()[0][0]
     
     def hash(self, password, salt):

@@ -3,7 +3,10 @@ Created on Oct 17, 2016
 
 @author: henrylevy
 '''
-from Backend.Controller.UserHandlers.AbstractUserHandler import AbstractUserHandler
+import tornado.web
+from Controller.UserHandlers.AbstractUserHandler import AbstractUserHandler
 
 class ModifyUserProfileHandler(AbstractUserHandler):
-    pass
+    @tornado.web.authenticated # ensures that user has valid token/is signed in
+    def get(self):
+        pass

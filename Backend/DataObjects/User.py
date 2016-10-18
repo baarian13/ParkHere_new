@@ -21,6 +21,8 @@ class User(DatabaseObject):
                         FOREIGN KEY (profilePictureID) REFERENCES PICTURES(ID),
                         PRIMARY KEY (ID));'''.format(TABLE_NAME)
     
+    
+    
     def __init__(self, firstName, lastName, isSeeker,
                  isOwner, saltedPassword, salt, email,
                  profilePictureID, userID):
@@ -44,6 +46,17 @@ class User(DatabaseObject):
         self.email = email
         self.profilePictureID = profilePictureID
         self.userID = userID
+    
+    @classmethod
+    def getSaltQuery(cls, email):
+        return '''select salt from {0}
+                    where email = \'{1}\';'''.format(cls.TABLE_NAME, email)
+
+    @classmethod
+    def getUserInfoQuery(cls, email, saltedPwd):
+        return '''select salt from {0}
+                    where email = \'{1}\' and
+                    saltedPassword = \'{2}\';'''.format(cls.TABLE_NAME, email, saltedPwd)
     
     def checkPassword(self, password): 
         '''

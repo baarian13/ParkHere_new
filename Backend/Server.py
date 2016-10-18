@@ -8,13 +8,15 @@ from tornado import netutil, process, httpserver
 from Controller.AbstractBaseHandler import MainHandler
 from Controller.UserHandlers.SinginHandler import SigninHandler
 from tornado.ioloop import IOLoop
+from Controller.UserHandlers.SingupHandler import SignUpHandler
 settings = {
-    "cookie_secret": "__TODO:_GENERATE_RANDOM_VALUE_HERE__",
+    "cookie_secret": "ADSFGHARY3457fgSDFHSDFjusdfASDFGH2345h=sdg",
     "login_url": "/signin",
 }
 application = tornado.web.Application([
     (r"/", MainHandler),
     (r"/signin", SigninHandler),
+    (r"/signup", SignUpHandler),
 ], **settings)
 
 def main():

@@ -16,7 +16,7 @@ class SQLDatabaseManager(object):
         :type password: str
         :type port: int
         :type db: str
-        :type dbObject: User.User or Picture.Picture
+        :type dbObject: DatabaseObject
         '''
         
         self.host = host
