@@ -5,8 +5,10 @@ Created on Jan 3, 2016
 '''
 import MySQLdb
 from _mysql_exceptions import ProgrammingError
+from DataObjects.DatabaseObject import DatabaseObject
 
 class SQLDatabaseManager(object):
+    DB_OBJECT_CLASS = DatabaseObject
     def __init__(self, host, user, password, port, db, dbObject):
         '''
         :type host: str
@@ -52,31 +54,21 @@ class SQLDatabaseManager(object):
             self._cursor = self.db.cursor()
         return self._cursor
     
-    def other_cursor(self, database):
-        _db = MySQLdb.connect(host = self.host,
-                                user = self.user,
-                                passwd = self.password,
-                                port = self.port,
-                                db = database or self.database)
-        _db.autocommit(True)
-        return _db.cursor()
-    
-    def delete_table(self, tableName):
+    def delete_table(self):
         '''
         deletes table
         :type tableName: str
         '''
+        self.execute('''DROP TABLE {0}'''.format(self.DB_OBJECT_CLASS.TABLE_NAME))
         
-        self.execute('''DROP TABLE {0}'''.format(tableName))
-        
-    def clean_table(self, tableName):
+    def clean_table(self):
         '''
         deletes table and creates it again, empty
         :type tableName: str
         '''
         
-        self.delete_table(tableName)
-        self.create_table(tableName, self.dbObject.DB_FIELDS, self.dbObject.DB_INDEX_FIELDS)
+        self.delete_table()
+        self.create_table()
         
     def add_index(self, tableName, index, isInt=False, database=None):
         '''
@@ -120,7 +112,7 @@ class SQLDatabaseManager(object):
             else:
                 raise e
             
-    def check_table_exists(self, tablename, database=None):
+    def tableExists(self, tablename, database=None):
         '''
         :type tablename: str
         '''
@@ -137,89 +129,19 @@ class SQLDatabaseManager(object):
         query = '''
             CREATE DATABASE IF NOT EXISTS {0};
         '''
-        print query.format(database)
         self.execute(query.format(database))
-    
-    def create_table(self, gameId, dbfields, indexFields, tableId=None, database=None):
+
+    def insert_into_table(self, dbObject):
+        '''
+        :type dbObject: DatabaseObject
+        '''
+        self.create_table()
+        self.execute(dbObject.asInsertStatement())
+
+    def create_table(self):
         '''
         creates table if it doesn't already exist
-        :type gameId: str
-        :type dbfields: dict
-        :type indexFields: dict
         '''
-        if database:
-            self.create_database(database)
-        database = database or self.database
-        if not self.check_table_exists(gameId, database):
-            fields = ''
-            for field, t in dbfields.iteritems():
-                if field != self.dbObject.PRIMARY_KEY_NAME: 
-                    fields += ' {0} {1},'.format(field, t)
-            fields = fields[:-1]
-            if not tableId:
-                if str(gameId).isdigit():
-                    gameId = '`{0}`'.format(gameId)
-                query = '''CREATE TABLE IF NOT EXISTS {0}(
-                        {2},
-                        {1});'''.format(gameId, fields, self.dbObject.PRIMARY_KEY or 'ID INT PRIMARY KEY AUTO_INCREMENT')
-                self.execute(query, database=database)
-            else:
-                self.execute('''create table IF NOT EXISTS {0}(
-                        {1} PRIMARY KEY,
-                        {2});'''.format(int(gameId), gameId, fields), database=database)
-            for field, isInt in indexFields.iteritems():
-                try:
-                    self.add_index(gameId, field, isInt, database=database)
-                except: pass
-    
-    def add_other_table(self, tableName, dbObject, database):
-        self.create_table(tableName, dbObject.DB_FIELDS,
-                          dbObject.DB_INDEX_FIELDS, database=database)
-    
-    def insert_into_table(self, tableName, row, database=None):
-        '''
-        :type tableName: str
-        :type row: dict
-        '''
-        schema = self.dbObject.DB_FIELDS
-        schema.pop('ID', None)
-        self.create_table(tableName, schema, self.dbObject.DB_INDEX_FIELDS)
-        fields = ''
-        values = ''
-        for field in self.dbObject.DB_FIELDS.iterkeys():
-            fields += ' {0},'.format(field)
-            if isinstance(row[field], str):
-                values += '\n \'{0}\','.format(row[field])
-            else:
-                values += '\n {0},'.format((row[field]
-                                            if row[field] or row[field] == 0
-                                            else '\'N.A.\''))
-        fields = fields[:-1]
-        values = values[:-1]
-        print """INSERT INTO {0} ({1}) 
-                    VALUES ({2});""".format(tableName, fields, values)
-        self.execute("""INSERT INTO {0} ({1}) 
-                    VALUES ({2});""".format(tableName, fields, values))
+        if not self.tableExists(self.DB_OBJECT_CLASS, self.database):
+            self.execute(self.DB_OBJECT_CLASS.TABLE_CREATE_STATEMENT, database=self.database)
             
-    def general_select_from_table(self, tableName, selectFields, conditions=None):
-        '''
-        :type tableName: str
-        :type selectFields: list
-        :type conditions: dict
-        '''
-        
-        fields = ''
-        for fields in selectFields:
-            fields += ' {0},'.format(fields)
-        fields = fields[:-1]
-        
-        statement = 'select {0} from {1}'.format(fields, tableName)
-        
-        if conditions:
-            cond = ''
-            for field, val in conditions.iteritems():
-                cond += ' {0} = {1} and '.format(field, val)
-            cond = cond[:-4]
-            statement += ' where {0}'.format(cond)
-        
-        return self.cursor.execute(statement)

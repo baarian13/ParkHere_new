@@ -8,13 +8,7 @@ class DatabaseObject(object):
     '''
         Base class for Database Objects
     '''
-    DB_INDEX_FIELDS = {}
+    TABLE_NAME = ""
     
-    PRIMARY_KEY_NAME = 'ID'
-    
-    PRIMARY_KEY = None
-    
-    DB_FIELDS = {}
-    
-    def table_creation_string(self, *args, **kwargs):
-        return ''
+    def asInsertStatement(self):
+        raise NotImplementedError()
