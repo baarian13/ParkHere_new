@@ -17,8 +17,8 @@ class SignUpHandler(AbstractUserHandler):
         '''
         -Each argument is specified in URL format.
         -If an argument is not specified (except picture), then the creation will fail.
-        -writes success if everything worked, writes partial if
-            picture could not be added, writes failure if user could not be created
+        -writes 'success' if everything worked, writes 'partial' if only
+            picture could not be added, writes 'failure' if user could not be created
         args:
             email->str
             password->str
