@@ -9,17 +9,16 @@ from DataObjects.DatabaseObject import DatabaseObject
 class User(DatabaseObject):
     TABLE_NAME = "USERS"
     TABLE_CREATE_STATEMENT = '''CREATE TABLE IF NOT EXISTS {0}(
-                        ID INT AUTO_INCREMENT,
+                        email VARCHAR(100) NOT NULL,
                         firstName VARCHAR(50) NOT NULL,
                         lastName VARCHAR(50) NOT NULL,
                         isSeeker BOOL NOT NULL,
                         isOwner BOOL NOT NULL,
                         saltedPassword VARCHAR(200) NOT NULL,
                         salt VARCHAR(100) NOT NULL,
-                        email VARCHAR(100) NOT NULL,
                         profilePictureID INT,
                         FOREIGN KEY (profilePictureID) REFERENCES PICTURES(ID),
-                        PRIMARY KEY (ID));'''.format(TABLE_NAME)
+                        PRIMARY KEY (email));'''.format(TABLE_NAME)
     
     
     
@@ -66,14 +65,7 @@ class User(DatabaseObject):
         return saltPassword(password, self.salt) == self.saltedPassword
 
     def asInsertStatement(self):
-        startDate = "{0}-{1}-{2}".format(self.startDate.year,
-                                         self.startDate.month,
-                                         self.startDate.day)
-        endDate = "{0}-{1}-{2}".format(self.endDate.year,
-                                       self.endDate.month,
-                                       self.endDate.day)
-        return """INSERT INTO {0} 
-        (renterID, ownerID, price, address, spotType, isBooked, startDate, endDate) 
-        VALUES ({1}, {2}, {3}, {4}, {5}, {6}, {7}, {8});
-        """.format(self.TABLE_NAME, self.renterUserID, self.ownerID, str(self.price),
-                   self.address, self.spotType, self.isBooked, startDate, endDate)    
+        params = '''email, firstName, lastName, isSeeker, isOwner, saltedPassword, salt, profilePictureID'''
+        values = '''{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}'''.format(self.email, self.firstName,
+            self.lastName, self.isSeeker, self.isOwner, self.saltedPassword, self.salt, self.profilePictureID or 0)
+        return """INSERT INTO {0} ({1}) VALUES ({2}); """.format(self.TABLE_NAME, params, values)    

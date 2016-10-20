@@ -6,6 +6,7 @@ Created on Jan 3, 2016
 import MySQLdb
 from _mysql_exceptions import ProgrammingError
 from DataObjects.DatabaseObject import DatabaseObject
+from Model.BaseManagers.ObjectStorageManager import ObjectStorageManager
 
 class SQLDatabaseManager(object):
     DB_OBJECT_CLASS = DatabaseObject
@@ -32,6 +33,15 @@ class SQLDatabaseManager(object):
                                 port = self.port,
                                 db = self.database)
         self._cursor = self.db.cursor()
+        self._objStorageManager = ObjectStorageManager('parkhereapp', 'parkhere.app',
+                                                       'password')
+
+    @property
+    def objStorageManager(self):
+        if not self._dbManager:
+            self._objStorageManager = ObjectStorageManager('parkhereapp', 'parkhere.app',
+                                                           'password')
+        return self._objStorageManager
     
     def __del__(self):
         self.db.close()
@@ -54,14 +64,14 @@ class SQLDatabaseManager(object):
             self._cursor = self.db.cursor()
         return self._cursor
     
-    def delete_table(self):
+    def deleteTable(self):
         '''
         deletes table
         :type tableName: str
         '''
         self.execute('''DROP TABLE {0}'''.format(self.DB_OBJECT_CLASS.TABLE_NAME))
         
-    def clean_table(self):
+    def cleanTable(self):
         '''
         deletes table and creates it again, empty
         :type tableName: str
@@ -70,7 +80,7 @@ class SQLDatabaseManager(object):
         self.delete_table()
         self.create_table()
         
-    def add_index(self, tableName, index, isInt=False, database=None):
+    def addIndex(self, tableName, index, isInt=False, database=None):
         '''
         :type tableName: str
         :type index: str
@@ -125,20 +135,20 @@ class SQLDatabaseManager(object):
             return True
         return False
     
-    def create_database(self, database):
+    def createDatabase(self, database):
         query = '''
             CREATE DATABASE IF NOT EXISTS {0};
         '''
         self.execute(query.format(database))
 
-    def insert_into_table(self, dbObject):
+    def insertIntoTable(self, dbObject):
         '''
         :type dbObject: DatabaseObject
         '''
         self.create_table()
         self.execute(dbObject.asInsertStatement())
 
-    def create_table(self):
+    def createTable(self):
         '''
         creates table if it doesn't already exist
         '''

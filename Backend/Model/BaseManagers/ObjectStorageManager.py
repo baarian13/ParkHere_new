@@ -46,41 +46,7 @@ class ObjectStorageManager(object):
         self._connection = S3Connection(self.userName, self.password)
         self._bucket = self.connection.get_bucket(bucketName or self.bucketName)
 
-    def path_for_media(self, gameId, isHomeTeam, userId, width, height, mediaType):
-        '''
-        :type gameId: str
-        :type isHomeTeam: bool
-        :type userId: int
-        :type width: int
-        :type height: int
-        
-        :rtype: str
-        '''
-        
-        filename = '''{0}_{1}_{2}x{3}'''.format(datetime.now().__str__(),
-                                                str(userId), width, height)
-        team = 'homeTeam' if isHomeTeam else 'awayTeam'
-        ext = 'jpg' if mediaType is 'picture' else 'mp4'
-        return  '''{0}/{1}/{2}.{3}'''.format(gameId, team, filename, ext)
-    
-    def path_for_picture_optimal(self, gameId, isHomeTeam, userId, width, height, filePath):
-        '''
-        :type gameId: str
-        :type isHomeTeam: bool
-        :type userId: int
-        :type width: int
-        :type height: int
-        :type filePath: str
-        
-        :rtype: str
-        '''
-        
-        filename = '''{0}{1}x{2}'''.format(filePath, width, height)
-        team = 'homeTeam' if isHomeTeam else 'awayTeam'
-        
-        return  '''{0}/{1}/optimal/{2}.jpg'''.format(gameId, team, filename)
-
-    def upload_media(self, path, contentAsString):
+    def uploadMedia(self, path, contentAsString):
         '''
         :type path: str
         :type contentAsString: str
@@ -94,28 +60,26 @@ class ObjectStorageManager(object):
         # may need to make private read
         k.set_acl('public-read')
         
-    def delete_pictures(self, paths):
+    def deleteKeys(self, paths):
         '''
         :type paths: [str]
         '''
         
         self.bucket.delete_keys(paths)
         
-    def download_picture_as_string(self, path):
+    def downloadPictureAsString(self, path):
         '''
         :type paths: str
         '''
         
         k = self.bucket.get_key(path)
-        print path
-        if(k):
+        if k:
             return k.get_contents_as_string()
         else:
             raise IOError("could not find picture")
     
-    def download_picture_as_b64(self, path):
+    def downloadPictureAsB64(self, path):
         '''
         :type paths: str
         '''
-        
         return base64.b64encode(self.download_picture_as_string(path))
