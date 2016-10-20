@@ -22,10 +22,12 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
                                                  port, db, Spot)
     
     def getSpotsRentedBy(self, userEmail):
-        pass
+        self.cursor.execute(Spot.searchByRenterEmailQuery(userEmail))
+        return self.cursor.fetchall()
     
     def getSpotsOwnedBy(self, userEmail):
-        pass
+        self.cursor.execute(Spot.searchByOwnerEmailQuery(userEmail))
+        return self.cursor.fetchall()
 
     def searchForSpots(self, address, maxDistance=25, maxResults=20):
         latitude, longitude = getLatitudeLongitude(address)

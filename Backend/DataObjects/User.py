@@ -20,8 +20,6 @@ class User(DatabaseObject):
                         FOREIGN KEY (profilePictureID) REFERENCES PICTURES(ID),
                         PRIMARY KEY (email));'''.format(TABLE_NAME)
     
-    
-    
     def __init__(self, firstName, lastName, isSeeker,
                  isOwner, saltedPassword, salt, email,
                  profilePictureID, userID):

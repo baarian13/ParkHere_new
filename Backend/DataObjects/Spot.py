@@ -23,7 +23,7 @@ class Spot(DatabaseObject):
                     latitude FLOAT NOT NULL,
                     longitude FLOAT NOT NULL,
                     FOREIGN KEY (renterEmail) REFERENCES USERS(email),
-                    FOREIGN KEY (ownerID) REFERENCES USERS(email),
+                    FOREIGN KEY (ownerEmail) REFERENCES USERS(email),
                     PRIMARY KEY (ID));'''.format(TABLE_NAME)
     MILES_MAGIC = 3959
     SPOT_TYPES = {0 : "Covered",
@@ -60,6 +60,13 @@ class Spot(DatabaseObject):
     ({0} * acos( cos( radians({1}) ) * cos( radians( latitude) ) * cos( radians(longitude) - radians({2}) ) + sin( radians({1}) ) * sin( radians( latitude ) ) ) ) AS distance
     FROM SPOTS HAVING distance < {3} ORDER BY distance LIMIT 0 , {4};'''.format(cls.MILES_MAGIC, latitude, longitude, maxDistance, maxResults)
 
+    @classmethod
+    def searchByOwnerEmailQuery(cls, ownerEmail):
+        return '''SELECT ID, address, startDate, endDate, FROM SPOTS WHERE ownerEmail = {0};'''.format(ownerEmail)
+
+    @classmethod
+    def searchByRenterEmailQuery(cls, renterEmail):
+        return '''SELECT ID, address, startDate, endDate, FROM SPOTS WHERE renterEmail = {0};'''.format(renterEmail)
 
     def isValidSpot(self): 
         return self.startDate < date.today() < self.endDate
