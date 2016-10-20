@@ -5,7 +5,6 @@ Created on Dec 21, 2015
 '''
 
 import base64
-from datetime import datetime
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
@@ -28,9 +27,6 @@ class ObjectStorageManager(object):
         if not self._bucket:
             self._bucket = self.connection.get_bucket(self.bucketName)
         return self._bucket
-    
-#     def bucket(self, bucketName):
-#         return self.connection.get_bucket(bucketName)
     
     @property
     def connection(self):
