@@ -22,14 +22,28 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
                                                  port, db, Spot)
     
     def getSpotsRentedBy(self, userEmail):
+        '''
+        :type userEmail: str
+        :rtype: list
+        '''
         self.cursor.execute(Spot.searchByRenterEmailQuery(userEmail))
         return self.cursor.fetchall()
     
     def getSpotsOwnedBy(self, userEmail):
+        '''
+        :type userEmail: str
+        :rtype: list
+        '''
         self.cursor.execute(Spot.searchByOwnerEmailQuery(userEmail))
         return self.cursor.fetchall()
 
     def searchForSpots(self, address, maxDistance=25, maxResults=20):
+        '''
+        :type address: str
+        :type maxDistance: int
+        :type maxResults: int
+        :rtype: list
+        '''
         latitude, longitude = getLatitudeLongitude(address)
         self.cursor.execute(Spot.searchByDistanceQuery(latitude, longitude, maxDistance, maxResults))
         return self.cursor.fetchall()

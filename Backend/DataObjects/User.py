@@ -16,13 +16,12 @@ class User(DatabaseObject):
                         isOwner BOOL NOT NULL,
                         saltedPassword VARCHAR(200) NOT NULL,
                         salt VARCHAR(100) NOT NULL,
-                        profilePictureID INT,
-                        FOREIGN KEY (profilePictureID) REFERENCES PICTURES(ID),
+                        profilePicturePath VARCHAR(200),
                         PRIMARY KEY (email));'''.format(TABLE_NAME)
     
     def __init__(self, firstName, lastName, isSeeker,
                  isOwner, saltedPassword, salt, email,
-                 profilePictureID, userID):
+                 profilePicturePath=None):
         '''
         :type firstName: str
         :type lastName: str
@@ -31,8 +30,7 @@ class User(DatabaseObject):
         :type saltedPassword: str
         :type salt: str
         :type email: str
-        :type profilePictureID: int
-        :type userID: int
+        :type profilePicturePath: str
         '''
         self.firstName = firstName
         self.lastName = lastName
@@ -41,19 +39,34 @@ class User(DatabaseObject):
         self.saltedPassword = saltedPassword
         self.salt = salt
         self.email = email
-        self.profilePictureID = profilePictureID
-        self.userID = userID
+        self.profilePicturePath = profilePicturePath
     
     @classmethod
     def getSaltQuery(cls, email):
-        return '''select salt from {0}
+        '''
+        :type email: str
+        '''
+        return '''SELECT salt FROM {0}
                     where email = \'{1}\';'''.format(cls.TABLE_NAME, email)
 
     @classmethod
     def getUserInfoQuery(cls, email, saltedPwd):
-        return '''select salt from {0}
-                    where email = \'{1}\' and
+        '''
+        :type email: str
+        :type saltedPwd: str
+        '''
+        return '''SELECT salt FROM {0}
+                    WHERE email = \'{1}\' AND
                     saltedPassword = \'{2}\';'''.format(cls.TABLE_NAME, email, saltedPwd)
+    
+    @classmethod
+    def updateProfilePictureQuery(cls, email, path):
+        '''
+        :type email: str
+        :type path: str
+        :rtype: str
+        '''
+        return '''UPDATE {0} SET profilePicturePath={1} WHERE email={2}'''.format(cls.TABLE_NAME, path, email)
     
     def checkPassword(self, password): 
         '''
@@ -63,7 +76,10 @@ class User(DatabaseObject):
         return saltPassword(password, self.salt) == self.saltedPassword
 
     def asInsertStatement(self):
-        params = '''email, firstName, lastName, isSeeker, isOwner, saltedPassword, salt, profilePictureID'''
+        '''
+        :rtype: str
+        '''
+        params = '''email, firstName, lastName, isSeeker, isOwner, saltedPassword, salt, profilePicturePath'''
         values = '''{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}'''.format(self.email, self.firstName,
-            self.lastName, self.isSeeker, self.isOwner, self.saltedPassword, self.salt, self.profilePictureID or 0)
+            self.lastName, self.isSeeker, self.isOwner, self.saltedPassword, self.salt, self.profilePicturePath or 0)
         return """INSERT INTO {0} ({1}) VALUES ({2}); """.format(self.TABLE_NAME, params, values)    

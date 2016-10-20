@@ -22,6 +22,15 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         super(SQLUserDatabaseManager, self).__init__(host, user, password,
                                                  port, db, User)
 
+    def submitPicture(self, email, pictureString):
+        '''
+        :type email: str
+        :type pictureString: str
+        '''
+        path = 'profilePictures/{0}'.format(email)
+        self.objStorageManager.uploadMedia(path, pictureString)
+        self.cursor.execute(User.updateProfilePictureQuery(email, path))
+
     def authenticate(self, email, password):
         '''
         :type email: str
