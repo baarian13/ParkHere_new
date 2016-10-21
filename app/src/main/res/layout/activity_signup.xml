@@ -5,10 +5,11 @@
     android:weightSum="1">
 
     <TextView
-        android:layout_width="115dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Email Address"
-        android:id="@+id/textView2" />
+        android:text="Sign Up"
+        android:id="@+id/textView2"
+        android:layout_weight="0.30" />
 
     <EditText
         android:layout_width="match_parent"
@@ -90,13 +91,6 @@
         android:text="User Type"
         android:id="@+id/textView8"
         android:layout_weight="0.21" />
-
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_gravity="center_horizontal">
-
-    </RadioGroup>
 
     <LinearLayout
         android:orientation="horizontal"
