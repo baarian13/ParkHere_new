@@ -33,7 +33,7 @@ public class Search extends AppCompatActivity {
         search_date_button = findViewById(R.id.search_date_button);
         search_date_button.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) {showDatePicker(view)};
+            public void onClick(View view) {showDatePicker(view);}
         });
         //===Search by date: DatePicker===//
         // Use the current date as the default date in the picker
@@ -56,7 +56,7 @@ public class Search extends AppCompatActivity {
         search_time_button = findViewById(R.id.search_time_button);
         search_time_button.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) {showTimePicker(view)};
+            public void onClick(View view) {showTimePicker(view);}
         });
         //===Search by date: DatePicker===//
         // Use the current date as the default date in the picker
