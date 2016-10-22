@@ -207,12 +207,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        //return email.contains("@");
+        return ValidationFunctions.isEmailAddress(email);
     }
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        //return password.length() > 4;
+        if (ValidationFunctions.hasEnoughLength(password))
+            return ValidationFunctions.hasSpecialCharacter(password);
+        return false;
     }
 
     /**
