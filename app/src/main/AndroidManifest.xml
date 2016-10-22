@@ -50,6 +50,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AddReview" />
         <activity android:name=".Search"></activity>
+        <activity android:name=".CreateSpotActivity"
+            android:label="Create Spot" />
     </application>
 
 </manifest>
