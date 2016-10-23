@@ -29,7 +29,6 @@
         android:id="@+id/spot_photos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="drawable/cool_pic???"
         android:contentDescription="@string/photos_contentDescription"/>
     <!--How to make this picture a variable?-->
 
