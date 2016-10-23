@@ -29,13 +29,6 @@
         android:id="@+id/spot_photos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        android:src=""
->>>>>>> origin/master
-=======
->>>>>>> origin/master
         android:contentDescription="@string/photos_contentDescription"/>
     <!--android:src=""-->
     <!--How to make this picture a variable?-->
