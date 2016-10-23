@@ -23,4 +23,12 @@ public class Account extends AppCompatActivity {
         if (!isOwner())
             ownedSpotsList.setVisibility(View.GONE);
     }
+
+    private boolean isSeeker() {
+        return true;
+    }
+
+    private boolean isOwner() {
+        return true;
+    }
 }
