@@ -50,8 +50,8 @@
 
     <!--create parking spot-->
     <string name="repeat_weekly_label">Repeat Weekly</string>
-    <string name="date_hint_label">dd/mm/yy</string>
-    <string name="hour_hint_label">hh/mm</string>
+    <string name="date_hint_label">mm/dd/yy</string>
+    <string name="hour_hint_label">hh:mm</string>
     <string name="to"> to </string>
     <string name="upload_photo_button_label">Upload Photo</string>
 
