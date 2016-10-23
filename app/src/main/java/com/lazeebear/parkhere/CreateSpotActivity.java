@@ -25,18 +25,18 @@ public class CreateSpotActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         //===variables===//
-        start_date = findViewById(R.id.create_spot_start_date);
-        end_date = findViewById(R.id.create_spot_end_date);
-        start_hour = findViewById(R.id.create_spot_start_hour);
-        end_hour = findViewById(R.id.create_spot_end_hour);
-        price_field = findViewById(R.id.create_spot_price_field);
-        description_field = findViewById(R.id.create_spot_description_field);
+        start_date = (TextView) findViewById(R.id.create_spot_start_date);
+        end_date = (TextView) findViewById(R.id.create_spot_end_date);
+        start_hour = (TextView) findViewById(R.id.create_spot_start_hour);
+        end_hour = (TextView) findViewById(R.id.create_spot_end_hour);
+        price_field = (TextView) findViewById(R.id.create_spot_price_field);
+        description_field = (TextView) findViewById(R.id.create_spot_description_field);
 
-        repeat_weekly_checkbox = findViewById(R.id.create_spot_repeat_weekly_checkbox);
-        covered_checkbox = findViewById(R.id.create_spot_covered_checkbox);
+        repeat_weekly_checkbox = (CheckBox) findViewById(R.id.create_spot_repeat_weekly_checkbox);
+        covered_checkbox = (CheckBox) findViewById(R.id.create_spot_covered_checkbox);
 
-        upload_photo_button = findViewById(R.id.upload_photo_button);
-        submit_button = findViewById(R.id.create_spot_submit_button);
+        upload_photo_button = (Button) findViewById(R.id.upload_photo_button);
+        submit_button = (Button) findViewById(R.id.create_spot_submit_button);
 
         Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);

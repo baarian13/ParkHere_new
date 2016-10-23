@@ -29,8 +29,8 @@ public class Search extends AppCompatActivity {
         int year, month, day, hour, minute;
 
         //===Search by date===//
-        search_date_textview = findViewById(R.id.search_date_textview);
-        search_date_button = findViewById(R.id.search_date_button);
+        search_date_textview = (TextView) findViewById(R.id.search_date_textview);
+        search_date_button = (Button) findViewById(R.id.search_date_button);
         search_date_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {showDatePicker(view);}
@@ -52,8 +52,8 @@ public class Search extends AppCompatActivity {
         datePicker = new DatePickerDialog(this, onDateSetHandler, year, month, day);
 
         //===Search by time===//
-        search_time_textview = findViewById(R.id.search_time_textview);
-        search_time_button = findViewById(R.id.search_time_button);
+        search_time_textview = (TextView) findViewById(R.id.search_time_textview);
+        search_time_button = (Button) findViewById(R.id.search_time_button);
         search_time_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {showTimePicker(view);}

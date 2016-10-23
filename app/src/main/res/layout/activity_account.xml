@@ -64,21 +64,22 @@
             android:text="Spots History"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/spotHistoryList"
+            android:id="@+id/spotHistoryButton"
             android:layout_weight="1" />
 
         <Button
             android:text="Spots Owned"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ownedSpotsList"
+            android:id="@+id/ownedSpotsButton"
             android:layout_weight="1" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="50pt"
-        android:layout_weight="0.15">
+        android:layout_weight="0.15"
+        android:id="@+id/spotHistoryList">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -89,7 +90,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_weight="0.38">
+        android:layout_weight="0.40"
+        android:id="@+id/ownedSpotsList">
 
         <LinearLayout
             android:layout_width="match_parent"
