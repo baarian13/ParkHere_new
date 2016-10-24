@@ -7,13 +7,16 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-    <!--To allow the app to save a photo-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <!-- To allow the owner to take photos.
+    <!-- To allow the app to save a photo -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--
+         To allow the owner to take photos.
         Be sure to call hasSystemFeature(PackageManager.FEATURE_CAMERA at runtime.
-        If a camera is not available, disable camera features.-->
-    <uses-feature android:name="android.hardware.camera"
-                  android:required="false"/>
+        If a camera is not available, disable camera features.
+    -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -49,7 +52,11 @@
             android:label="@string/title_activity_filter_search_results"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AddReview" />
-        <activity android:name=".Search"></activity>
+        <activity android:name=".Search" />
+        <activity
+            android:name=".SignUpActivity"
+            android:label="@string/title_activity_sign_up"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

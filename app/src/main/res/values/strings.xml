@@ -20,6 +20,9 @@
     <string name="title_spot_detail">Spot Detail</string>
     <string name="title_activity_filter_search_results">FilterSearchResults</string>
 
+    <!-- Strings related to Sign Up -->
+    <string name="title_activity_sign_up">Sign Up</string>
+
     <!--filter search results-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

@@ -3,6 +3,7 @@ package com.lazeebear.parkhere;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -150,7 +151,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Sends user to the register page
      */
     private void sendToRegisterView() {
-
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
     }
 
     /**
