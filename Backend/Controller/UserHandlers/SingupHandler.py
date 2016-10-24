@@ -6,6 +6,10 @@ Created on Oct 17, 2016
 import tornado.gen
 from Controller.UserHandlers.AbstractUserHandler import AbstractUserHandler
 
+SUCCESS = 200
+FAILURE = 401
+PARTIAL = 206
+    
 class SignUpHandler(AbstractUserHandler):
     '''
     -Requests are posted here when a user is creating an account.
@@ -28,8 +32,12 @@ class SignUpHandler(AbstractUserHandler):
             profilePic->B64 string (if not specified default is used)
             seeker->str--0 for false, 1 for true
             owner->same as seeker
+        returns:
+            success: 200
+            failure: 401
+            partial: 206
         '''
-        result = 'success'
+        result = SUCCESS
         args = {'email'      : self.get_argument("email", ""),
                 'password'   : self.get_argument("password", ""),
                 'first'      : self.get_argument("first", ""),
@@ -40,10 +48,10 @@ class SignUpHandler(AbstractUserHandler):
         (userId, success) = self.db.createUser(**args)
         
         profilePic = self.get_argument("profilePic", "")
-        if not success: result = 'failure'
+        if not success: result = FAILURE
         elif profilePic: # profile picture support not implemented
             (picId, success) = self.db.submitPicture(userId, profilePic)
             
             if success: self.db.addUserPicture(userId, picId)
-            else: result = 'partial'
+            else: result = PARTIAL
         self.write(result)

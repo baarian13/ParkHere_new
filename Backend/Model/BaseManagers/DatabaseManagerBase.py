@@ -9,7 +9,12 @@ from DataObjects.DatabaseObject import DatabaseObject
 from Model.BaseManagers.ObjectStorageManager import ObjectStorageManager
 
 class SQLDatabaseManager(object):
-    DB_OBJECT_CLASS = DatabaseObject
+    DB_OBJECT_CLASS     = DatabaseObject
+    TABLE_EXISTS_QUERY = """
+            SELECT COUNT(*)
+            FROM information_schema.tables
+            WHERE table_name = '{0}'
+            """
     def __init__(self, host, user, password, port, db, dbObject):
         '''
         :type host: str
@@ -20,18 +25,18 @@ class SQLDatabaseManager(object):
         :type dbObject: DatabaseObject
         '''
         
-        self.host = host
-        self.user = user
+        self.host     = host
+        self.user     = user
         self.password = password
-        self.port = port
+        self.port     = port
         self.database = db
         self.dbObject = dbObject
         
-        self._db = MySQLdb.connect(host = self.host,
-                                user = self.user,
-                                passwd = self.password,
-                                port = self.port,
-                                db = self.database)
+        self._db = MySQLdb.connect(host   = self.host,
+                                   user   = self.user,
+                                   passwd = self.password,
+                                   port   = self.port,
+                                   db     = self.database)
         self._cursor = self.db.cursor()
         self._objStorageManager = ObjectStorageManager('parkhereapp', 'parkhere.app',
                                                        'password')
@@ -50,11 +55,11 @@ class SQLDatabaseManager(object):
     @property
     def db(self):
         if not self._db:
-            self._db = MySQLdb.connect(host = self.host,
-                                user = self.user,
-                                passwd = self.password,
-                                port = self.port,
-                                db = self.database)
+            self._db = MySQLdb.connect(host   = self.host,
+                                       user   = self.user,
+                                       passwd = self.password,
+                                       port   = self.port,
+                                       db     = self.database)
             self._db.autocommit(True)
         return self._db
     
@@ -104,17 +109,16 @@ class SQLDatabaseManager(object):
         '''
         
         try:
-            db = MySQLdb.connect(host = self.host,
-                                user = self.user,
-                                passwd = self.password,
-                                port = self.port,
-                                db = (database or self.database))
+            db = MySQLdb.connect(host   = self.host,
+                                 user   = self.user,
+                                 passwd = self.password,
+                                 port   = self.port,
+                                 db     = (database or self.database))
             curr = db.cursor()
             curr.execute(query)
             vals = curr.fetchall()
             db.commit()
-            db.close()
-            curr.close()
+            self.close()
             return vals
         except ProgrammingError as e:
             if tries<time_out:
@@ -127,13 +131,7 @@ class SQLDatabaseManager(object):
         :type tablename: str
         '''
         database = database or self.database
-        if self.execute("""
-            SELECT COUNT(*)
-            FROM information_schema.tables
-            WHERE table_name = '{0}'
-            """.format(str(tablename).replace('\'', '\'\'')), database=database)[0][0] == 1:
-            return True
-        return False
+        return bool(self.execute(self.TABLE_EXISTS_QUERY.format(str(tablename).replace('\'', '\'\'')), database=database)[0][0])
     
     def createDatabase(self, database):
         query = '''
