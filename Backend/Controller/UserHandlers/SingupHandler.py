@@ -39,7 +39,7 @@ class SignUpHandler(AbstractUserHandler):
                 'owner'      : self.get_argument("owner", "")}
         (userId, success) = self.db.createUser(**args)
         
-        profilePic = self.get_argument("profilePic", "") # TODO
+        profilePic = self.get_argument("profilePic", "")
         if not success: result = 'failure'
         elif profilePic: # profile picture support not implemented
             (picId, success) = self.db.submitPicture(userId, profilePic)
