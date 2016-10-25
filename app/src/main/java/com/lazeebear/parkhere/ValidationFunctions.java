@@ -13,7 +13,7 @@ public class ValidationFunctions {
 
     public static boolean isEmailAddress(String s) {
         // email address should not be empty
-        if (s == null || s.trim().isEmpty()) {
+        if (s == null || s.trim().isEmpty() || s.length() < 4) {
             return false;
         }
 
@@ -53,5 +53,20 @@ public class ValidationFunctions {
         else
             //System.out.println("There is no special char.");
             return false;
+    }
+
+    public static boolean isPhoneNum(String s){
+        // s should not be empty
+        if (s == null || s.trim().isEmpty() || s.length()!=10)
+            return false;
+
+        // s should have no dot (.)
+        Pattern p = Pattern.compile("[^0-9]");
+        Matcher m = p.matcher(s);
+        boolean b = m.find();
+        if (b == true)
+            return false; // Should not have other character than number, so false if there is
+        else
+            return true;
     }
 }

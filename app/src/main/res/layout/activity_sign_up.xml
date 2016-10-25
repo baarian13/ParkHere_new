@@ -41,6 +41,22 @@
         android:layout_gravity="center_horizontal" />
 
     <EditText
+        android:layout_width="373dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="Password"
+        android:ems="10"
+        android:id="@+id/password_sign_up" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="Password Confirm"
+        android:ems="10"
+        android:id="@+id/passwordConfirm_sign_up" />
+
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="First Name"
@@ -53,35 +69,19 @@
         android:id="@+id/LastNameEditText" />
 
     <EditText
-        android:layout_width="373dp"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:hint="Password"
-        android:ems="10"
-        android:id="@+id/editText2" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:hint="Password Confirm"
-        android:ems="10"
-        android:id="@+id/editText3" />
-
-    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="phone"
         android:hint="Phone Number"
         android:ems="10"
-        android:id="@+id/editText6"
+        android:id="@+id/phoneNum_sign_up"
         android:layout_gravity="center_horizontal" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="User Type"
-        android:id="@+id/textView8"
+        android:id="@+id/userType"
         android:layout_weight="0.09" />
 
     <LinearLayout
@@ -95,14 +95,14 @@
             android:layout_width="185dp"
             android:layout_height="match_parent"
             android:text="Sign up"
-            android:id="@+id/button"
+            android:id="@+id/sign_up_button"
             android:layout_weight="0.5" />
 
         <Button
             android:layout_width="185dp"
             android:layout_height="match_parent"
             android:text="Cancel"
-            android:id="@+id/button2"
+            android:id="@+id/cancel_button_sign_up"
             android:layout_weight="0.5" />
     </LinearLayout>
 
