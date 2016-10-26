@@ -22,10 +22,10 @@
             android:layout_weight="1"/>
 
         <Button
-            android:text="Set"
+            android:text="Log out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/setButton_acount" />
+            android:id="@+id/logoutButton_acount" />
     </LinearLayout>
 
     <RatingBar
