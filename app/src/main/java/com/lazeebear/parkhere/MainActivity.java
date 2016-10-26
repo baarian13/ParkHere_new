@@ -28,4 +28,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void openPaymentActivity(View view) {
+        Intent intent = new Intent(this, PaymentActivity.class);
+        startActivity(intent);
+    }
 }
