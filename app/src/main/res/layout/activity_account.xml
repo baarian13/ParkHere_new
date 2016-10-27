@@ -34,6 +34,17 @@
         android:id="@+id/ratingBar"
         android:layout_gravity="center_horizontal" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:id="@+id/phoneNumber"
+        android:text="phoneNumber"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:id="@+id/email"
+        android:text="email"/>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -46,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Search A Spot"
-            android:id="@+id/button5"
+            android:id="@+id/searchSpotButton_account"
             android:layout_weight="0.50" />
 
         <Button

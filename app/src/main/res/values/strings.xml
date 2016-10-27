@@ -76,4 +76,20 @@
     <string name="pay_by_paypal_label">Pay by Paypal</string>
     <string name="pay_by_credit_card_label">Pay by Credit Card</string>
     <string name="account_name">Account Name</string>
+
+    <!--create spot -->
+   <string name="flexible_option" formatted="false">
+       Users will receive a full refund, excluding ParkHere fee (10%), if cancellation occurs 24 hours or more before rental period.\n
+       Users will receive no refund if their cancellation occurs less 24 hours before the rental period.\n
+       Users who leave early will receive a refund for the hours not spent in the space 24 hours after their cancellation.
+   </string>
+   <string name="moderate_option" formatted="false">
+       Users will receive a full refund, excluding ParkHere fee (10%), if cancellation occurs five days or more before rental period.\n
+       Users will receive a refund for 50% of the rental fees for the entire rental period excluding the first 24 hours.\n
+       Users who leave early will receive a refund for 50% of the hours not spent in the space 24 hours after their cancellation.
+   </string>
+   <string name="strict_option" formatted="false">
+       Users will receive a 50% refund if cancellation occurs seven days or more before rental period.\n
+       If the user cancels less than 7 days in advance of the rental period, no value will be refunded.
+   </string>
 </resources>
