@@ -4,7 +4,9 @@ Created on Oct 17, 2016
 @author: henrylevy
 '''
 import tornado.gen
+from DataObjects.User import User
 from Controller.UserHandlers.AbstractUserHandler import AbstractUserHandler
+from FunctionalUtils import createSalt, saltPassword
 
 SUCCESS = 200
 FAILURE = 401
@@ -38,17 +40,20 @@ class SignUpHandler(AbstractUserHandler):
             partial: 206
         '''
         result = SUCCESS
-        args = {'email'      : self.get_argument("email", ""),
-                'password'   : self.get_argument("password", ""),
-                'first'      : self.get_argument("first", ""),
-                'last'       : self.get_argument("last", ""),
-                'phone'      : self.get_argument("phone", ""),
-                'seeker'     : self.get_argument("seeker", ""),
-                'owner'      : self.get_argument("owner", "")}
-        (userId, success) = self.db.createUser(**args)
-        
+        salt = createSalt()
+        args = {'email'          : self.get_argument("email", ""),
+                'saltedPassword' : saltPassword(self.get_argument("password", ""), salt),
+                'salt'           : salt,
+                'firstName'      : self.get_argument("first", ""),
+                'lastName'       : self.get_argument("last", ""),
+                'phone'          : self.get_argument("phone", ""),
+                'isSeeker'       : self.get_argument("seeker", ""),
+                'isOwner'        : self.get_argument("owner", "")}
+        user = User(**args)
+        self.db.insertIntoTable(user)
+        userId = self.get_argument("email", "")
         profilePic = self.get_argument("profilePic", "")
-        if not success: result = FAILURE
+        if not userId: result = FAILURE
         elif profilePic: # profile picture support not implemented
             (picId, success) = self.db.submitPicture(userId, profilePic)
             

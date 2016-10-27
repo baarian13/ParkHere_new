@@ -16,12 +16,13 @@ class User(DatabaseObject):
                         isOwner BOOL NOT NULL,
                         saltedPassword VARCHAR(200) NOT NULL,
                         salt VARCHAR(100) NOT NULL,
+                        phone VARCHAR(100) NOT NULL,
                         profilePicturePath VARCHAR(200),
                         PRIMARY KEY (email));'''.format(TABLE_NAME)
     
     def __init__(self, firstName, lastName, isSeeker,
                  isOwner, saltedPassword, salt, email,
-                 profilePicturePath=None):
+                 phone, profilePicturePath=None):
         '''
         :type firstName: str
         :type lastName: str
@@ -37,6 +38,7 @@ class User(DatabaseObject):
         self.isSeeker = isSeeker
         self.isOwner = isOwner
         self.saltedPassword = saltedPassword
+        self.phone = phone
         self.salt = salt
         self.email = email
         self.profilePicturePath = profilePicturePath
@@ -79,7 +81,7 @@ class User(DatabaseObject):
         '''
         :rtype: str
         '''
-        params = '''email, firstName, lastName, isSeeker, isOwner, saltedPassword, salt, profilePicturePath'''
+        params = '''email, firstName, lastName, isSeeker, isOwner, saltedPassword, salt, phone, profilePicturePath'''
         values = '''{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}'''.format(self.email, self.firstName,
             self.lastName, self.isSeeker, self.isOwner, self.saltedPassword, self.salt, self.profilePicturePath or 0)
         return """INSERT INTO {0} ({1}) VALUES ({2}); """.format(self.TABLE_NAME, params, values)    
