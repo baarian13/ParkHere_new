@@ -49,20 +49,20 @@ class Spot(DatabaseObject):
         '''
         assert spotType in self.SPOT_TYPES
         
-        self.address = address
-        self.spotType = spotType
-        self.ownerEmail = ownerEmail
-        self.isBooked = isBooked
-        self.price = Decimal(price).quantize(Decimal('.01'), rounding=ROUND_DOWN)
-        self.startDate = "{0}-{1}-{2}".format(startDate.year,
-                                              startDate.month,
-                                              startDate.day)
-        self.endDate   = "{0}-{1}-{2}".format(endDate.year,
-                                              endDate.month,
-                                              endDate.day)
+        self.address     = address
+        self.spotType    = spotType
+        self.ownerEmail  = ownerEmail
+        self.isBooked    = isBooked
         self.renterEmail = renterEmail
+        self.isCovered   = isCovered
+        self.price       = Decimal(price).quantize(Decimal('.01'), rounding=ROUND_DOWN)
+        self.startDate   = "{0}-{1}-{2}".format(startDate.year,
+                                                startDate.month,
+                                                startDate.day)
+        self.endDate     = "{0}-{1}-{2}".format(endDate.year,
+                                                endDate.month,
+                                                endDate.day)
         self.latitude, self.longitude = getLatitudeLongitude(self.address)
-        self.isCovered = isCovered
         self.data = {'address'     : address,
                      'spotType'    : spotType,
                      'ownerEmail'  : ownerEmail,
