@@ -18,15 +18,13 @@ public class Search extends AppCompatActivity {
     private TimePickerDialog timePicker;
     private TextView search_date_textview, search_time_textview;
     private Button search_date_button, search_time_button;
+    private Calendar c;
+    private int year, month, day, hour, minute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
-        //---local variables---//
-        Calendar c;
-        int year, month, day, hour, minute;
 
         //===Search by date===//
         search_date_textview = (TextView) findViewById(R.id.search_date_textview);
@@ -35,6 +33,19 @@ public class Search extends AppCompatActivity {
             @Override
             public void onClick(View view) {showDatePicker(view);}
         });
+        createDatePicker();
+
+        //===Search by time===//
+        search_time_textview = (TextView) findViewById(R.id.search_time_textview);
+        search_time_button = (Button) findViewById(R.id.search_time_button);
+        search_time_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {showTimePicker(view);}
+        });
+       createTimePicker();
+    }
+
+    private void createDatePicker(){
         //===Search by date: DatePicker===//
         // Use the current date as the default date in the picker
         c = Calendar.getInstance();
@@ -50,14 +61,9 @@ public class Search extends AppCompatActivity {
             }
         };
         datePicker = new DatePickerDialog(this, onDateSetHandler, year, month, day);
+    }
 
-        //===Search by time===//
-        search_time_textview = (TextView) findViewById(R.id.search_time_textview);
-        search_time_button = (Button) findViewById(R.id.search_time_button);
-        search_time_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {showTimePicker(view);}
-        });
+    private void createTimePicker() {
         //===Search by date: DatePicker===//
         // Use the current date as the default date in the picker
         hour = c.get(Calendar.HOUR_OF_DAY);
