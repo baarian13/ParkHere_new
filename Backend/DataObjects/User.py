@@ -17,12 +17,15 @@ class User(DatabaseObject):
                         saltedPassword VARCHAR(200) NOT NULL,
                         salt VARCHAR(100) NOT NULL,
                         phone VARCHAR(100) NOT NULL,
+                        numReviews INT NOT NULL,
+                        rating FLOAT NOT NULL,
                         profilePicturePath VARCHAR(200),
                         PRIMARY KEY (email));'''.format(TABLE_NAME)
     
     def __init__(self, firstName, lastName, isSeeker,
                  isOwner, saltedPassword, salt, email,
-                 phone, profilePicturePath=None):
+                 phone, profilePicturePath=None, 
+                 numReviews=0, rating=0):
         '''
         :type firstName: str
         :type lastName: str
@@ -31,17 +34,33 @@ class User(DatabaseObject):
         :type saltedPassword: str
         :type salt: str
         :type email: str
+        :type phone: str
         :type profilePicturePath: str
+        :type numReviews: int
+        :type rating: int
         '''
-        self.firstName = firstName
-        self.lastName = lastName
-        self.isSeeker = isSeeker
-        self.isOwner = isOwner
-        self.saltedPassword = saltedPassword
-        self.phone = phone
-        self.salt = salt
-        self.email = email
+        self.firstName          = firstName
+        self.lastName           = lastName
+        self.isSeeker           = isSeeker
+        self.isOwner            = isOwner
+        self.saltedPassword     = saltedPassword
+        self.phone              = phone
+        self.salt               = salt
+        self.email              = email
         self.profilePicturePath = profilePicturePath
+        self.numReviews         = numReviews
+        self.rating             = rating
+        self.data = {'firstName'          : firstName,
+                     'lastName'           : lastName,
+                     'isSeeker'           : isSeeker,
+                     'isOwner'            : isOwner,
+                     'saltedPassword'     : saltedPassword,
+                     'phone'              : phone,
+                     'salt'               : salt,
+                     'email'              : email,
+                     'profilePicturePath' : profilePicturePath,
+                     'numReviews'         : numReviews,
+                     'rating'             : rating}
     
     @classmethod
     def getSaltQuery(cls, email):
@@ -57,7 +76,7 @@ class User(DatabaseObject):
         :type email: str
         :type saltedPwd: str
         '''
-        return '''SELECT salt FROM {0}
+        return '''SELECT * FROM {0}
                     WHERE email = \'{1}\' AND
                     saltedPassword = \'{2}\';'''.format(cls.TABLE_NAME, email, saltedPwd)
     
@@ -76,12 +95,4 @@ class User(DatabaseObject):
         :rtype: bool
         '''
         return saltPassword(password, self.salt) == self.saltedPassword
-
-    def asInsertStatement(self):
-        '''
-        :rtype: str
-        '''
-        params = '''email, firstName, lastName, isSeeker, isOwner, saltedPassword, salt, phone, profilePicturePath'''
-        values = '''{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}'''.format(self.email, self.firstName,
-            self.lastName, self.isSeeker, self.isOwner, self.saltedPassword, self.salt, self.profilePicturePath or 0)
-        return """INSERT INTO {0} ({1}) VALUES ({2}); """.format(self.TABLE_NAME, params, values)    
+    

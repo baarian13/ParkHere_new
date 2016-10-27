@@ -10,5 +10,8 @@ class DatabaseObject(object):
     '''
     TABLE_NAME = ""
     
+    def __init__(self):
+        self.data = {}
+    
     def asInsertStatement(self):
-        raise NotImplementedError()
+        return """INSERT INTO {0} {1} VALUES ({2});""".format(self.TABLE_NAME, self.data.keys(), self.data.values())
