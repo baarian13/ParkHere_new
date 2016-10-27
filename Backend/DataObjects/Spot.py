@@ -23,6 +23,7 @@ class Spot(DatabaseObject):
                     latitude FLOAT NOT NULL,
                     longitude FLOAT NOT NULL,
                     isCovered BOOL NOT NULL,
+                    cancelationPolicy SMALLINT NOT NULL,
                     FOREIGN KEY (renterEmail) REFERENCES USERS(email),
                     FOREIGN KEY (ownerEmail) REFERENCES USERS(email),
                     PRIMARY KEY (ID));'''.format(TABLE_NAME)
@@ -31,11 +32,15 @@ class Spot(DatabaseObject):
                   1 : 'compact',
                   2 : 'regular car',
                   3 : 'truck'}
+    CANCELATION_POLICIES = {0 : 'flexible',
+                            1 : 'moderate',
+                            2 : 'strict'}
     
     def __init__(self, address, spotType,
                  ownerEmail, isBooked, price,
                  startDate, endDate, 
-                 isCovered, renterEmail=None):
+                 isCovered, cancelationPolicy,
+                 renterEmail=None):
         '''
             :type address: str
             :type spotType: int
@@ -45,35 +50,42 @@ class Spot(DatabaseObject):
             :type startDate: date
             :type endDate: date
             :type isCovered: bool
+            :type cancelationPolicy: int
             :type renterEmail: str or None
         '''
         assert spotType in self.SPOT_TYPES
+        assert cancelationPolicy in self.CANCELATION_POLICIES
         
-        self.address     = address
-        self.spotType    = spotType
-        self.ownerEmail  = ownerEmail
-        self.isBooked    = isBooked
-        self.renterEmail = renterEmail
-        self.isCovered   = isCovered
-        self.price       = Decimal(price).quantize(Decimal('.01'), rounding=ROUND_DOWN)
-        self.startDate   = "{0}-{1}-{2}".format(startDate.year,
-                                                startDate.month,
-                                                startDate.day)
-        self.endDate     = "{0}-{1}-{2}".format(endDate.year,
-                                                endDate.month,
-                                                endDate.day)
+        self.address           = address
+        self.spotType          = spotType
+        self.ownerEmail        = ownerEmail
+        self.isBooked          = isBooked
+        self.renterEmail       = renterEmail
+        self.isCovered         = isCovered
+        self.cancelationPolicy = cancelationPolicy
+        self.price             = Decimal(price).quantize(Decimal('.01'), rounding=ROUND_DOWN)
+        self.startDate         = startDate
+        self.endDate           = endDate
+        self.startDateStr      = "{0}-{1}-{2}".format(startDate.year,
+                                                      startDate.month,
+                                                      startDate.day)
+        self.endDateStr        = "{0}-{1}-{2}".format(endDate.year,
+                                                      endDate.month,
+                                                      endDate.day)
         self.latitude, self.longitude = getLatitudeLongitude(self.address)
-        self.data = {'address'     : address,
-                     'spotType'    : spotType,
-                     'ownerEmail'  : ownerEmail,
-                     'isBooked'    : isBooked,
-                     'price'       : self.price,
-                     'startDate'   : startDate,
-                     'endDate'     : endDate,
-                     'renterEmail' : renterEmail,
-                     'latitude'    : self.latitude,
-                     'longitude'   : self.longitude,
-                     'isCovered'   : isCovered}
+        
+        self.data = {'address'           : address,
+                     'spotType'          : spotType,
+                     'ownerEmail'        : ownerEmail,
+                     'isBooked'          : isBooked,
+                     'price'             : self.price,
+                     'startDate'         : self.startDateStrs,
+                     'endDate'           : self.endDateStr,
+                     'renterEmail'       : renterEmail,
+                     'latitude'          : self.latitude,
+                     'longitude'         : self.longitude,
+                     'isCovered'         : isCovered,
+                     'cancelationPolicy' : cancelationPolicy}
         if not self.renterEmail:
             self.data.pop('renterEmail')
 
@@ -93,8 +105,4 @@ class Spot(DatabaseObject):
 
     def isValidSpot(self): 
         return self.startDate < date.today() < self.endDate
-    
-    def getSpotType(self):
-        assert self.spotType in self.SPOT_TYPES
-        return self.SPOT_TYPES.get(self.spotType)
 
