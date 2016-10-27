@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Search A Spot"
-            android:id="@+id/button5"
+            android:id="@+id/searchSpotButton_account"
             android:layout_weight="0.50" />
 
         <Button
