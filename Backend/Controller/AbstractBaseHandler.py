@@ -10,8 +10,10 @@ class AbstractBaseHandler(tornado.web.RequestHandler):
         return self.get_secure_cookie("user")
     
     def get(self):
+        print "test"
         if not self.current_user:
             self.redirect("/signin")
+        print "test2"
 
 class MainHandler(AbstractBaseHandler):
     pass

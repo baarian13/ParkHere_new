@@ -14,9 +14,9 @@ settings = {
     "login_url": "/signin",
 }
 application = tornado.web.Application([
-    (r"/", MainHandler),
-    (r"/signin", SigninHandler),
-    (r"/signup", SignUpHandler),
+    ("/", MainHandler),
+    ("/signin", SigninHandler),
+    ("/signup", SignUpHandler),
 ], **settings)
 
 def main():
