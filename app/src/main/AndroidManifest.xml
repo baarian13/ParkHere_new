@@ -66,6 +66,7 @@
             android:name=".ForgotPasswordActivity"
             android:label="Forgot Password"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".CreateSpotActivity"/>
     </application>
 
 </manifest>

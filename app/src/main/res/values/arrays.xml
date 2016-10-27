@@ -19,4 +19,9 @@
         <item>No</item>
     </string-array>
 
+    <string-array name="cancellation_policy">
+        <item>Flexible</item>
+        <item>Moderate</item>
+        <item>Strict</item>
+    </string-array>
 </resources>
