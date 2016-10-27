@@ -32,4 +32,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PaymentActivity.class);
         startActivity(intent);
     }
+
+    public void openForgotPasswordActivity(View view){
+        Intent intent = new Intent(this, ForgotPasswordActivity.class);
+        startActivity(intent);
+    }
 }

@@ -61,7 +61,11 @@
             android:name=".Account"
             android:label="Account"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".PaymentActivity"></activity>
+        <activity android:name=".PaymentActivity" />
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:label="Forgot Password"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
