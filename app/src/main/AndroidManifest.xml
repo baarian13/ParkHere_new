@@ -56,7 +56,12 @@
         <activity
             android:name=".SignUpActivity"
             android:label="@string/title_activity_sign_up"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Account"
+            android:label="Account"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".PaymentActivity"></activity>
     </application>
 
 </manifest>

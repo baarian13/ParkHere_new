@@ -17,4 +17,19 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
+
+    public void openSearchActivity(View view) {
+        Intent intent = new Intent(this, Search.class);
+        startActivity(intent);
+    }
+
+    public void openAccountActivity(View view) {
+        Intent intent = new Intent(this, Account.class);
+        startActivity(intent);
+    }
+
+    public void openPaymentActivity(View view) {
+        Intent intent = new Intent(this, PaymentActivity.class);
+        startActivity(intent);
+    }
 }
