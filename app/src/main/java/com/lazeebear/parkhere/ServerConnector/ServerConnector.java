@@ -1,7 +1,10 @@
 package com.lazeebear.parkhere.ServerConnector;
 
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotListDAO;
+import com.lazeebear.parkhere.DAOs.SentObjects.BookDAO;
+import com.lazeebear.parkhere.DAOs.SentObjects.RateDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentSpotDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentUserDAO;
 
@@ -119,10 +122,6 @@ public class ServerConnector {
         return entity.getStatusCode().value();
     }
 
-
-
-
-    public static final String viewUserEndpoint = "/view/user";
     /*
     Send:
         String email
@@ -133,23 +132,52 @@ public class ServerConnector {
         String phoneNumber
         String email
     */
-    public static final String rateUserEndpoint = "/rate";
+    public static ReturnedUserDAO viewUser(String email) {
+        String url = Configs.baseURL + Configs.viewUserEndpoint;
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<ReturnedUserDAO> entity = restTemplate.getForEntity(url, ReturnedUserDAO.class);
+
+        return entity.getBody();
+    }
+
     /*
     Send:
         Int spotID
+        Int rating
     Returns:
         Success - 200 returned
         Failure - 401 returned
     */
+    // TODO, consider put - put returns void
+    public static int rateUser(RateDAO rating) {
+        String url = Configs.baseURL + Configs.rateUserEndpoint;
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity entity = restTemplate.postForEntity(url, rating, Object.class);
+
+        return entity.getStatusCode().value();
+    }
+
     public static final String bookSpotEndpoint = "/book";
     /*
     Send:
         Int spotID
+        String email
     Returns:
         Success - 200 returned
         Failure - 401 returned
     */
-    public static final String deleteSpotEndpoint = "/delete";
+    // TODO, consider put - put returns void
+    public static int bookSpot(BookDAO booking) {
+        String url = Configs.baseURL + Configs.bookSpotEndpoint;
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity entity = restTemplate.postForEntity(url, booking, Object.class);
+
+        return entity.getStatusCode().value();
+    }
+
     /*
     Send:
         Int spotID
@@ -157,21 +185,46 @@ public class ServerConnector {
         Success - 200 returned
         Failure - 401 returned
     */
-    public static final String viewRentalsEndpoint = "/view/rentals";
+    // TODO, consider put - put returns void
+    public static int deleteSpot(int spotID) {
+        String url = Configs.baseURL + Configs.deleteSpotEndpoint;
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity entity = restTemplate.postForEntity(url, spotID, Object.class);
+
+        return entity.getStatusCode().value();
+    }
+
     /*
     Send:
         String email
     Returns:
         List<spot> spots
      */
-    public static final String viewPostingsEndpoint = "/view/postings";
+    public static SpotListDAO viewRentals(String email) {
+        String url = Configs.baseURL + Configs.viewRentalsEndpoint + "?email=" + email;
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<SpotListDAO> entity = restTemplate.getForEntity(url, SpotListDAO.class);
+
+        return entity.getBody();
+    }
+
     /*
     Send:
-        Int userID
+        String email
     Returns:
         List<spot> spots
      */
-    public static final String forgotPasswordEndpoint = "/password/reset";
+    public static SpotListDAO viewPostings(String email) {
+        String url = Configs.baseURL + Configs.viewPostingsEndpoint + "?email=" + email;
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<SpotListDAO> entity = restTemplate.getForEntity(url, SpotListDAO.class);
+
+        return entity.getBody();
+    }
+
     /*
     Send:
         String email
@@ -179,6 +232,15 @@ public class ServerConnector {
         Success - 200 returned
         Failure - 401 returned
     */
+    // TODO, consider put - put returns void
+    public static int forgotPassword(String email) {
+        String url = Configs.baseURL + Configs.forgotPasswordEndpoint + "?email=" + email;
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity entity = restTemplate.getForEntity(url, Object.class);
+
+        return entity.getStatusCode().value();
+    }
 
 
 

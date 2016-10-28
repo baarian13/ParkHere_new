@@ -100,6 +100,7 @@ public class Configs {
     /*
     Send:
         Int spotID
+        Int rating
     Returns:
         Success - 200 returned
         Failure - 401 returned
@@ -108,6 +109,7 @@ public class Configs {
     /*
     Send:
         Int spotID
+        String email
     Returns:
         Success - 200 returned
         Failure - 401 returned
@@ -130,7 +132,7 @@ public class Configs {
     public static final String viewPostingsEndpoint = "/view/postings";
     /*
     Send:
-        Int userID
+        String email
     Returns:
         List<spot> spots
      */
