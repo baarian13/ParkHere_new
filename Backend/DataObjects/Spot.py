@@ -11,6 +11,7 @@ from FunctionalUtils import getLatitudeLongitude
 class Spot(DatabaseObject):
     TABLE_NAME = "SPOTS"
     TABLE_CREATE_STATEMENT = '''CREATE TABLE IF NOT EXISTS {0}(
+                    ID INT AUTO_INCREMENT,
                     renterEmail VARCHAR(100),
                     ownerEmail VARCHAR(100) NOT NULL,
                     price DECIMAL(10, 2) NOT NULL,
@@ -25,7 +26,8 @@ class Spot(DatabaseObject):
                     isRecurring BOOL NOT NULL,
                     cancelationPolicy SMALLINT NOT NULL,
                     FOREIGN KEY (renterEmail) REFERENCES USERS(email),
-                    FOREIGN KEY (ownerEmail) REFERENCES USERS(email));'''.format(TABLE_NAME)
+                    FOREIGN KEY (ownerEmail) REFERENCES USERS(email))
+                    PRIMARY KEY (ID));'''.format(TABLE_NAME)
     MILES_MAGIC = 3959
     SPOT_TYPES = {0 : 'motorcycle',
                   1 : 'compact',
@@ -89,7 +91,7 @@ class Spot(DatabaseObject):
 
     @classmethod
     def searchByDistanceQuery(cls, latitude, longitude, maxDistance=25, maxResults=20):
-        return '''SELECT address, start, end, 
+        return '''SELECT ID, address, start, end, 
     ({0} * acos( cos( radians({1}) ) * cos( radians( latitude) ) * cos( radians(longitude) - radians({2}) ) + sin( radians({1}) ) * sin( radians( latitude ) ) ) ) AS distance
     FROM SPOTS HAVING distance < {3} ORDER BY distance LIMIT 0 , {4};'''.format(cls.MILES_MAGIC, latitude, longitude, maxDistance, maxResults)
 

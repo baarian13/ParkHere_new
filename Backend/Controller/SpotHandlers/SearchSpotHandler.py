@@ -13,9 +13,10 @@ class SearchSpotHandler(AbstractSpotHandler):
     @tornado.gen.coroutine
     def get(self):
         print self.get_argument("address")
-        results = [{'address'  : res[0],
-                    'start'    : str(res[1]),
-                    'end'      : str(res[2]),
-                    'distance' : res[3]}
+        results = [{'id'       : res[0],
+                    'address'  : res[1],
+                    'start'    : str(res[2]),
+                    'end'      : str(res[3]),
+                    'distance' : res[4]}
             for res in self.db.searchForSpots(self.get_argument("address"))]
         self.write(json.dumps(results))
