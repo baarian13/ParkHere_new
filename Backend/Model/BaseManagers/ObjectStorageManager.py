@@ -10,7 +10,7 @@ from boto.s3.key import Key
 
 class ObjectStorageManager(object):
     
-    def __init__(self, bucket, user, password):
+    def __init__(self, bucket, user=None, password=None):
         '''
         :type bucket: str
         :type user: str

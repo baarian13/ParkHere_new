@@ -3,7 +3,7 @@ Created on Jan 3, 2016
 
 @author: henrylevy
 '''
-import MySQLdb
+import MySQLdb, os
 from _mysql_exceptions import ProgrammingError
 from DataObjects.DatabaseObject import DatabaseObject
 from Model.BaseManagers.ObjectStorageManager import ObjectStorageManager
@@ -38,19 +38,20 @@ class SQLDatabaseManager(object):
                                    port   = self.port,
                                    db     = self.database)
         self._cursor = self.db.cursor()
-        self._objStorageManager = ObjectStorageManager('parkhereapp', 'AKIAIZH42RFDPBIWJIYQ',
-                                                       't2cFVxQckGNragrpyWkLvwgPcWCzOdfoOz6IwyB0')
+        print os.getenv('AWS_ACCESS_KEY_ID', '')
+        self._objStorageManager = ObjectStorageManager('parkhereapp')
 
     @property
     def objStorageManager(self):
         if not self._dbManager:
-            self._objStorageManager = ObjectStorageManager('parkhereapp', 'parkhere.app',
-                                                           'password')
+            self._objStorageManager = ObjectStorageManager('parkhereapp')
         return self._objStorageManager
     
     def __del__(self):
-        self.db.close()
-        self.cursor.close()
+        if self.db:
+            self.db.close()
+        if self.cursor:
+            self.cursor.close()
     
     @property
     def db(self):

@@ -61,7 +61,8 @@ class User(DatabaseObject):
                      'profilePicturePath' : profilePicturePath,
                      'numReviews'         : numReviews,
                      'rating'             : rating}
-            
+        if not profilePicturePath:
+            self.data.pop('profilePicturePath')
     
     @classmethod
     def getSaltQuery(cls, email):
