@@ -47,20 +47,21 @@ class User(DatabaseObject):
         self.phone              = phone
         self.salt               = salt
         self.email              = email
-        self.profilePicturePath = profilePicturePath
+        self.profilePicturePath = profilePicturePath or ''
         self.numReviews         = numReviews
         self.rating             = rating
-        self.data = {'firstName'          : firstName,
-                     'lastName'           : lastName,
-                     'isSeeker'           : isSeeker,
-                     'isOwner'            : isOwner,
+        self.data = {'firstName'          : str(firstName),
+                     'lastName'           : str(lastName),
+                     'isSeeker'           : bool(isSeeker),
+                     'isOwner'            : bool(isOwner),
                      'saltedPassword'     : saltedPassword,
-                     'phone'              : phone,
+                     'phone'              : str(phone),
                      'salt'               : salt,
-                     'email'              : email,
+                     'email'              : str(email),
                      'profilePicturePath' : profilePicturePath,
                      'numReviews'         : numReviews,
                      'rating'             : rating}
+            
     
     @classmethod
     def getSaltQuery(cls, email):

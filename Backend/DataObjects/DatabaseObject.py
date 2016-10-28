@@ -14,4 +14,6 @@ class DatabaseObject(object):
         self.data = {}
     
     def asInsertStatement(self):
-        return """INSERT INTO {0} {1} VALUES ({2});""".format(self.TABLE_NAME, self.data.keys(), self.data.values())
+        return """INSERT INTO {0} {1} VALUES {2};""".format(self.TABLE_NAME,
+                                                              str(tuple(self.data.keys())).replace('\'', ''),
+                                                              tuple(self.data.values()))

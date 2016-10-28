@@ -38,8 +38,8 @@ class SQLDatabaseManager(object):
                                    port   = self.port,
                                    db     = self.database)
         self._cursor = self.db.cursor()
-        self._objStorageManager = ObjectStorageManager('parkhereapp', 'parkhere.app',
-                                                       'password')
+        self._objStorageManager = ObjectStorageManager('parkhereapp', 'AKIAIZH42RFDPBIWJIYQ',
+                                                       't2cFVxQckGNragrpyWkLvwgPcWCzOdfoOz6IwyB0')
 
     @property
     def objStorageManager(self):
@@ -107,7 +107,7 @@ class SQLDatabaseManager(object):
         :type tries: int
         :type time_out: int
         '''
-        
+        print query
         try:
             db = MySQLdb.connect(host   = self.host,
                                  user   = self.user,
@@ -131,7 +131,7 @@ class SQLDatabaseManager(object):
         :type tablename: str
         '''
         database = database or self.database
-        return bool(self.execute(self.TABLE_EXISTS_QUERY.format(str(tablename).replace('\'', '\'\'')), database=database)[0][0])
+        return bool(len(self.execute(self.TABLE_EXISTS_QUERY.format(str(tablename).replace('\'', '\'\'')), database=database)[0]))
     
     def createDatabase(self, database):
         query = '''
@@ -143,7 +143,7 @@ class SQLDatabaseManager(object):
         '''
         :type dbObject: DatabaseObject
         '''
-        self.create_table()
+        self.createTable()
         self.execute(dbObject.asInsertStatement())
 
     def createTable(self):

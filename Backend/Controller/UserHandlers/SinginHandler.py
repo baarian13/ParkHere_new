@@ -14,6 +14,20 @@ class SigninHandler(AbstractUserHandler):
     '''
     
     @tornado.gen.coroutine
+    def get(self):
+        '''
+        -Each argument is specified in URL format.
+        -If an argument is not specified  then the creation will fail.
+        -writes success if everything writes failure if user could not be authenticated
+        -if success token is set, if not, token is not set and client must try again
+        args:
+            email->str (no checks performed-assumed on client side)
+            password->str (no checks performed-assumed on client side)
+        '''
+        print "getting"
+        self.write("authentication failed")
+    
+    @tornado.gen.coroutine
     def post(self):
         '''
         -Each argument is specified in URL format.
