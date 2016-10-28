@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+    <!-- To allow the app to consume RESTful Webservice -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- To allow the app to save a photo -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--

@@ -14,12 +14,12 @@ public class Configs {
         String password
     Returns:
         Success - 200 returned
-        Partial Success - 206 returned (Profile photo submission unsuccessful
         Failure - 401 returned
     */
     public static final String signupEndpoint = "/signup";
     /*
     Send:
+       String username
        String email
        String password
        String firstName
@@ -65,7 +65,7 @@ public class Configs {
         TIME startTime
         TIME endTime
         String description
-        String price
+        Float price
         Int rating
      */
     public static final String postSpotEndpoint = "/post/spot";
@@ -91,8 +91,9 @@ public class Configs {
         String email
     Returns:
         String username
-        Int Rating
-        Int PhoneNumber
+        String email
+        Int rating
+        String phoneNumber
         String email
     */
     public static final String rateUserEndpoint = "/rate";
