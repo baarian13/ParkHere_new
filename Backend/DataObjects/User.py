@@ -89,7 +89,7 @@ class User(DatabaseObject):
         :type path: str
         :rtype: str
         '''
-        return '''UPDATE {0} SET profilePicturePath={1} WHERE email={2}'''.format(cls.TABLE_NAME, path, email)
+        return '''UPDATE {0} SET profilePicturePath=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, path, email)
     
     def checkPassword(self, password): 
         '''

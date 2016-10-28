@@ -8,9 +8,9 @@ from DataObjects.User import User
 from Controller.UserHandlers.AbstractUserHandler import AbstractUserHandler
 from FunctionalUtils import createSalt, saltPassword
 
-SUCCESS = 200
-FAILURE = 401
-PARTIAL = 206
+SUCCESS = '200'
+FAILURE = '401'
+PARTIAL = '206'
     
 class SignUpHandler(AbstractUserHandler):
     '''
@@ -55,8 +55,8 @@ class SignUpHandler(AbstractUserHandler):
         profilePic = self.get_argument("profilePic", "")
         if not userId: result = FAILURE
         elif profilePic: # profile picture support not implemented
-            (picId, success) = self.db.submitPicture(userId, profilePic)
-            
-            if success: self.db.addUserPicture(userId, picId)
-            else: result = PARTIAL
+            try:
+                self.db.submitPicture(userId, profilePic)
+            except:
+                result = PARTIAL
         self.write(result)

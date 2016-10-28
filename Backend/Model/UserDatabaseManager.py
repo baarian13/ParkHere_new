@@ -29,7 +29,7 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         '''
         path = 'profilePictures/{0}'.format(email)
         self.objStorageManager.uploadMedia(path, pictureString)
-        self.cursor.execute(User.updateProfilePictureQuery(email, path))
+        self.execute(User.updateProfilePictureQuery(email, path))
 
     def authenticate(self, email, password):
         '''
@@ -37,7 +37,7 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         :type password: str
         '''
         saltedPwd = self.hash(password, self.getSalt(email))
-        self.cursor.execute(User.getUserInfoQuery(email, saltedPwd))
+        self.execute(User.getUserInfoQuery(email, saltedPwd))
         return len(self.cursor.fetchall()) > 0
 
     def createSalt(self):
@@ -47,7 +47,7 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         '''
         :type email: str
         '''
-        self.cursor.execute(User.getSaltQuery(email))
+        self.execute(User.getSaltQuery(email))
         return self.cursor.fetchall()[0][0]
     
     def hash(self, password, salt):

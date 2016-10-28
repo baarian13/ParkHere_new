@@ -43,7 +43,7 @@ class SQLDatabaseManager(object):
 
     @property
     def objStorageManager(self):
-        if not self._dbManager:
+        if not self._objStorageManager:
             self._objStorageManager = ObjectStorageManager('parkhereapp')
         return self._objStorageManager
     
@@ -119,7 +119,7 @@ class SQLDatabaseManager(object):
             curr.execute(query)
             vals = curr.fetchall()
             db.commit()
-            self.close()
+            db.close()
             return vals
         except ProgrammingError as e:
             if tries<time_out:
@@ -132,7 +132,7 @@ class SQLDatabaseManager(object):
         :type tablename: str
         '''
         database = database or self.database
-        return bool(len(self.execute(self.TABLE_EXISTS_QUERY.format(str(tablename).replace('\'', '\'\'')), database=database)[0]))
+        return bool(len(self.execute(self.TABLE_EXISTS_QUERY.format(str(tablename).replace('\'', '')), database=database)[0]))
     
     def createDatabase(self, database):
         query = '''
@@ -151,6 +151,6 @@ class SQLDatabaseManager(object):
         '''
         creates table if it doesn't already exist
         '''
-        if not self.tableExists(self.DB_OBJECT_CLASS, self.database):
+        if not self.tableExists(self.DB_OBJECT_CLASS.TABLE_NAME, self.database):
             self.execute(self.DB_OBJECT_CLASS.TABLE_CREATE_STATEMENT, database=self.database)
             
