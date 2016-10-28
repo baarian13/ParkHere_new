@@ -37,7 +37,7 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         :type password: str
         '''
         saltedPwd = self.hash(password, self.getSalt(email))
-        self.execute(User.getUserInfoQuery(email, saltedPwd))
+        self.cursor.execute(User.getUserInfoQuery(email, saltedPwd))
         return len(self.cursor.fetchall()) > 0
 
     def createSalt(self):
@@ -47,7 +47,7 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         '''
         :type email: str
         '''
-        self.execute(User.getSaltQuery(email))
+        self.cursor.execute(User.getSaltQuery(email))
         return self.cursor.fetchall()[0][0]
     
     def hash(self, password, salt):
