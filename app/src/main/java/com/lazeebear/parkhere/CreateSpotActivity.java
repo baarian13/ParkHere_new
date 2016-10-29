@@ -24,13 +24,14 @@ public class CreateSpotActivity extends AppCompatActivity {
     private Button upload_photo_button, submit_button;
     private DatePickerDialog startDatePicker, endDatePicker;
     private TimePickerDialog startTimePicker, endTimePicker;
+    private int year, month, day, hour, minute;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_spot);
-        setActionListeners();
+
 
         //===variables===//
         start_date = (TextView) findViewById(R.id.create_spot_start_date);
@@ -47,12 +48,16 @@ public class CreateSpotActivity extends AppCompatActivity {
         submit_button = (Button) findViewById(R.id.create_spot_submit_button);
 
         Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
+        year = c.get(Calendar.YEAR);
+        month = c.get(Calendar.MONTH);
+        day = c.get(Calendar.DAY_OF_MONTH);
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        minute = c.get(Calendar.MINUTE);
 
+        setActionListeners();
+    }
+
+    private void createPickers(){
         //===StartDatePicker===//
         start_date.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -115,6 +120,7 @@ public class CreateSpotActivity extends AppCompatActivity {
 
     private void setActionListeners(){
         setCancellationPolicyListener();
+        createPickers();
     }
 
     private void setCancellationPolicyListener(){
