@@ -56,3 +56,22 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         :type salt: str
         '''
         return saltPassword(password, salt)
+
+    def changePassword(self, email, saltedPassword):
+        self.execute(User.updatePassword(email, saltedPassword))
+
+    def changeFirst(self, email, name):
+        self.execute(User.updateFirst(email,name))
+
+
+    def changeLast(self, email, name):
+        self.execute(User.updateLast(email,name))  
+
+    def changePhone(self, email, phone):
+        self.execute(User.updatePhone(email,phone))    
+
+    def changeOwner(self, email, isOwner):
+        self.execute(User.updateOwner(email, isOwner)) 
+
+    def changeSeeker(self, email, isSeeker):
+        self.execute(User.updateSeeker(email,isSeeker)) 

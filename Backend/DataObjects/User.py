@@ -90,7 +90,16 @@ class User(DatabaseObject):
         :rtype: str
         '''
         return '''UPDATE {0} SET profilePicturePath=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, path, email)
-    
+
+    def updatePassword(cls, email, saltedPassword):
+        return '''UPDATE {0} SET saltedPassword=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, saltedPassword, email)
+
+    def updateFirst(cls, email, name):
+        return '''UPDATE {0} SET firstName=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, name, email)
+
+    def updateLast(cls, email, name):
+        return '''UPDATE {0} SET lastName=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, name, email)
+
     def checkPassword(self, password): 
         '''
         :type password: str
