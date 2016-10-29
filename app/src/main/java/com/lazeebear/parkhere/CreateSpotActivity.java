@@ -1,9 +1,14 @@
 package com.lazeebear.parkhere;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -15,6 +20,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Calendar;
 
 public class CreateSpotActivity extends AppCompatActivity {
@@ -25,6 +32,7 @@ public class CreateSpotActivity extends AppCompatActivity {
     private DatePickerDialog startDatePicker, endDatePicker;
     private TimePickerDialog startTimePicker, endTimePicker;
     private int year, month, day, hour, minute;
+    public static final int GET_FROM_GALLERY = 3; //request code for opening the gallery
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +129,7 @@ public class CreateSpotActivity extends AppCompatActivity {
     private void setActionListeners(){
         setCancellationPolicyListener();
         createPickers();
+        setUploadButtonListener();
     }
 
     private void setCancellationPolicyListener(){
@@ -147,4 +156,34 @@ public class CreateSpotActivity extends AppCompatActivity {
         });
     }
 
+    private void setUploadButtonListener() {
+        upload_photo_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
+            }
+
+        });
+    }
+
+    //opens the gallery when upload_photo_button is clicked
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //Detects request codes
+        if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
+            Uri selectedImage = data.getData();
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
 }
