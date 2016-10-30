@@ -74,4 +74,17 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         self.execute(User.updateOwner(email, isOwner)) 
 
     def changeSeeker(self, email, isSeeker):
-        self.execute(User.updateSeeker(email,isSeeker)) 
+        self.execute(User.updateSeeker(email,isSeeker))
+
+    def viewUserInfo(self, email):
+        self.cursor.execute(User.viewUserInfoQuery(email))
+        return self.cursor.fetchall()
+
+    def rateUser(self, email, rating):
+        self.cursor.execute(User.getRating(email))
+        results = self.cursor.fetchall()
+        oldrating = results[0]
+        numReviews = results[1]
+        rating = oldrating*numReviews + rating
+        numReviews += 1
+        self.execute(User.setRating(email, rating, numReviews))

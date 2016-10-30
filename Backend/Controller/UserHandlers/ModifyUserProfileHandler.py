@@ -6,6 +6,8 @@ Created on Oct 17, 2016
 import tornado.web
 import tornado.gen
 from Controller.UserHandlers.AbstractUserHandler import AbstractUserHandler
+from FunctionalUtils import createSalt, saltPassword
+
 
 SUCCESS = '200'
 FAILURE = '401'

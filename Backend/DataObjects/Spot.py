@@ -103,6 +103,13 @@ class Spot(DatabaseObject):
     def searchByRenterEmailQuery(cls, renterEmail):
         return '''SELECT ID, address, start, end, FROM SPOTS WHERE renterEmail = {0};'''.format(renterEmail)
 
+    @classmethod
+    def getOwner(cls, spotID):
+        return '''SELECT ownerEmail FROM SPOTS WHERE ID = {0};'''.format(spotID)
+
+    @classmethod
+    def viewSpotInfo(cls, spotID):
+
     def isValidSpot(self): 
         return self.start < date.today() < self.end
 

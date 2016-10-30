@@ -91,19 +91,40 @@ class User(DatabaseObject):
         '''
         return '''UPDATE {0} SET profilePicturePath=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, path, email)
 
+    @classmethod
     def updatePassword(cls, email, saltedPassword):
         return '''UPDATE {0} SET saltedPassword=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, saltedPassword, email)
 
+    @classmethod
     def updateFirst(cls, email, name):
         return '''UPDATE {0} SET firstName=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, name, email)
 
+    @classmethod
     def updateLast(cls, email, name):
         return '''UPDATE {0} SET lastName=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, name, email)
 
+    @classmethod
+    def updatePhone(cls, email, phone):
+        return '''UPDATE {0} SET phone=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, name, email)
+
+    @classmethod
     def checkPassword(self, password): 
         '''
         :type password: str
         :rtype: bool
         '''
         return saltPassword(password, self.salt) == self.saltedPassword
-    
+
+    @classmethod
+    def viewUserInfoQuery(cls, email):
+        return '''SELECT email, rating, phoneNumber, FROM {0}
+                    WHERE email = \'{1}\';'''.format(cls.TABLE_NAME, email)
+
+    @classmethod
+    def getRating(cls, email):
+        return '''SELECT rating, numReviews, FROM {0}
+                    WHERE email = \'{1}\';'''.format(cls.TABLE_NAME, email)
+
+    @classmethod
+    def setRating(cls, email, rating, numReviews):
+            return '''UPDATE {0} SET rating=\'{1}\' AND numReviews = \'{2}\' WHERE email=\'{3}\''''.format(cls.TABLE_NAME, rating, numReviews, email)
