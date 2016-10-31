@@ -63,7 +63,6 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
     def changeFirst(self, email, name):
         self.execute(User.updateFirst(email,name))
 
-
     def changeLast(self, email, name):
         self.execute(User.updateLast(email,name))  
 
@@ -78,11 +77,15 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
 
     def viewUserInfo(self, email):
         self.cursor.execute(User.viewUserInfoQuery(email))
-        return self.cursor.fetchall()
+        info = self.cursor.fetchall()[0]
+        self.cursor.execute(User.getPicturePath(email))
+        picturePath = self.cursor.fetchall()
+        info.append(self.objStorageManager.downloadPictureAsString(picturePath))
+        return info
 
     def rateUser(self, email, rating):
         self.cursor.execute(User.getRating(email))
-        results = self.cursor.fetchall()
+        results = self.cursor.fetchall()[0]
         oldrating = results[0]
         numReviews = results[1]
         rating = oldrating*numReviews + rating

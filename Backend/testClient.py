@@ -38,8 +38,10 @@ def signIn(http_client, email, password):
 def searchSpot(cookie, http_client, address):
     url = 'http://{0}:8888/search/spot'.format(ip)
     headers = {'Cookie'  : cookie}
+    print cookie
     args = urllib.urlencode({'address' : address})
     url = url + '?' + args
+    print url
     req = httpclient.HTTPRequest(url, 'GET', headers=headers)
     
     res = http_client.fetch(req)
@@ -48,7 +50,6 @@ def searchSpot(cookie, http_client, address):
 def postSpot(cookie, http_client, address, spotType, isCovered,
              cancelationPolicy, price, start, end, recurring):
     headers = {"Cookie": cookie}
-    print headers
     url = 'http://{0}:8888/post/spot'.format(ip)
     body = urllib.urlencode({'address'           : address,
                              'spotType'          : spotType,

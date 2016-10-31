@@ -66,11 +66,7 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
     
     def viewSpotInfo(self, spotID):
         self.cursor.execute(Spot.viewSpotInfo(spotID))
-        return cursor.fetchall()
-
-    def viewSpotRating(self, ownerEmail):
-        self.cursor.execute(Spot.viewOwnerRating(ownerEmail))
-        return cursor.fetchall()
+        return self.cursor.fetchall()
 
     def bookSpot(self, renterEmail, spotID):
         self.execute(Spot.bookSpot(renterEmail, spotID, False))

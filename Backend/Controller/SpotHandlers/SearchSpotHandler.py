@@ -12,7 +12,6 @@ class SearchSpotHandler(AbstractSpotHandler):
     @tornado.web.authenticated
     @tornado.gen.coroutine
     def get(self):
-        print self.get_argument("address")
         results = [{'id'       : res[0],
                     'address'  : res[1],
                     'start'    : str(res[2]),

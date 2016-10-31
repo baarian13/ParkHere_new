@@ -24,9 +24,10 @@ class Spot(DatabaseObject):
                     longitude FLOAT NOT NULL,
                     isCovered BOOL NOT NULL,
                     isRecurring BOOL NOT NULL,
+                    description VARCHAR,
                     cancelationPolicy SMALLINT NOT NULL,
                     FOREIGN KEY (renterEmail) REFERENCES USERS(email),
-                    FOREIGN KEY (ownerEmail) REFERENCES USERS(email))
+                    FOREIGN KEY (ownerEmail) REFERENCES USERS(email),
                     PRIMARY KEY (ID));'''.format(TABLE_NAME)
     MILES_MAGIC = 3959
     SPOT_TYPES = {0 : 'motorcycle',
@@ -41,7 +42,7 @@ class Spot(DatabaseObject):
                  ownerEmail, isBooked, price,
                  start, end, isCovered,
                  cancelationPolicy, isRecurring,
-                 renterEmail=None):
+                 description="", renterEmail=None):
         '''
             :type address: str
             :type spotType: int
@@ -58,78 +59,62 @@ class Spot(DatabaseObject):
         assert spotType in self.SPOT_TYPES
         assert cancelationPolicy in self.CANCELATION_POLICIES
         
-        self.address           = address
+        self.address           = str(address)
         self.spotType          = spotType
-        self.ownerEmail        = ownerEmail
+        self.ownerEmail        = str(ownerEmail)
         self.isBooked          = isBooked
-        self.renterEmail       = renterEmail
+        self.renterEmail       = str(renterEmail or "")
         self.isCovered         = isCovered
         self.cancelationPolicy = cancelationPolicy
-        self.price             = Decimal(price).quantize(Decimal('.01'), rounding=ROUND_DOWN)
+        self.price             = str(Decimal(price).quantize(Decimal('.01'), rounding=ROUND_DOWN))
         self.start             = datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
         self.end               = datetime.strptime(end,   '%Y-%m-%d %H:%M:%S')
-        self.startStr          = start
-        self.endStr            = end
+        self.startStr          = str(start)
+        self.endStr            = str(end)
         self.isRecurring       = isRecurring
+        self.description       = description
         self.latitude, self.longitude = getLatitudeLongitude(self.address)
-        
-        self.data = {'address'           : str(address),
-                     'spotType'          : spotType,
-                     'ownerEmail'        : str(ownerEmail),
-                     'isBooked'          : isBooked,
-                     'price'             : str(self.price),
-                     'start'             : str(self.startStr),
-                     'end'               : str(self.endStr),
-                     'renterEmail'       : str(renterEmail),
-                     'latitude'          : self.latitude,
-                     'longitude'         : self.longitude,
-                     'isCovered'         : isCovered,
-                     'isRecurring'       : isRecurring,
-                     'cancelationPolicy' : cancelationPolicy}
-        if not self.renterEmail:
-            self.data.pop('renterEmail')
+
+    def __iter__(self):
+        return iter([('address'          , self.address),
+                     ('spotType'         , self.spotType),
+                     ('ownerEmail'       , self.ownerEmail),
+                     ('isBooked'         , self.isBooked),
+                     ('price'            , self.price),
+                     ('start'            , self.startStr),
+                     ('end'              , self.endStr),
+                     ('renterEmail'      , self.renterEmail),
+                     ('latitude'         , self.latitude),
+                     ('longitude'        , self.longitude),
+                     ('isCovered'        , self.isCovered),
+                     ('isRecurring'      , self.isRecurring),
+                     ('cancelationPolicy', self.cancelationPolicy)])
 
     @classmethod
     def searchByDistanceQuery(cls, latitude, longitude, maxDistance=25, maxResults=20):
-        return '''SELECT ID, address, start, end, 
+        return '''SELECT ID, address, start, end, spotType, ownerEmail,
+        renterEmail, isRecurring, isCovered, cancelationPolicy,
     ({0} * acos( cos( radians({1}) ) * cos( radians( latitude) ) * cos( radians(longitude) - radians({2}) ) + sin( radians({1}) ) * sin( radians( latitude ) ) ) ) AS distance
     FROM SPOTS HAVING distance < {3} ORDER BY distance LIMIT 0 , {4};'''.format(cls.MILES_MAGIC, latitude, longitude, maxDistance, maxResults)
 
     @classmethod
-    def searchIDByOwnerEmailQuery(cls, ownerEmail):
-        return '''SELECT ID FROM SPOTS WHERE ownerEmail = {0};'''.format(ownerEmail)
+    def bookSpot(cls, renterEmail, spotID, isRecurring):
+        return '''UPDATE {0} SET 
+        isRecurring=\'{1}\', renterEmail=\'{2}\' WHERE ID=\'{3}\''''.format(cls.TABLE_NAME, isRecurring, renterEmail, spotID)
+
+    @classmethod
+    def viewSpotInfo(cls, spotID):
+        return '''SELECT address, start, end, spotType, ownerEmail,
+        renterEmail, isRecurring, isCovered, cancelationPolicy FROM SPOTS WHERE ID = {0};'''.format(spotID)
 
     @classmethod
     def searchByOwnerEmailQuery(cls, ownerEmail):
         return '''SELECT ID, address, start, end, FROM SPOTS WHERE ownerEmail = {0};'''.format(ownerEmail)
 
     @classmethod
-    def searchIDByRentalEmailQuery(cls, renterEmail):
-        return '''SELECT ID FROM SPOTS WHERE renterEmail = {0};'''.format(renterEmail)
-
-    @classmethod
     def searchByRenterEmailQuery(cls, renterEmail):
         return '''SELECT ID, address, start, end, FROM SPOTS WHERE renterEmail = {0};'''.format(renterEmail)
 
-    @classmethod
-    def getOwner(cls, spotID):
-        return '''SELECT ownerEmail FROM SPOTS WHERE ID = {0};'''.format(spotID)
-
-    @classmethod
-    def viewSpotInfo(cls, spotID):
-        return '''SELECT address, latitude, longitude, picture, phoneNumber start, end, description, price, ownerEmail, FROM SPOTS WHERE ID = {0};'''.format(spotID)
-
-    @classmethod
-    def viewOwnerRating(cls, ownerEmail):
-        return '''SELECT rating FROM USERS WHERE email = {0};'''.format(ownerEmail)
-
-    @classmethod
-    def bookSpot(cls, renterEmail, spotID, isBooked):
-        return '''UPDATE SPOTS SET renterEmail=\'{0}\' AND isBooked = \'{2}\' WHERE ID=\'{1}\''''.format(renterEmail, spotID, isBooked)
-
-    @classmethod
-    def deleteSpot(cls, ownerEmail, spotID):
-        return '''DELETE FROM SPOTS WHERE ownerEmail=\'{0}\' AND ID= \'{1}\''''.format(ownerEmail)
-
-    def isValidSpot(self):
+    def isValidSpot(self): 
         return self.start < date.today() < self.end
+

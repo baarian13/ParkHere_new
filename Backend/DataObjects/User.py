@@ -21,6 +21,7 @@ class User(DatabaseObject):
                         rating FLOAT NOT NULL,
                         profilePicturePath VARCHAR(200),
                         PRIMARY KEY (email));'''.format(TABLE_NAME)
+
     
     def __init__(self, firstName, lastName, isSeeker,
                  isOwner, saltedPassword, salt, email,
@@ -39,30 +40,30 @@ class User(DatabaseObject):
         :type numReviews: int
         :type rating: int
         '''
-        self.firstName          = firstName
-        self.lastName           = lastName
-        self.isSeeker           = isSeeker
-        self.isOwner            = isOwner
+        self.firstName          = str(firstName)
+        self.lastName           = str(lastName)
+        self.isSeeker           = bool(isSeeker)
+        self.isOwner            = bool(isOwner)
         self.saltedPassword     = saltedPassword
-        self.phone              = phone
+        self.phone              = str(phone)
         self.salt               = salt
-        self.email              = email
-        self.profilePicturePath = profilePicturePath or ''
+        self.email              = str(email)
+        self.profilePicturePath = str(profilePicturePath or '')
         self.numReviews         = numReviews
         self.rating             = rating
-        self.data = {'firstName'          : str(firstName),
-                     'lastName'           : str(lastName),
-                     'isSeeker'           : bool(isSeeker),
-                     'isOwner'            : bool(isOwner),
-                     'saltedPassword'     : saltedPassword,
-                     'phone'              : str(phone),
-                     'salt'               : salt,
-                     'email'              : str(email),
-                     'profilePicturePath' : profilePicturePath,
-                     'numReviews'         : numReviews,
-                     'rating'             : rating}
-        if not profilePicturePath:
-            self.data.pop('profilePicturePath')
+    
+    def __iter__(self):
+        return iter([('firstName'         , self.firstName),
+                     ('lastName'          , self.lastName),
+                     ('isSeeker'          , self.isSeeker),
+                     ('isOwner'           , self.isOwner),
+                     ('saltedPassword'    , self.saltedPassword),
+                     ('phone'             , self.phone),
+                     ('salt'              , self.salt),
+                     ('email'             , self.email),
+                     ('profilePicturePath', self.profilePicturePath),
+                     ('numReviews'        , self.numReviews),
+                     ('rating'            , self.rating)])
     
     @classmethod
     def getSaltQuery(cls, email):
@@ -73,12 +74,21 @@ class User(DatabaseObject):
                     where email = \'{1}\';'''.format(cls.TABLE_NAME, email)
 
     @classmethod
+    def getPicturePath(cls, email):
+        '''
+        :type email: str
+        '''
+        return '''SELECT profilePicturePath FROM {0}
+                    WHERE email = \'{1}\';'''.format(cls.TABLE_NAME, email)
+
+    @classmethod
     def getUserInfoQuery(cls, email, saltedPwd):
         '''
         :type email: str
         :type saltedPwd: str
         '''
-        return '''SELECT * FROM {0}
+        return '''SELECT firstName, lastName, isSeeker, isOwner,
+                    phone, email, rating, numReviews FROM {0}
                     WHERE email = \'{1}\' AND
                     saltedPassword = \'{2}\';'''.format(cls.TABLE_NAME, email, saltedPwd)
     
@@ -105,19 +115,12 @@ class User(DatabaseObject):
 
     @classmethod
     def updatePhone(cls, email, phone):
-        return '''UPDATE {0} SET phone=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, name, email)
-
-    @classmethod
-    def checkPassword(self, password): 
-        '''
-        :type password: str
-        :rtype: bool
-        '''
-        return saltPassword(password, self.salt) == self.saltedPassword
+        return '''UPDATE {0} SET phone=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, phone, email)
 
     @classmethod
     def viewUserInfoQuery(cls, email):
-        return '''SELECT email, rating, phoneNumber, FROM {0}
+        return '''SELECT firstName, lastName, isSeeker, isOwner,
+                    phone, email, rating, numReviews FROM {0}
                     WHERE email = \'{1}\';'''.format(cls.TABLE_NAME, email)
 
     @classmethod
@@ -126,5 +129,20 @@ class User(DatabaseObject):
                     WHERE email = \'{1}\';'''.format(cls.TABLE_NAME, email)
 
     @classmethod
+    def updateSeeker(cls, email, isSeekr):
+        return '''UPDATE {0} SET isSeeker=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, isSeekr, email)
+
+    @classmethod
+    def updateOwner(cls, email, isOwner):
+        return '''UPDATE {0} SET isOwner=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, isOwner, email)
+
+    @classmethod
     def setRating(cls, email, rating, numReviews):
             return '''UPDATE {0} SET rating=\'{1}\' AND numReviews = \'{2}\' WHERE email=\'{3}\''''.format(cls.TABLE_NAME, rating, numReviews, email)
+
+    def checkPassword(self, password): 
+        '''
+        :type password: str
+        :rtype: bool
+        '''
+        return saltPassword(password, self.salt) == self.saltedPassword

@@ -71,16 +71,17 @@ class ModifyUserProfileHandler(AbstractUserHandler):
         isSeeker = self.get_argument("seeker","")
         if isSeeker:
             try:
-                self.db.changeSeeker(self.get_current_user(),(bool)isSeeker)
+                self.db.changeSeeker(self.get_current_user(), bool(isSeeker))
             except:
                 result = PARTIAL
+        isOwner = self.get_argument("isOwner","")
         if isOwner:
             try:
-                self.db.changeOwner(self.get_current_user(),(bool)isOwner)
+                self.db.changeOwner(self.get_current_user(), bool(isOwner))
             except:
                 result = PARTIAL
         profilePic = self.get_argument("profilePic", "")
-        if profilePic: # profile picture support not implemented
+        if profilePic:
             try:
                 self.db.submitPicture(self.get_current_user(), profilePic)
             except:

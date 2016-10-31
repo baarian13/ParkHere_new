@@ -10,10 +10,11 @@ class DatabaseObject(object):
     '''
     TABLE_NAME = ""
     
-    def __init__(self):
-        self.data = {}
+    def __iter__(self):
+        return []
     
     def asInsertStatement(self):
+        data = dict(self)
         return """INSERT INTO {0} {1} VALUES {2};""".format(self.TABLE_NAME,
-                                                              str(tuple(self.data.keys())).replace('\'', ''),
-                                                              tuple(self.data.values()))
+                                                              str(tuple(data.keys())).replace('\'', ''),
+                                                              tuple(data.values()))
