@@ -3,7 +3,6 @@ Created on Oct 17, 2016
 
 @author: henrylevy
 '''
-import tornado.escape
 import tornado.gen
 from Controller.UserHandlers.AbstractUserHandler import AbstractUserHandler
 

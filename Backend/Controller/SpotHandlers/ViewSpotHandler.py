@@ -10,17 +10,15 @@ class ViewSpotHandler(AbstractSpotHandler):
         spotID = self.get_argument("spotID")
         #needs to be finished
         if spotID:
-            results = [{'address'       : res[0],
-                        'latitude'      : res[1],
-                        'longitude'     : res[2],
-                        'picture'       : res[3],
-                        'phoneNumber'   : res[4],
-                        'start'         : str(res[5]),
-                        'end'           : str(res[6]),
-                        'description'   : res[7],
-                        'price'         : res[8],
-                        'ownerEmail'    : res[9]}
-            for res in self.db.viewSpotInfo(spotID)]
-            res2 = self.db.viewSpotRating(results["ownerEmail"])
-            results["ownerRating"] = res2[0]
+            res = self.db.viewSpotInfo(spotID)
+            results = { 'address'           : res[0],
+                        'start'             : res[1],
+                        'end'               : res[2],
+                        'spotType'          : res[3],
+                        'ownerEmail'        : res[4],
+                        'renterEmail'       : res[5],
+                        'isRecurring'       : res[6],
+                        'isCovered'         : res[7],
+                        'cancelationPolicy' : res[8],
+                        'description'       : res[9]}
             self.write(json.dumps(results))

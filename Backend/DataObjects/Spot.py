@@ -25,6 +25,7 @@ class Spot(DatabaseObject):
                     isCovered BOOL NOT NULL,
                     isRecurring BOOL NOT NULL,
                     description VARCHAR,
+                    picturePath VARCHAR(300),
                     cancelationPolicy SMALLINT NOT NULL,
                     FOREIGN KEY (renterEmail) REFERENCES USERS(email),
                     FOREIGN KEY (ownerEmail) REFERENCES USERS(email),
@@ -42,7 +43,7 @@ class Spot(DatabaseObject):
                  ownerEmail, isBooked, price,
                  start, end, isCovered,
                  cancelationPolicy, isRecurring,
-                 description="", renterEmail=None):
+                 description="", picturePath="", renterEmail=None):
         '''
             :type address: str
             :type spotType: int
@@ -73,6 +74,7 @@ class Spot(DatabaseObject):
         self.endStr            = str(end)
         self.isRecurring       = isRecurring
         self.description       = description
+        self.picturePath       = str(picturePath)
         self.latitude, self.longitude = getLatitudeLongitude(self.address)
 
     def __iter__(self):
@@ -88,7 +90,8 @@ class Spot(DatabaseObject):
                      ('longitude'        , self.longitude),
                      ('isCovered'        , self.isCovered),
                      ('isRecurring'      , self.isRecurring),
-                     ('cancelationPolicy', self.cancelationPolicy)])
+                     ('cancelationPolicy', self.cancelationPolicy),
+                     ('picturePath'      , self.picturePath)])
 
     @classmethod
     def searchByDistanceQuery(cls, latitude, longitude, maxDistance=25, maxResults=20):
@@ -103,9 +106,17 @@ class Spot(DatabaseObject):
         isRecurring=\'{1}\', renterEmail=\'{2}\' WHERE ID=\'{3}\''''.format(cls.TABLE_NAME, isRecurring, renterEmail, spotID)
 
     @classmethod
+    def searchIDByOwnerEmailQuery(cls, ownerEmail):
+        return '''SELECT ID FROM {0} WHERE ownerEmail=\'{3}\''''.format(cls.TABLE_NAME, ownerEmail)
+
+    @classmethod
+    def getPicturePath(cls, spotID):
+        return '''SELECT picturePath FROM SPOTS WHERE ID = {0};'''.format(spotID)
+
+    @classmethod
     def viewSpotInfo(cls, spotID):
         return '''SELECT address, start, end, spotType, ownerEmail,
-        renterEmail, isRecurring, isCovered, cancelationPolicy FROM SPOTS WHERE ID = {0};'''.format(spotID)
+        renterEmail, isRecurring, isCovered, cancelationPolicy, description FROM SPOTS WHERE ID = {0};'''.format(spotID)
 
     @classmethod
     def searchByOwnerEmailQuery(cls, ownerEmail):
