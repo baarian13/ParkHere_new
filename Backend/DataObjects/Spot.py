@@ -96,8 +96,16 @@ class Spot(DatabaseObject):
     FROM SPOTS HAVING distance < {3} ORDER BY distance LIMIT 0 , {4};'''.format(cls.MILES_MAGIC, latitude, longitude, maxDistance, maxResults)
 
     @classmethod
+    def searchIDByOwnerEmailQuery(cls, ownerEmail):
+        return '''SELECT ID FROM SPOTS WHERE ownerEmail = {0};'''.format(ownerEmail)
+
+    @classmethod
     def searchByOwnerEmailQuery(cls, ownerEmail):
         return '''SELECT ID, address, start, end, FROM SPOTS WHERE ownerEmail = {0};'''.format(ownerEmail)
+
+    @classmethod
+    def searchIDByRentalEmailQuery(cls, renterEmail):
+        return '''SELECT ID FROM SPOTS WHERE renterEmail = {0};'''.format(renterEmail)
 
     @classmethod
     def searchByRenterEmailQuery(cls, renterEmail):
@@ -109,7 +117,19 @@ class Spot(DatabaseObject):
 
     @classmethod
     def viewSpotInfo(cls, spotID):
+        return '''SELECT address, latitude, longitude, picture, phoneNumber start, end, description, price, ownerEmail, FROM SPOTS WHERE ID = {0};'''.format(spotID)
 
-    def isValidSpot(self): 
+    @classmethod
+    def viewOwnerRating(cls, ownerEmail):
+        return '''SELECT rating FROM USERS WHERE email = {0};'''.format(ownerEmail)
+
+    @classmethod
+    def bookSpot(cls, renterEmail, spotID, isBooked):
+        return '''UPDATE SPOTS SET renterEmail=\'{0}\' AND isBooked = \'{2}\' WHERE ID=\'{1}\''''.format(renterEmail, spotID, isBooked)
+
+    @classmethod
+    def deleteSpot(cls, ownerEmail, spotID):
+        return '''DELETE FROM SPOTS WHERE ownerEmail=\'{0}\' AND ID= \'{1}\''''.format(ownerEmail)
+
+    def isValidSpot(self):
         return self.start < date.today() < self.end
-

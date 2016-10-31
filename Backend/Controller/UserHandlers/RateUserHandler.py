@@ -7,6 +7,7 @@ SUCCESS = '200'
 FAILURE = '401'
 PARTIAL = '206'
 
+
 class RateUserHandler(AbstractUserHandler):
 
     @tornado.web.authenticated # ensures that user has valid token/is signed in

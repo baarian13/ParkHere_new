@@ -29,12 +29,28 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
         self.cursor.execute(Spot.searchByRenterEmailQuery(userEmail))
         return self.cursor.fetchall()
     
+    def getSpotIDsRentedBy(self, userEmail):
+        '''
+        :type userEmail: str
+        :rtype: list
+        '''
+        self.cursor.execute(Spot.searchIDByRenterEmailQuery(userEmail))
+        return self.cursor.fetchall()
+    
     def getSpotsOwnedBy(self, userEmail):
         '''
         :type userEmail: str
         :rtype: list
         '''
         self.cursor.execute(Spot.searchByOwnerEmailQuery(userEmail))
+        return self.cursor.fetchall()
+
+    def getSpotIDsOwnedBy(self, userEmail):
+        '''
+        :type userEmail: str
+        :rtype: list
+        '''
+        self.cursor.execute(Spot.searchIDByOwnerEmailQuery(userEmail))
         return self.cursor.fetchall()
 
     def searchForSpots(self, address, maxDistance=25, maxResults=20):
@@ -47,4 +63,17 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
         latitude, longitude = getLatitudeLongitude(address)
         self.cursor.execute(Spot.searchByDistanceQuery(latitude, longitude, maxDistance, maxResults))
         return self.cursor.fetchall()
-        
+    
+    def viewSpotInfo(self, spotID):
+        self.cursor.execute(Spot.viewSpotInfo(spotID))
+        return cursor.fetchall()
+
+    def viewSpotRating(self, ownerEmail):
+        self.cursor.execute(Spot.viewOwnerRating(ownerEmail))
+        return cursor.fetchall()
+
+    def bookSpot(self, renterEmail, spotID):
+        self.execute(Spot.bookSpot(renterEmail, spotID, False))
+
+    def deleteSpot(self, ownerEmail, spotID):
+        self.execute(Spot.deleteSpot(ownerEmail, spotID))
