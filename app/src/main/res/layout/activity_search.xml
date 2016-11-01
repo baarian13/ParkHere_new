@@ -106,6 +106,7 @@
             android:layout_height="wrap_content"
             android:text="@string/search_button_label"
             android:layout_marginTop="20dp"
+            android:id="@+id/search_submit_button"
             />
     </LinearLayout>
 </RelativeLayout>
