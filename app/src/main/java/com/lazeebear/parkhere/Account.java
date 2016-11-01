@@ -28,6 +28,11 @@ public class Account extends AppCompatActivity {
      */
     //private GoogleApiClient client;
 
+    private String user_phonenumber;
+    private int user_stars;
+    private String user_name;
+    private String user_email;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +43,18 @@ public class Account extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        //defaults
+        user_phonenumber = "9494994949";
+        user_stars = 3;
+        user_email = "jimmy@aol.com";
+
+        Intent intent = getIntent();
+        //if intent != null
+        user_name = intent.getStringExtra("");
+        user_stars = intent.getIntExtra("", 0); //second int is the default int, if intent didn't send one with it.
+        user_email = intent.getStringExtra("");
+        user_phonenumber = intent.getStringExtra("");
     }
 
     private void hideComponentsOnStartUp() {
@@ -85,13 +102,13 @@ public class Account extends AppCompatActivity {
         TextView accountName = (TextView) findViewById(R.id.accountName_account);
         accountName.setText(getDisplayName());
         RatingBar ratingOfUser = (RatingBar) findViewById(R.id.ratingBar);
-        ratingOfUser.setNumStars(3);
+        ratingOfUser.setNumStars(user_stars);
 
         TextView phoneNumber = (TextView) findViewById(R.id.phoneNumber);
-        phoneNumber.setText("9494994949");
+        phoneNumber.setText(user_phonenumber);
 
         TextView email = (TextView) findViewById(R.id.email);
-        email.setText("jimmy@aol.com");
+        email.setText(user_email);
     }
 
 
@@ -201,10 +218,14 @@ public class Account extends AppCompatActivity {
     }
 
     private String getDisplayName() {
+        //split user_name accordingly:
+        String[] output = user_name.split(" "); //split along the space
         if (isViewingOwnAccount())
-            return "First and Last Name";
+            //return "First and Last Name";
+            return user_name;
         else
-            return "First Name Only";
+            //return "First Name Only";
+            return output[0];
     }
 
     /**
