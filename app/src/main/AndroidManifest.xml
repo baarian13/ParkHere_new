@@ -68,18 +68,23 @@
             android:name=".ForgotPasswordActivity"
             android:label="Forgot Password"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CreateSpotActivity"/>
-        <!--braintree requirement to allow the application to switch to Paypal, detailed here: https://developers.braintreepayments.com/guides/client-sdk/setup/android/v2#browser-switch-setup-->
-        <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+        <activity android:name=".CreateSpotActivity" />
+        <!-- braintree requirement to allow the application to switch to Paypal, detailed here: https://developers.braintreepayments.com/guides/client-sdk/setup/android/v2#browser-switch-setup -->
+        <activity
+            android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="$com.lazeebear.parkhere.braintree" />
-                <!--<data android:scheme="${applicationId}.braintree" /> -->
+                <!-- <data android:scheme="${applicationId}.braintree" /> -->
             </intent-filter>
         </activity>
+        <activity android:name=".AddSpotReviewActivity"></activity>
     </application>
 
 </manifest>
