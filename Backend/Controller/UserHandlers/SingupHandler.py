@@ -62,3 +62,15 @@ class SignUpHandler(AbstractUserHandler):
         if userId:
             self.setCurrentUser(userId)
         self.write(result)
+
+    @tornado.gen.coroutine
+    def setCurrentUser(self, user):
+        '''
+        -set secure cookie for future requests
+        '''
+        if user:
+            print user
+            self.set_secure_cookie("user", user, expires_days=None)
+        else:
+            self.clear_cookie("user")
+            
