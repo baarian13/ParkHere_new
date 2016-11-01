@@ -137,6 +137,7 @@ public class Account extends AppCompatActivity {
         addSpotHistoryButtonActionListener();
         addSearchSpotButtonActionListener();
         addCreateSpotButtonActionListener();
+        addLogoutButtonActionListener();
     }
 
     private void addOwnedSpotsButtonActionListener() {
@@ -202,6 +203,19 @@ public class Account extends AppCompatActivity {
 
     private void goToCreateSpot() {
         Intent intent = new Intent(this, CreateSpotActivity.class);
+        startActivity(intent);
+    }
+
+    private void addLogoutButtonActionListener(){
+        Button logoutButton = (Button) findViewById(R.id.logoutButton_acount);
+        logoutButton.setOnClickListener((new View.OnClickListener() {
+            public void onClick(View view) {
+                logout();
+            }
+        }));
+    }
+    private void logout(){
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
