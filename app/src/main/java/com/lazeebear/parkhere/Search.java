@@ -11,6 +11,10 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.lazeebear.parkhere.ServerConnector.ServerConnector;
+
+import org.w3c.dom.Text;
+
 import java.util.Calendar;
 
 public class Search extends AppCompatActivity {
@@ -88,6 +92,13 @@ public class Search extends AppCompatActivity {
     //Time Picker
     public void showTimePicker(View view){
         timePicker.show();
+    }
+
+    private void search(){
+        TextView address = (TextView) findViewById(R.id.address);
+        String addressString = address.getText();
+        ServerConnector.search(addressString);
+
     }
 
 }
