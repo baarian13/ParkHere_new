@@ -106,9 +106,11 @@ public class Search extends AppCompatActivity {
         TextView address = (TextView) findViewById(R.id.address);
         String addressString = (String)address.getText();
         //ServerConnector.search(addressString);
+        int idForAddress = 0;
+        String searchAddress = "address";
         Intent intent = new Intent(this, SpotListActivity.class);
         for (int i=0; i<5; i++) {
-            intent.putExtra("address"+i, "address"+i);
+            intent.putExtra("address"+i, searchAddress + ":" + idForAddress);
         }
         startActivity(intent);
     }
