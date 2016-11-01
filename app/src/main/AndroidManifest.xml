@@ -76,7 +76,8 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="${applicationId}.braintree" />
+                <data android:scheme="$com.lazeebear.parkhere.braintree" />
+                <!--<data android:scheme="${applicationId}.braintree" /> -->
             </intent-filter>
         </activity>
     </application>
