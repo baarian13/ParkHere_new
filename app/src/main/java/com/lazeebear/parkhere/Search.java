@@ -12,11 +12,13 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
 import org.w3c.dom.Text;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class Search extends AppCompatActivity {
     private DatePickerDialog datePicker;
@@ -105,12 +107,10 @@ public class Search extends AppCompatActivity {
     private void search(){
         TextView address = (TextView) findViewById(R.id.address);
         String addressString = (String)address.getText();
-        //ServerConnector.search(addressString);
-        int idForAddress = 0;
-        String searchAddress = "address";
+        List<SpotDAO> spots = ServerConnector.SearchSpotTask(addressString);
         Intent intent = new Intent(this, SpotListActivity.class);
-        for (int i=0; i<5; i++) {
-            intent.putExtra("address"+i, searchAddress + ":" + idForAddress);
+        for (int i=0; i< spots.size(); i++) {
+            intent.putExtra("address"+i, spots.get(i).getAddress() + ":" + spots.get(i).getId());
         }
         startActivity(intent);
     }
