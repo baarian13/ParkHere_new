@@ -47,6 +47,13 @@ public class Search extends AppCompatActivity {
             public void onClick(View view) {showTimePicker(view);}
         });
        createTimePicker();
+
+        Button searchButton = (Button) findViewById(R.id.search_submit_button);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                search();
+            }
+        });
     }
 
     private void createDatePicker(){
