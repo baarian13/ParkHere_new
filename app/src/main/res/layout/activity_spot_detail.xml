@@ -50,5 +50,12 @@
         app:layout_anchor="@+id/spot_detail_container"
         app:layout_anchorGravity="top|end"
         app:srcCompat="@android:drawable/ic_menu_agenda" />
+    
+    <fragment
+        android:name="com.lazeebear.parkhere.SpotDetailFragment"
+        android:id="@+id/spot_detail_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/spot_detail" />
 
 </android.support.design.widget.CoordinatorLayout>
