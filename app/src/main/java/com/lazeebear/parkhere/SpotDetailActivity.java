@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 /**
  * An activity representing a single Spot detail screen. This
@@ -79,5 +80,11 @@ public class SpotDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void openAddReviewScreen(View view) {
+        Intent intent = new Intent(this, AddReview.class);
+        intent.putExtra("accountName", ((TextView) findViewById(R.id.spot_owner_label)).getText().toString());
+        startActivity(intent);
     }
 }

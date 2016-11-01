@@ -55,16 +55,6 @@ public class ServerConnector {
     Success - 200 returned
     Failure - 401 returned
      */
-    /*
-    public static int sigin(String email, String password) {
-        String url = Configs.baseURL + Configs.signinEndpoint + "?email=" + email + "&password=" + password;
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity entity = restTemplate.getForEntity(url, Object.class);
-
-        return entity.getStatusCode().value();
-    }
-    */
     public static boolean signin(String email, String password) {
         try {
             String url = "http://35.160.111.133:8888/signin";
@@ -124,16 +114,6 @@ public class ServerConnector {
     Partial Success - 206 returned (Profile photo submission unsuccessful
     Failure - 401 returned
      */
-    /*
-    public static int signup(SentUserDAO user) {
-        String url = Configs.baseURL + Configs.signupEndpoint;
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity entity = restTemplate.postForEntity(url, user, Object.class);
-
-        return entity.getStatusCode().value();
-    }
-    */
     public static int signup(String email, String password, String first, String last, String phone, int seeker, int owner, Base64 profilePic) {
 
         try {
@@ -192,4 +172,33 @@ public class ServerConnector {
             return 401;
         }
     }
+
+    public static Object search(String address) throws Exception {
+        String url = "http://35.160.111.133:8888/search/spot?address="+address.replace(' ', '+');
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("User-Agent", USER_AGENT);
+        setConnCookies(con);
+        con.connect();
+        int responseCode = con.getResponseCode();
+        System.out.println("\nSending 'GET' request to URL : " + url);
+        System.out.println("Response Code : " + responseCode);
+
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+
+        // TODO
+        return 1;
+    }
+
 }
