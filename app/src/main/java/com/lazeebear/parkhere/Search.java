@@ -103,7 +103,7 @@ public class Search extends AppCompatActivity {
 
     private void search(){
         TextView address = (TextView) findViewById(R.id.address);
-        String addressString = address.getText();
+        String addressString = (String)address.getText();
         ServerConnector.search(addressString);
 
     }
