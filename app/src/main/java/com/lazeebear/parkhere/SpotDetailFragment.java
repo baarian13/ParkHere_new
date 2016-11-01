@@ -1,12 +1,14 @@
 package com.lazeebear.parkhere;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.lazeebear.parkhere.dummy.DummyContent;
@@ -60,10 +62,48 @@ public class SpotDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.spot_detail, container, false);
 
         // Show the dummy content as text in a TextView.
+        /*
         if (mItem != null) {
             ((TextView) rootView.findViewById(R.id.spot_description)).setText(mItem.details);
-        }
+        }*/
 
-        return rootView;
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.spot_detail, container, false);
+
+        //return rootView;
+    }
+
+    Button button; //rate user button
+    Button spot_back_button;
+    String spot_price, spot_address, spot_owner_label;
+    //Image spot_photos (takes src="")
+    String spot_description, spot_owner_phone_number, spot_owner_rating, spot_date_range;
+
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        button = (Button) getView().findViewById(R.id.button);
+        spot_back_button = (Button) getView().findViewById(R.id.spot_back_button);
+
+        //get intent for specific spot
+        //get information from the server about that specific spot
+
+        //rate user button
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), AddReview.class);
+                //add extra info here later.
+                getActivity().startActivity(intent);
+            }
+        });
+
+        spot_back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), Search.class);
+                getActivity().startActivity(intent);
+            }
+        });
     }
 }
