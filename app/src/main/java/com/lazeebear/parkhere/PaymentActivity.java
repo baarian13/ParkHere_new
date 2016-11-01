@@ -9,6 +9,7 @@ import android.view.View;
 import com.braintreepayments.api.BraintreePaymentActivity;
 import com.braintreepayments.api.PaymentRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
 public class PaymentActivity extends AppCompatActivity {
     final int REQUEST_CODE = 999;
@@ -29,9 +30,9 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     public void onBraintreeSubmit(View v) {
-        //get client token from server
+        clientToken = ServerConnector.getToken();
         PaymentRequest paymentRequest = new PaymentRequest()
-                //.primaryDescription()
+                .primaryDescription("Booking")
                 //.secondaryDescription()
                 .amount(costOfSpot)
                 .submitButtonText("")
@@ -48,7 +49,7 @@ public class PaymentActivity extends AppCompatActivity {
                             BraintreePaymentActivity.EXTRA_PAYMENT_METHOD_NONCE
                     );
                     String nonce = paymentMethodNonce.getNonce();
-                    //send the nonce to your server(post), get result code
+                    //result = ServerConnector.bookSpot(amount, paymentMethodNonce, email, spotID);
                     break;
                 case BraintreePaymentActivity.BRAINTREE_RESULT_DEVELOPER_ERROR:
                 case BraintreePaymentActivity.BRAINTREE_RESULT_SERVER_ERROR:
