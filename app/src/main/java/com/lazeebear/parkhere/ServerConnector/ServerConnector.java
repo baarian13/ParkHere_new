@@ -5,6 +5,8 @@ import android.util.Base64;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.Deserializers;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotListDAO;
@@ -20,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
@@ -103,6 +106,74 @@ public class ServerConnector {
         protected void onPostExecute(Void result) {
             // dismiss progress dialog and update ui
         }
+    }
+
+    static class SearchSpotTask extends AsyncTask<Void,Void,Void>
+    {
+        List<SpotDAO> spots;
+        String address;
+        boolean done = false;
+        boolean success = false;
+
+        public SearchSpotTask(String address){
+            this.address = address;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = "http://35.160.111.133:8888/search/spot?address="+ address.replace(' ', '+');
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                setConnCookies(con);
+                con.connect();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'GET' request to URL : " + url);
+                System.out.println("Response Code : " + responseCode);
+
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                Gson gson = new Gson();
+                Type typeOfT = new TypeToken<List<SpotDAO>>(){}.getType();
+                spots = gson.fromJson(response.toString(), typeOfT);
+                //print result
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+    public static List<SpotDAO> SearchSpotTask(String address) throws Exception {
+        SearchSpotTask s = new SearchSpotTask(address);
+        s.execute();
+        while(!s.done)
+            ;
+        if(s.success)
+            return s.spots;
+        return null;
     }
 
     /*
