@@ -20,6 +20,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.lazeebear.parkhere.ServerConnector.ServerConnector;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Calendar;
@@ -211,6 +213,7 @@ public class CreateSpotActivity extends AppCompatActivity {
         String spot_type = ((Spinner) findViewById(R.id.spot_type)).getSelectedItemPosition() + "";
 
         //send data
+        ServerConnector.createSpot(addressString, spot_type, isCovered, cancellation, price, startString, endString, description, 1);
     }
 
     private void setSubmitButtonListener(){

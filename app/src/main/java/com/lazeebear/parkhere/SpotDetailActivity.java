@@ -20,6 +20,8 @@ import android.widget.TextView;
  */
 public class SpotDetailActivity extends AppCompatActivity {
 
+    private String spotID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,12 +29,16 @@ public class SpotDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
+        Intent intent = getIntent();
+        spotID = intent.getStringExtra("id");
+
         FloatingActionButton reserveSpotButton = (FloatingActionButton) findViewById(R.id.reserveSpotButton);
         reserveSpotButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                openReserveSpot();
+                //Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
+                //       .setAction("Action", null).show();
             }
         });
 
@@ -63,6 +69,12 @@ public class SpotDetailActivity extends AppCompatActivity {
                     .add(R.id.spot_detail_container, fragment)
                     .commit();
         }
+    }
+
+    public void openReserveSpot() {
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra("id", spotID);
+        startActivity(intent);
     }
 
     @Override

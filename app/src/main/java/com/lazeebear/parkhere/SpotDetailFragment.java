@@ -78,6 +78,7 @@ public class SpotDetailFragment extends Fragment {
     String spot_price, spot_address, spot_owner_label;
     //Image spot_photos (takes src="")
     String spot_description, spot_owner_phone_number, spot_owner_rating, spot_date_range;
+    String spotID;
 
 
     @Override
@@ -86,6 +87,8 @@ public class SpotDetailFragment extends Fragment {
         spot_back_button = (Button) getView().findViewById(R.id.spot_back_button);
 
         //get intent for specific spot
+        Intent intent = getActivity().getIntent();
+        spotID = intent.getStringExtra("id");
         //get information from the server about that specific spot
 
         //rate user button
@@ -94,6 +97,7 @@ public class SpotDetailFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), AddReview.class);
                 //add extra info here later.
+                intent.putExtra("id",spotID);
                 getActivity().startActivity(intent);
             }
         });
@@ -102,6 +106,7 @@ public class SpotDetailFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), Search.class);
+                intent.putExtra("id", spotID);
                 getActivity().startActivity(intent);
             }
         });
