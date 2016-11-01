@@ -101,7 +101,7 @@ class Spot(DatabaseObject):
     FROM SPOTS HAVING distance < {3} ORDER BY distance LIMIT 0 , {4};'''.format(cls.MILES_MAGIC, latitude, longitude, maxDistance, maxResults)
 
     @classmethod
-    def searchIDByRenterEmailQuery(userEmail):
+    def searchIDByRenterEmailQuery(cls, ownerEmail):
         return '''SELECT ID FROM {0} WHERE ownerEmail=\'{3}\''''.format(cls.TABLE_NAME, ownerEmail)
 
     @classmethod
