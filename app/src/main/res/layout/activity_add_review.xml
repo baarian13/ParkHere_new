@@ -23,7 +23,7 @@
     <RatingBar
         android:id="@+id/rating"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" />jij
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
