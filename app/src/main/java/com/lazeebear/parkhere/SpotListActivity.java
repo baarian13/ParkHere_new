@@ -43,27 +43,30 @@ public class SpotListActivity extends AppCompatActivity {
     }
 
     private void populateList(String address) {
+        //address + : + id
+        String[] arr = address.split(":");
         LinearLayout list = (LinearLayout) findViewById(R.id.spotList);
-        Button spotButton = createSpotButton(address);
+        Button spotButton = createSpotButton(arr[0]);
+        spotButton.setId(Integer.parseInt(arr[1]));
         list.addView(spotButton);
     }
 
     private Button createSpotButton(final String address) {
-        Button button = new Button(this);
+        final Button button = new Button(this);
         button.setText(address);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 //send to spot detail page
-                goToSpotDetail(address);
+                goToSpotDetail(button.getId());
             }
         });
 
         return button;
     }
 
-    private void goToSpotDetail(String address){
+    private void goToSpotDetail(int id){
         Intent intent = new Intent(this, SpotDetailActivity.class);
-        intent.putExtra("address",address);
+        intent.putExtra("id",id);
         startActivity(intent);
     }
 
