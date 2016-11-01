@@ -14,19 +14,24 @@ import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 public class PaymentActivity extends AppCompatActivity {
     final int REQUEST_CODE = 999;
     private String clientToken;
-    private String costOfSpot, email, spotID;
+    private String costOfSpot, email;
+    private String spotID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_page);
 
-        costOfSpot="";
+        costOfSpot=""; email = ""; spotID = "";
+        // get this stuff from the server
 
         Intent intent = getIntent();
         if (intent != null) {
-            costOfSpot = intent.getStringExtra("costOfSpot");
-            email = intent.getStringExtra("email");
-            spotID = intent.getStringExtra("spotID:");
+            spotID = intent.getStringExtra("id");
+            //intent doesn't give any of this following data. query the server for it given the spotID.
+            //costOfSpot = intent.getStringExtra("costOfSpot");
+            //email = intent.getStringExtra("email");
+            //spotID = intent.getStringExtra("spotID:");
         }
     }
 
