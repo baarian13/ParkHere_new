@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
+import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 import com.lazeebear.parkhere.dummy.DummyContent;
 
 /**
@@ -90,6 +92,16 @@ public class SpotDetailFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         spotID = intent.getStringExtra("id");
         //get information from the server about that specific spot
+        SpotDetailsDAO spot = ServerConnector.spotDetails(spotID);
+        spot_address = spot.getAddress();
+        spot_date_range = spot.getStart() + " to " + spot.getEnd();
+        spot_description = spot.getDescription();
+        spot_owner_label = spot.getOwnerEmail();
+
+        ((TextView) getActivity().findViewById(R.id.spot_address)).setText(spot.getAddress());
+        ((TextView) getActivity().findViewById(R.id.spot_date_range)).setText(spot_date_range);
+        ((TextView) getActivity().findViewById(R.id.spot_description)).setText(spot_description);
+        ((TextView) getActivity().findViewById(R.id.spot_owner_label)).setText(spot_owner_label);
 
         //rate user button
         button.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +109,7 @@ public class SpotDetailFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), AddReview.class);
                 //add extra info here later.
+                intent.putExtra("user", spot_owner_label);
                 intent.putExtra("id",spotID);
                 getActivity().startActivity(intent);
             }
