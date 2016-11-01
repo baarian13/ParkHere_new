@@ -2,6 +2,7 @@ package com.lazeebear.parkhere;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -104,8 +105,12 @@ public class Search extends AppCompatActivity {
     private void search(){
         TextView address = (TextView) findViewById(R.id.address);
         String addressString = (String)address.getText();
-        ServerConnector.search(addressString);
-
+        //ServerConnector.search(addressString);
+        Intent intent = new Intent(this, SpotListActivity.class);
+        for (int i=0; i<5; i++) {
+            intent.putExtra("address"+i, "address"+i);
+        }
+        startActivity(intent);
     }
 
 }
