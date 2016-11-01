@@ -59,4 +59,6 @@ class SignUpHandler(AbstractUserHandler):
                 self.db.submitPicture(userId, profilePic)
             except:
                 result = PARTIAL
+        if userId:
+            self.setCurrentUser(userId)
         self.write(result)
