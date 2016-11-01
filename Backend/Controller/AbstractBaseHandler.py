@@ -11,14 +11,7 @@ class AbstractBaseHandler(tornado.web.RequestHandler):
     
     @property
     def current_user(self):
-        print self.get_current_user()
         return self.get_current_user()
-    
-    def get(self):
-        print "test"
-        if not self.current_user:
-            self.redirect("/signin")
-        print "test2"
 
 class MainHandler(AbstractBaseHandler):
     pass
