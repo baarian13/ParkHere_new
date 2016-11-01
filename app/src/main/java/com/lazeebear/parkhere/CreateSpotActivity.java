@@ -200,8 +200,8 @@ public class CreateSpotActivity extends AppCompatActivity {
         String endDate = (String)end_date.getText();
         //pretty sure THIS ISN'T THE RIGHTWAY to concatenate these strings///
         //but just pushing so we can test
-        String startString = startDate + startTime;
-        String endString = endDate + endTime;
+        String startString = startDate + " " + startTime;
+        String endString = endDate + " " + endTime;
         double price = Double.parseDouble((String)price_field.getText());
         String description = (String)description_field.getText();
         String cancellation = ((Spinner) findViewById(R.id.cancellation_policy_selection)).getSelectedItemPosition() + "";
