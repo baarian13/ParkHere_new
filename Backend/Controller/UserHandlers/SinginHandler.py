@@ -6,6 +6,9 @@ Created on Oct 17, 2016
 import tornado.gen
 from Controller.UserHandlers.AbstractUserHandler import AbstractUserHandler
 
+SUCCESS = '200'
+FAILURE = '401'
+
 class SigninHandler(AbstractUserHandler):
     '''
     -Requests are posted here when a user is creating an account.

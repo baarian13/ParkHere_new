@@ -90,4 +90,5 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         numReviews = results[1]
         rating = oldrating*numReviews + rating
         numReviews += 1
+        float(rating)/numReviews
         self.execute(User.setRating(email, rating, numReviews))

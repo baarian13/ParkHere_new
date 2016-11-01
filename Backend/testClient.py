@@ -26,6 +26,7 @@ def createUser(http_client, email, password, first, last, phone, seeker, owner, 
     
     res = http_client.fetch(req)
     print res
+    return res.headers['set-cookie']
     
 def signIn(http_client, email, password):
     url = 'http://{0}:8888/signin'.format(ip)
@@ -61,15 +62,16 @@ def postSpot(cookie, http_client, address, spotType, isCovered,
                              'isRecurring'       : recurring})
     req = httpclient.HTTPRequest(url, 'POST', body=body, headers=headers)
     
-    res = http_client.fetch(req)
-    return res.headers['set-cookie']
+    http_client.fetch(req)
 
 if __name__ == '__main__':
     http_client = httpclient.HTTPClient()
     img = buildImgStr('/Users/henrylevy/Downloads/default.jpg')
-#     createUser('default12@test.com', 'password', 'first', 'last', '123-456-7890', 1, 1, img)
+#     cookie = createUser(http_client, 'default123@test.com', 'password', 'first', 'last', '123-456-7890', 1, 1, img)
     
     cookie = signIn(http_client, 'default12@test.com', 'password')
+    postSpot(cookie, http_client, '707 West 28th street, Los Angeles CA, 90007', '0', '0',
+             "0", '10.00', "2016-10-12 12:00:00", "2016-10-12 14:00:00", '0')
     searchSpot(cookie, http_client, '700 West 28th street, Los Angeles CA, 90007')
     http_client.close()
     

@@ -101,6 +101,10 @@ class Spot(DatabaseObject):
     FROM SPOTS HAVING distance < {3} ORDER BY distance LIMIT 0 , {4};'''.format(cls.MILES_MAGIC, latitude, longitude, maxDistance, maxResults)
 
     @classmethod
+    def searchIDByRenterEmailQuery(userEmail):
+        return '''SELECT ID FROM {0} WHERE ownerEmail=\'{3}\''''.format(cls.TABLE_NAME, ownerEmail)
+
+    @classmethod
     def bookSpot(cls, renterEmail, spotID, isRecurring):
         return '''UPDATE {0} SET 
         isRecurring=\'{1}\', renterEmail=\'{2}\' WHERE ID=\'{3}\''''.format(cls.TABLE_NAME, isRecurring, renterEmail, spotID)
@@ -120,11 +124,15 @@ class Spot(DatabaseObject):
 
     @classmethod
     def searchByOwnerEmailQuery(cls, ownerEmail):
-        return '''SELECT ID, address, start, end, FROM SPOTS WHERE ownerEmail = {0};'''.format(ownerEmail)
+        return '''SELECT ID, address, start, end FROM SPOTS WHERE ownerEmail = \'{0}\';'''.format(ownerEmail)
+
+    @classmethod
+    def deleteSpot(cls, ownerEmail, spotID):
+        return '''DELETE FROM SPOTS where ID = {0} and ownerEmail = \'{1}\''''.format(spotID, ownerEmail)
 
     @classmethod
     def searchByRenterEmailQuery(cls, renterEmail):
-        return '''SELECT ID, address, start, end, FROM SPOTS WHERE renterEmail = {0};'''.format(renterEmail)
+        return '''SELECT ID, address, start, end FROM SPOTS WHERE renterEmail = {0};'''.format(renterEmail)
 
     def isValidSpot(self): 
         return self.start < date.today() < self.end
