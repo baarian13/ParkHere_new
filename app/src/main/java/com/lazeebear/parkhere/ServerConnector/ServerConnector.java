@@ -5,6 +5,8 @@ import android.util.Base64;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.Deserializers;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotListDAO;
@@ -20,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
@@ -437,6 +440,36 @@ public class ServerConnector {
             return 200;
         else
             return 401;
+    }
+
+    public static List<SpotDAO> search(String address) throws Exception {
+        String url = "http://35.160.111.133:8888/search/spot?address="+address.replace(' ', '+');
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("User-Agent", USER_AGENT);
+        setConnCookies(con);
+        con.connect();
+        int responseCode = con.getResponseCode();
+        System.out.println("\nSending 'GET' request to URL : " + url);
+        System.out.println("Response Code : " + responseCode);
+
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        Gson gson = new Gson();
+        Type typeOfT = new TypeToken<List<SpotDAO>>(){}.getType();
+        List<SpotDAO> spots = gson.fromJson(response.toString(), typeOfT);
+
+        return spots;
     }
 
 }
