@@ -85,22 +85,33 @@ public class SpotDetailFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        button = (Button) getView().findViewById(R.id.button);
+        button = (Button) getView().findViewById(R.id.button); //rate user button
         spot_back_button = (Button) getView().findViewById(R.id.spot_back_button);
 
         //get intent for specific spot
         Intent intent = getActivity().getIntent();
         spotID = intent.getStringExtra("id");
         //get information from the server about that specific spot
-        SpotDetailsDAO spot = ServerConnector.spotDetails(spotID);
+        SpotDetailsDAO spot = null;
+        try {
+            spot = ServerConnector.spotDetails(spotID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         spot_address = spot.getAddress();
         spot_date_range = spot.getStart() + " to " + spot.getEnd();
         spot_description = spot.getDescription();
         spot_owner_label = spot.getOwnerEmail();
 
-        ((TextView) getActivity().findViewById(R.id.spot_address)).setText(spot.getAddress());
+        ((TextView) getActivity().findViewById(R.id.spot_address)).setText(spot_address);
         ((TextView) getActivity().findViewById(R.id.spot_date_range)).setText(spot_date_range);
-        ((TextView) getActivity().findViewById(R.id.spot_description)).setText(spot_description);
+
+        // TODO: boolean might be flipped
+        if (spot.getIsCovered() == 0){
+            ((TextView) getActivity().findViewById(R.id.spot_description)).setText("Covered: true \n" + spot_description);
+        } else {
+            ((TextView) getActivity().findViewById(R.id.spot_description)).setText("Covered: false \n" + spot_description);
+        }
         ((TextView) getActivity().findViewById(R.id.spot_owner_label)).setText(spot_owner_label);
 
         //rate user button
