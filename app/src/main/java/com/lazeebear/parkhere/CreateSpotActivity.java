@@ -76,7 +76,7 @@ public class CreateSpotActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 // Update the TextView with the date chosen by the user
-                start_date.setText(month + "/" + day + "/" + year );
+                start_date.setText(year + "-" + month + "-" + day);
             }
         };
         startDatePicker = new DatePickerDialog(this, onStartDateSetHandler, year, month, day);
@@ -90,7 +90,7 @@ public class CreateSpotActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 // Update the TextView with the date chosen byint  the user
-                end_date.setText(month + "/" + day + "/" + year );
+                end_date.setText(year + "-" + month + "-" + day);
             }
         };
         endDatePicker = new DatePickerDialog(this, onEndDateSetHandler, year, month, day);
@@ -104,7 +104,7 @@ public class CreateSpotActivity extends AppCompatActivity {
             @Override
             public void onTimeSet(TimePicker view, int hour, int minute) {
                 // Update the TextView with the date chosen by the user
-                start_hour.setText(hour + ":" + minute);
+                start_hour.setText(hour + ":" + minute + ":" + "00");
             }
         };
         startTimePicker = new TimePickerDialog(this, onStartTimeSetHandler, hour, minute,
@@ -119,7 +119,7 @@ public class CreateSpotActivity extends AppCompatActivity {
             @Override
             public void onTimeSet(TimePicker view, int hour, int minute) {
                 // Update the TextView with the date chosen by the user
-                end_hour.setText(hour + ":" + minute);
+                end_hour.setText(hour + ":" + minute + "00");
             }
         };
         endTimePicker = new TimePickerDialog(this, onEndTimeSetHandler, hour, minute,
