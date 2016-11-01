@@ -94,25 +94,26 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="50pt"
-        android:layout_weight="0.15"
-        android:id="@+id/spotHistoryList">
+        android:layout_weight="0.15">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"
+            android:id="@+id/spotHistoryList"/>
     </ScrollView>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_weight="0.40"
-        android:id="@+id/ownedSpotsList">
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"
+            android:id="@+id/ownedSpotsList"/>
     </ScrollView>
 
 
