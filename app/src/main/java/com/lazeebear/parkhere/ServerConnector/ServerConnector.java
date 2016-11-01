@@ -1,5 +1,6 @@
 package com.lazeebear.parkhere.ServerConnector;
 
+import android.os.AsyncTask;
 import android.util.Base64;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,154 +52,314 @@ public class ServerConnector {
         }
     }
 
+    static class SignInTask extends AsyncTask<Void,Void,Void>
+    {
+        String email;
+        String password;
+        boolean done = false;
+        boolean success = false;
+
+        public SignInTask(String email, String password){
+            this.email = email;
+            this.password = password;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = "http://35.160.111.133:8888/signin";
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+                String urlParameters = "email=" + email + "&password=" + password;
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                //print result
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
     /*
     Success - 200 returned
     Failure - 401 returned
      */
-    public static boolean signin(String email, String password) {
-        try {
-            String url = "http://35.160.111.133:8888/signin";
-            URL obj = new URL(url);
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+    /*
+    public static int sigin(String email, String password) {
+        String url = Configs.baseURL + Configs.signinEndpoint + "?email=" + email + "&password=" + password;
 
-            //add reuqest header
-            con.setRequestMethod("POST");
-            con.setRequestProperty("User-Agent", USER_AGENT);
-            con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity entity = restTemplate.getForEntity(url, Object.class);
 
-            String urlParameters = "email=" + email + "&password=" + password;
-
-            // Send post request
-            con.setDoOutput(true);
-            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.writeBytes(urlParameters);
-            wr.flush();
-            wr.close();
-            Map<String, List<String>> headerFields = con.getHeaderFields();
-            List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
-
-            if (cookiesHeader != null) {
-                for (String cookie : cookiesHeader) {
-                    msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
-                }
-            }
-            int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'POST' request to URL : " + url);
-            System.out.println("Post parameters : " + urlParameters);
-            System.out.println("Response Code : " + responseCode);
-
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            if (response.toString().trim().equals("authentication failed"))
-                return false;
-
-            //print result
-            System.out.println(response.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
+        return entity.getStatusCode().value();
     }
+    */
+    public static boolean signin(String email, String password) {
+        SignInTask s = new SignInTask(email, password);
+        s.execute();
+        while(!s.done)
+            ;
+        return s.success;
+    }
+
+    static class SignUpTask extends AsyncTask<Void,Void,Void>
+    {
+        String email;
+        String password;
+        String first;
+        String last;
+        String phone;
+        int seeker;
+        int owner;
+        Base64 profilePic;
+        boolean done = false;
+        boolean success = false;
+
+        public SignUpTask(String email, String password, String first, String last, String phone, int seeker, int owner, Base64 profilePic){
+            this.email = email;
+            this.password = password;
+            this.first = first;
+            this.last = last;
+            this.phone = phone;
+            this.seeker = seeker;
+            this.owner = owner;
+            this.profilePic = profilePic;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = "http://35.160.111.133:8888/signup";
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                String urlParameters = null;
+
+                if (profilePic != null) {
+                    urlParameters = "email=" + email + "&password=" + password + "&first=" + first +
+                            "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner + "&profilePic="
+                            + profilePic.toString();
+                } else {
+                    urlParameters = "email=" + email + "&password=" + password + "&first=" + first +
+                            "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner;
+                }
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                con.connect();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+//            con.setDoOutput(false);
+//            con.setDoInput(true);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
 
     /*
     Success - 200 returned
     Partial Success - 206 returned (Profile photo submission unsuccessful
     Failure - 401 returned
      */
+    /*
+    public static int signup(SentUserDAO user) {
+        String url = Configs.baseURL + Configs.signupEndpoint;
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity entity = restTemplate.postForEntity(url, user, Object.class);
+
+        return entity.getStatusCode().value();
+    }
+    */
     public static int signup(String email, String password, String first, String last, String phone, int seeker, int owner, Base64 profilePic) {
-
-        try {
-            String url = "http://35.160.111.133:8888/signup";
-            URL obj = new URL(url);
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-            //add reuqest header
-            con.setRequestMethod("POST");
-            con.setRequestProperty("User-Agent", USER_AGENT);
-            con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
-            String urlParameters = null;
-
-            if (profilePic != null) {
-                urlParameters = "email=" + email + "&password=" + password + "&first=" + first +
-                        "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner + "&profilePic="
-                        + profilePic.toString();
-            } else {
-                urlParameters = "email=" + email + "&password=" + password + "&first=" + first +
-                        "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner;
-            }
-
-            // Send post request
-            con.setDoOutput(true);
-            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.writeBytes(urlParameters);
-            wr.flush();
-            wr.close();
-            Map<String, List<String>> headerFields = con.getHeaderFields();
-            List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
-
-            if (cookiesHeader != null) {
-                for (String cookie : cookiesHeader) {
-                    msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
-                }
-            }
-            int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'POST' request to URL : " + url);
-            System.out.println("Post parameters : " + urlParameters);
-            System.out.println("Response Code : " + responseCode);
-
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            return responseCode;
-        } catch (Exception e) {
-            e.printStackTrace();
+        SignUpTask s = new SignUpTask(email, password, first, last, phone, seeker, owner, profilePic);
+        s.execute();
+        while(!s.done)
+            ;
+        if(s.success)
+            return 200;
+        else
             return 401;
+    }
+
+
+    static class BookSpotTask extends AsyncTask<Void,Void,Void>
+    {
+        String amount;
+        String payment_method_nonce;
+        String email;
+        String spotID;
+        boolean done = false;
+        boolean success = false;
+
+        public BookSpotTask(String amount, String payment_method_nonce, String email, String spotID){
+            this.amount = amount;
+            this.payment_method_nonce = payment_method_nonce;
+            this.email = email;
+            this.spotID = spotID;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = "http://35.160.111.133:8888/book/spot";
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                String urlParameters = null;
+
+                urlParameters = "amount=" + amount + "&payment_method_nonce=" + payment_method_nonce + "&email=" + email +
+                        "&spotID=" + spotID;
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+//            con.setDoOutput(false);
+//            con.setDoInput(true);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
         }
     }
 
-    public static Object search(String address) throws Exception {
-        String url = "http://35.160.111.133:8888/search/spot?address="+address.replace(' ', '+');
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("User-Agent", USER_AGENT);
-        setConnCookies(con);
-        con.connect();
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + url);
-        System.out.println("Response Code : " + responseCode);
-
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-
-
-        // TODO
-        return 1;
+    public static int bookSpot(String amount, String payment_method_nonce, String email, String spotID){
+        BookSpotTask s = new BookSpotTask(amount, payment_method_nonce, email, spotID);
+        s.execute();
+        while(!s.done)
+            ;
+        if(s.success)
+            return 200;
+        else
+            return 401;
     }
 
 }
