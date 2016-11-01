@@ -24,17 +24,6 @@
         android:id="@+id/rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/comment_label"/>
-    <EditText
-        android:id="@+id/comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:lines="5"
-        android:maxLength="200"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
