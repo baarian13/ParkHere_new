@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.Calendar;
 
 public class CreateSpotActivity extends AppCompatActivity {
-    private TextView start_date, end_date, start_hour,
+    private TextView address, start_date, end_date, start_hour,
         end_hour, price_field, description_field;
     private CheckBox repeat_weekly_checkbox, covered_checkbox;
     private Button upload_photo_button, submit_button;
@@ -42,6 +42,7 @@ public class CreateSpotActivity extends AppCompatActivity {
 
 
         //===variables===//
+        address = (TextView) findViewById(R.id.addressCreateSpot);
         start_date = (TextView) findViewById(R.id.create_spot_start_date);
         end_date = (TextView) findViewById(R.id.create_spot_end_date);
         start_hour = (TextView) findViewById(R.id.create_spot_start_hour);
@@ -88,7 +89,7 @@ public class CreateSpotActivity extends AppCompatActivity {
         DatePickerDialog.OnDateSetListener onEndDateSetHandler = new DatePickerDialog.OnDateSetListener(){
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
-                // Update the TextView with the date chosen by the user
+                // Update the TextView with the date chosen byint  the user
                 end_date.setText(month + "/" + day + "/" + year );
             }
         };
@@ -130,6 +131,7 @@ public class CreateSpotActivity extends AppCompatActivity {
         setCancellationPolicyListener();
         createPickers();
         setUploadButtonListener();
+        setSubmitButtonListener();
     }
 
     private void setCancellationPolicyListener(){
@@ -185,5 +187,38 @@ public class CreateSpotActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void createSpot(){
+        String addressString = (String)address.getText();
+
+        String startTime = (String)start_hour.getText();
+        String endTime = (String)end_hour.getText();
+        String startDate = (String)start_date.getText();
+        String endDate = (String)end_date.getText();
+        //pretty sure THIS ISN'T THE RIGHTWAY to concatenate these strings///
+        //but just pushing so we can test
+        String startString = startDate + startTime;
+        String endString = endDate + endTime;
+        double price = Double.parseDouble((String)price_field.getText());
+        String description = (String)description_field.getText();
+        String cancellation = ((Spinner) findViewById(R.id.cancellation_policy_selection)).getSelectedItemPosition() + "";
+        String isCovered = "";
+        if (covered_checkbox.isChecked())
+            isCovered = "1";
+        else
+            isCovered = "0";
+        String spot_type = ((Spinner) findViewById(R.id.spot_type)).getSelectedItemPosition() + "";
+
+        //send data
+    }
+
+    private void setSubmitButtonListener(){
+        Button submitButton = (Button) findViewById(R.id.create_spot_submit_button);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                createSpot();
+            }
+        });
     }
 }
