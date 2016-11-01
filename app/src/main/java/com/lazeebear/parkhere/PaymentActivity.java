@@ -12,15 +12,29 @@ import com.braintreepayments.api.models.PaymentMethodNonce;
 
 public class PaymentActivity extends AppCompatActivity {
     final int REQUEST_CODE = 999;
+    private String clientToken;
+    private String costOfSpot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_page);
+
+        costOfSpot="";
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            costOfSpot = intent.getStringExtra("costOfSpot");
+        }
     }
 
     public void onBraintreeSubmit(View v) {
+        //get client token from server
         PaymentRequest paymentRequest = new PaymentRequest()
+                //.primaryDescription()
+                //.secondaryDescription()
+                .amount(costOfSpot)
+                .submitButtonText("")
                 .clientToken(clientToken);
         startActivityForResult(paymentRequest.getIntent(this), REQUEST_CODE);
     }
@@ -34,6 +48,7 @@ public class PaymentActivity extends AppCompatActivity {
                             BraintreePaymentActivity.EXTRA_PAYMENT_METHOD_NONCE
                     );
                     String nonce = paymentMethodNonce.getNonce();
+                    //send the nonce to your server(post), get result code
                     break;
                 case BraintreePaymentActivity.BRAINTREE_RESULT_DEVELOPER_ERROR:
                 case BraintreePaymentActivity.BRAINTREE_RESULT_SERVER_ERROR:
