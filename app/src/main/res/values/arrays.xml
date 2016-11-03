@@ -9,6 +9,7 @@
     </integer-array>
 
     <string-array name="car_types">
+        <item>Motorcycle</item>
         <item>Compact</item>
         <item>Normal</item>
         <item>Truck</item>

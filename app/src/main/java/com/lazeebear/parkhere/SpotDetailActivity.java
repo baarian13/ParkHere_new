@@ -2,14 +2,11 @@ package com.lazeebear.parkhere;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.NavUtils;
-import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 /**
  * An activity representing a single Spot detail screen. This
@@ -19,65 +16,81 @@ import android.view.MenuItem;
  */
 public class SpotDetailActivity extends AppCompatActivity {
 
+    private int spotID;
+    private String userUniqueID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spot_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        setSupportActionBar(toolbar);
+        Intent intent = getIntent();
+        if (intent != null) {
+            spotID = Integer.parseInt(intent.getStringExtra("id"));
+            setInformation(spotID);
+            setActionListeners();
+        }
 
-        FloatingActionButton reserveSpotButton = (FloatingActionButton) findViewById(R.id.reserveSpotButton);
+    }
+
+    private void setInformation(int spotID){
+        userUniqueID = "email";
+
+        TextView addressField = (TextView) findViewById(R.id.address_spotDetail);
+        addressField.setText(spotID+"");
+        RatingBar spotRating = (RatingBar) findViewById(R.id.rating_spot_spotDetail);
+        spotRating.setRating(3);
+        TextView price = (TextView) findViewById(R.id.price_spotDetail);
+        price.setText("$" + 2.00);
+        TextView owner = (TextView) findViewById(R.id.owner_spotDetail);
+        owner.setText("First" + " " + "Last");
+
+    }
+
+
+    private void openReserveSpot() {
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra("id", spotID);
+        startActivity(intent);
+    }
+
+    private void openRateUser() {
+        Intent intent = new Intent(this, AddUserRatingActivity.class);
+        intent.putExtra("id", userUniqueID);
+        startActivity(intent);
+    }
+
+    private void openRateSpot() {
+        Intent intent = new Intent(this, AddUserRatingActivity.class);
+        //putExtra needs string??
+        intent.putExtra("id", spotID+"");
+        startActivity(intent);
+    }
+
+    private void setActionListeners(){
+        Button reserveSpotButton = (Button) findViewById(R.id.reserveButton_spotDetail);
         reserveSpotButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                openReserveSpot();
             }
         });
 
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        Button rateUserButton = (Button) findViewById(R.id.rateUserButton_spotDetail);
+        rateUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openRateUser();
+            }
+        });
 
-        // savedInstanceState is non-null when there is fragment state
-        // saved from previous configurations of this activity
-        // (e.g. when rotating the screen from portrait to landscape).
-        // In this case, the fragment will automatically be re-added
-        // to its container so we don't need to manually add it.
-        // For more information, see the Fragments API guide at:
-        //
-        // http://developer.android.com/guide/components/fragments.html
-        //
-        if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(SpotDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(SpotDetailFragment.ARG_ITEM_ID));
-            SpotDetailFragment fragment = new SpotDetailFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.spot_detail_container, fragment)
-                    .commit();
-        }
-    }
+        Button rateSpotButton = (Button) findViewById(R.id.rateSpotButton_spotDetail);
+        rateSpotButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openRateSpot();
+            }
+        });
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. Use NavUtils to allow users
-            // to navigate up one level in the application structure. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            //
-            NavUtils.navigateUpTo(this, new Intent(this, SpotListActivity.class));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+
     }
 }

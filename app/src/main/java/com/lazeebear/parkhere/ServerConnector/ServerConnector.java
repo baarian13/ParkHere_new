@@ -1,24 +1,19 @@
 package com.lazeebear.parkhere.ServerConnector;
 
+
+import android.os.AsyncTask;
 import android.util.Base64;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.deser.Deserializers;
-import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
-import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDAO;
-import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotListDAO;
-import com.lazeebear.parkhere.DAOs.SentObjects.BookDAO;
-import com.lazeebear.parkhere.DAOs.SentObjects.RateDAO;
-import com.lazeebear.parkhere.DAOs.SentObjects.SentSpotDAO;
-import com.lazeebear.parkhere.DAOs.SentObjects.SentUserDAO;
 
-import org.json.JSONObject;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDAO;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
@@ -51,73 +46,397 @@ public class ServerConnector {
         }
     }
 
-    /*
-    Success - 200 returned
-    Failure - 401 returned
+    static class GetTokenTask extends AsyncTask<Void,Void,Void>
+       {
+                String token;
+                boolean done = false;
+                boolean success = false;
+
+                        public GetTokenTask(){
+                    }
+
+                        protected void onPreExecute() {
+                        //display progress dialog.
+
+                                    }
+                protected Void doInBackground(Void... params) {
+                        try {
+                                String url = "http://35.160.111.133:8888/get/token";
+                                URL obj = new URL(url);
+                                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                                con.setRequestMethod("GET");
+                                con.setRequestProperty("UserAgent", USER_AGENT);
+                                setConnCookies(con);
+                //			con.connect();
+                                        int responseCode = con.getResponseCode();
+                                System.out.println("\nSending 'GET' request to URL : " + url);
+                                System.out.println("Response Code : " + responseCode);
+
+
+                                                BufferedReader in = new BufferedReader(
+                                                new InputStreamReader(con.getInputStream()));
+                                String inputLine;
+                                StringBuffer response = new StringBuffer();
+
+                                        while ((inputLine = in.readLine()) != null) {
+                                        response.append(inputLine);
+                                    }
+                                in.close();
+                                token = response.toString();
+                                //print result
+                                        success = true;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        done = true;
+                        return null;
+                    }
+
+
+
+                                        protected void onPostExecute(Void result) {
+                        // dismiss progress dialog and update ui
+                            }
+            }
+
+                static class SearchSpotTask extends AsyncTask<Void,Void,Void>
+        {
+                List<SpotDAO> spots;
+                String address;
+                boolean done = false;
+                boolean success = false;
+
+                        public SearchSpotTask(String address){
+                        this.address = address;
+                    }
+
+                        protected void onPreExecute() {
+                        //display progress dialog.
+
+                                    }
+                protected Void doInBackground(Void... params) {
+                        try {
+                                String url = "http://35.160.111.133:8888/search/spot?address="+ address.replace(' ', '+');
+                                URL obj = new URL(url);
+                                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                                con.setRequestMethod("GET");
+                                con.setRequestProperty("User-Agent", USER_AGENT);
+                                setConnCookies(con);
+                                con.connect();
+                                int responseCode = con.getResponseCode();
+                                System.out.println("\nSending 'GET' request to URL : " + url);
+                                System.out.println("Response Code : " + responseCode);
+
+
+                                                BufferedReader in = new BufferedReader(
+                                                new InputStreamReader(con.getInputStream()));
+                                String inputLine;
+                                StringBuffer response = new StringBuffer();
+
+                                        while ((inputLine = in.readLine()) != null) {
+                                        response.append(inputLine);
+                                    }
+                                in.close();
+
+                            Gson gson = new Gson();
+                                Type typeOfT = new TypeToken<List<SpotDAO>>(){}.getType();
+                                spots = gson.fromJson(response.toString(), typeOfT);
+                                //print result
+                                        success = true;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        done = true;
+                        return null;
+                    }
+
+
+            protected void onPostExecute(Void result) {
+
+                        // dismiss progress dialog and update ui
+                            }
+            }
+
+    public static List<SpotDAO> searchSpot(String address) throws Exception {
+                SearchSpotTask s = new SearchSpotTask(address);
+                s.execute();
+                while(!s.done)
+                        ;
+                if(s.success)
+                        return s.spots;
+                return null;
+            }
+
+                /*
+     Success  200 returned
+     Failure  401 returned
+      */
+                /*
+     public static int sigin(String email, String password) {
+         String url = Configs.baseURL + Configs.signinEndpoint + "?email=" + email + "&password=" + password;
+
+         RestTemplate restTemplate = new RestTemplate();
+         ResponseEntity entity = restTemplate.getForEntity(url, Object.class);
+
+         return entity.getStatusCode().value();
+     }
      */
-    /*
-    public static int sigin(String email, String password) {
-        String url = Configs.baseURL + Configs.signinEndpoint + "?email=" + email + "&password=" + password;
 
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity entity = restTemplate.getForEntity(url, Object.class);
-
-        return entity.getStatusCode().value();
-    }
-    */
-    public static boolean signin(String email, String password) {
-        try {
-            String url = "http://35.160.111.133:8888/signin";
-            URL obj = new URL(url);
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-            //add reuqest header
-            con.setRequestMethod("POST");
-            con.setRequestProperty("User-Agent", USER_AGENT);
-            con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
-            String urlParameters = "email=" + email + "&password=" + password;
-
-            // Send post request
-            con.setDoOutput(true);
-            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.writeBytes(urlParameters);
-            wr.flush();
-            wr.close();
-            Map<String, List<String>> headerFields = con.getHeaderFields();
-            List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
-
-            if (cookiesHeader != null) {
-                for (String cookie : cookiesHeader) {
-                    msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
-                }
+    public static String getToken() {
+                GetTokenTask s = new GetTokenTask();
+                s.execute();
+                while(!s.done)
+                        ;
+                if(s.success)
+                        return s.token;
+                return null;
             }
-            int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'POST' request to URL : " + url);
-            System.out.println("Post parameters : " + urlParameters);
-            System.out.println("Response Code : " + responseCode);
 
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
+    static class SpotDetailsTask extends AsyncTask<Void,Void,Void>
+    {
+        String spotID;
+        SpotDetailsDAO spot;
+        boolean done = false;
+        boolean success = false;
 
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            if (response.toString().trim().equals("authentication failed"))
-                return false;
-
-            //print result
-            System.out.println(response.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        public SpotDetailsTask(String id){
+            this.spotID = id;
         }
-        return true;
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = "http://35.160.111.133:8888/view/spot?spotid="+spotID;
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                setConnCookies(con);
+                con.connect();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'GET' request to URL : " + url);
+                System.out.println("Response Code : " + responseCode);
+
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                Gson gson = new Gson();
+                Type typeOfT = new TypeToken<SpotDetailsDAO>(){}.getType();
+                spot = gson.fromJson(response.toString(), typeOfT);
+                //print result
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
     }
+
+    public static SpotDetailsDAO spotDetails(int spotID) throws Exception {
+        SpotDetailsTask s = new SpotDetailsTask(spotID+"");
+        s.execute();
+        while(!s.done)
+            ;
+        if(s.success)
+            return s.spot;
+        return null;
+    }
+
+    static class SignInTask extends AsyncTask<Void,Void,Void>
+    {
+        String email;
+        String password;
+        boolean done = false;
+        boolean success = false;
+
+        public SignInTask(String email, String password){
+            this.email = email;
+            this.password = password;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = "http://35.160.111.133:8888/signin";
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+                String urlParameters = "email=" + email + "&password=" + password;
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                //print result
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+    public static boolean signin(String email, String password) {
+        SignInTask s = new SignInTask(email, password);
+        s.execute();
+        while(!s.done)
+            ;
+        return s.success;
+    }
+
+    static class SignUpTask extends AsyncTask<Void,Void,Void>
+    {
+        String email;
+        String password;
+        String first;
+        String last;
+        String phone;
+        int seeker;
+        int owner;
+        Base64 profilePic;
+        boolean done = false;
+        boolean success = false;
+
+        public SignUpTask(String email, String password, String first, String last, String phone, int seeker, int owner, Base64 profilePic){
+            this.email = email;
+            this.password = password;
+            this.first = first;
+            this.last = last;
+            this.phone = phone;
+            this.seeker = seeker;
+            this.owner = owner;
+            this.profilePic = profilePic;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = "http://35.160.111.133:8888/signup";
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                String urlParameters = null;
+
+                if (profilePic != null) {
+                    urlParameters = "email=" + email + "&password=" + password + "&first=" + first +
+                            "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner + "&profilePic="
+                            + profilePic.toString();
+                } else {
+                    urlParameters = "email=" + email + "&password=" + password + "&first=" + first +
+                            "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner;
+                }
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                con.connect();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+//            con.setDoOutput(false);
+//            con.setDoInput(true);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
 
     /*
     Success - 200 returned
@@ -135,300 +454,106 @@ public class ServerConnector {
     }
     */
     public static int signup(String email, String password, String first, String last, String phone, int seeker, int owner, Base64 profilePic) {
+        SignUpTask s = new SignUpTask(email, password, first, last, phone, seeker, owner, profilePic);
+        s.execute();
+        while(!s.done)
+            ;
+        if(s.success)
+            return 200;
+        else
+            return 401;
+    }
 
-    try
+
+    static class BookSpotTask extends AsyncTask<Void,Void,Void>
     {
-        String url = "http://35.160.111.133:8888/signup";
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        String amount;
+        String payment_method_nonce;
+        String email;
+        String spotID;
+        boolean done = false;
+        boolean success = false;
 
-        //add reuqest header
-        con.setRequestMethod("POST");
-        con.setRequestProperty("User-Agent", USER_AGENT);
-        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
-        String urlParameters = null;
-
-        if (profilePic != null) {
-            urlParameters = "email=" + email + "&password=" + password + "&first=" + first +
-                    "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner + "&profilePic="
-                    + profilePic.toString();
-        }
-        else {
-            urlParameters = "email=" + email + "&password=" + password + "&first=" + first +
-                    "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner;
+        public BookSpotTask(String amount, String payment_method_nonce, String email, String spotID){
+            this.amount = amount;
+            this.payment_method_nonce = payment_method_nonce;
+            this.email = email;
+            this.spotID = spotID;
         }
 
-        // Send post request
-        con.setDoOutput(true);
-        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.writeBytes(urlParameters);
-        wr.flush();
-        wr.close();
-        Map<String, List<String>> headerFields = con.getHeaderFields();
-        List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+        protected void onPreExecute() {
+            //display progress dialog.
 
-        if (cookiesHeader != null) {
-            for (String cookie : cookiesHeader) {
-                msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = "http://35.160.111.133:8888/book/spot";
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                String urlParameters = null;
+
+                urlParameters = "amount=" + amount + "&payment_method_nonce=" + payment_method_nonce + "&email=" + email +
+                        "&spotID=" + spotID;
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+//            con.setDoOutput(false);
+//            con.setDoInput(true);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            done = true;
+            return null;
         }
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Post parameters : " + urlParameters);
-        System.out.println("Response Code : " + responseCode);
 
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
 
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
         }
-        in.close();
-
-        return responseCode;
-    }
-    catch(Exception e)
-    {
-        e.printStackTrace();
-        return 401;
-    }
-}
-
-    /*
-    Send:
-        String address
-        Int longitude
-        Int latitude
-        Int month
-        Int day
-        Int year
-        TIME startTime
-        TIME endTime
-    Returns:
-        List spots
-        String address
-        TIME startTime
-        TIME endTime
-        Int price
-    */
-
-    /*
-    public static SpotListDAO search(String address, int longitude, int latitude, int month, int day, int year, String startTime, String endTime) {
-        String url = Configs.baseURL + Configs.searchEndpoint + "?address=" + address + "?longitude=" + longitude + "?month=" + month +
-                "?day=" + day + "?year=" + year + "?startTime=" + startTime + "?endTime=" + endTime;
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<SpotListDAO> entity = restTemplate.getForEntity(url, SpotListDAO.class);
-
-        return entity.getBody();
-    }
-    */
-    public static Object search(String address) throws Exception {
-        String url = "http://35.160.111.133:8888/search/spot?address="+address.replace(' ', '+');
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("User-Agent", USER_AGENT);
-        setConnCookies(con);
-        con.connect();
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + url);
-        System.out.println("Response Code : " + responseCode);
-
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-
-
-        // TODO
-        return 1;
     }
 
-    /*
-    Send:
-        Int spotID
-    Return:
-        String address
-        Int latitude
-        Int longitude
-        Int ownerRating
-        String picture
-        String phoneNumber
-        String startTime
-        String endTime
-        String description
-        Float price
-        Int rating
-     */
-    public static SpotDAO viewSpot(int spotID) {
-        String url = Configs.baseURL + Configs.viewSpotEndpoint + "?spotID=" + spotID;
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<SpotDAO> entity = restTemplate.getForEntity(url, SpotDAO.class);
-
-        return entity.getBody();
+    public static int bookSpot(String amount, String payment_method_nonce, String email, String spotID){
+        BookSpotTask s = new BookSpotTask(amount, payment_method_nonce, email, spotID);
+        s.execute();
+        while(!s.done)
+            ;
+        if(s.success)
+            return 200;
+        else
+            return 401;
     }
-
-    /*
-    Send:
-        String address
-        Int latitude
-        Int longitude
-        Int ownerRating
-        String picture
-        String phoneNumber
-        String startTime
-        String endTime
-        String description
-        String price
-    Return:
-        Success - 200 returned
-        Failure - 401 returned
-     */
-    public static int postSpot(SentSpotDAO spot) {
-        String url = Configs.baseURL + Configs.postSpotEndpoint;
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity entity = restTemplate.postForEntity(url, spot, Object.class);
-
-        return entity.getStatusCode().value();
-    }
-
-    /*
-    Send:
-        String email
-    Returns:
-        String username
-        String email
-        Int rating
-        String phoneNumber
-        String email
-    */
-    public static ReturnedUserDAO viewUser(String email) {
-        String url = Configs.baseURL + Configs.viewUserEndpoint;
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<ReturnedUserDAO> entity = restTemplate.getForEntity(url, ReturnedUserDAO.class);
-
-        return entity.getBody();
-    }
-
-    /*
-    Send:
-        Int spotID
-        Int rating
-    Returns:
-        Success - 200 returned
-        Failure - 401 returned
-    */
-    // TODO, consider put - put returns void
-    public static int rateUser(RateDAO rating) {
-        String url = Configs.baseURL + Configs.rateUserEndpoint;
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity entity = restTemplate.postForEntity(url, rating, Object.class);
-
-        return entity.getStatusCode().value();
-    }
-
-    public static final String bookSpotEndpoint = "/book";
-    /*
-    Send:
-        Int spotID
-        String email
-    Returns:
-        Success - 200 returned
-        Failure - 401 returned
-    */
-    // TODO, consider put - put returns void
-    public static int bookSpot(BookDAO booking) {
-        String url = Configs.baseURL + Configs.bookSpotEndpoint;
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity entity = restTemplate.postForEntity(url, booking, Object.class);
-
-        return entity.getStatusCode().value();
-    }
-
-    /*
-    Send:
-        Int spotID
-    Returns:
-        Success - 200 returned
-        Failure - 401 returned
-    */
-    // TODO, consider put - put returns void
-    public static int deleteSpot(int spotID) {
-        String url = Configs.baseURL + Configs.deleteSpotEndpoint;
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity entity = restTemplate.postForEntity(url, spotID, Object.class);
-
-        return entity.getStatusCode().value();
-    }
-
-    /*
-    Send:
-        String email
-    Returns:
-        List<spot> spots
-     */
-    public static SpotListDAO viewRentals(String email) {
-        String url = Configs.baseURL + Configs.viewRentalsEndpoint + "?email=" + email;
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<SpotListDAO> entity = restTemplate.getForEntity(url, SpotListDAO.class);
-
-        return entity.getBody();
-    }
-
-    /*
-    Send:
-        String email
-    Returns:
-        List<spot> spots
-     */
-    public static SpotListDAO viewPostings(String email) {
-        String url = Configs.baseURL + Configs.viewPostingsEndpoint + "?email=" + email;
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<SpotListDAO> entity = restTemplate.getForEntity(url, SpotListDAO.class);
-
-        return entity.getBody();
-    }
-
-    /*
-    Send:
-        String email
-    Returns:
-        Success - 200 returned
-        Failure - 401 returned
-    */
-    // TODO, consider put - put returns void
-    public static int forgotPassword(String email) {
-        String url = Configs.baseURL + Configs.forgotPasswordEndpoint + "?email=" + email;
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity entity = restTemplate.getForEntity(url, Object.class);
-
-        return entity.getStatusCode().value();
-    }
-
-
-
-
-
-
-
 
 }

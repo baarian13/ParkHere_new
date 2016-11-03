@@ -72,6 +72,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private void attempLogin() {
+
     }
 
 

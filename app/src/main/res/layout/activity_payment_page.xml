@@ -17,6 +17,11 @@
         android:layout_weight="0.1" />
 
     <Button
+        android:id="@+id/launch_braintree_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Braintree"/>
+    <Button
         android:id="@+id/pay_by_paypal_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

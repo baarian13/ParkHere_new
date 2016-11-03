@@ -25,27 +25,25 @@ import java.io.IOException;
 import java.util.Calendar;
 
 public class CreateSpotActivity extends AppCompatActivity {
-    private TextView start_date, end_date, start_hour,
-        end_hour, price_field, description_field;
+    private TextView address, price_field, description_field;
     private CheckBox repeat_weekly_checkbox, covered_checkbox;
-    private Button upload_photo_button, submit_button;
-    private DatePickerDialog startDatePicker, endDatePicker;
-    private TimePickerDialog startTimePicker, endTimePicker;
+    private Button upload_photo_button, date_button_lower, date_button_upper, time_button_lower, time_button_upper, submit_button;
+    private Calendar c;
+    private DatePickerDialog datePicker_lower, datePicker_upper;
+    private TimePickerDialog timePicker_lower, timePicker_upper;
     private int year, month, day, hour, minute;
     public static final int GET_FROM_GALLERY = 3; //request code for opening the gallery
+
+    private String userUniqueID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.create_spot);
-
-
+        setContentView(R.layout.activity_create_spot);
+        getCurrentTime();
         //===variables===//
-        start_date = (TextView) findViewById(R.id.create_spot_start_date);
-        end_date = (TextView) findViewById(R.id.create_spot_end_date);
-        start_hour = (TextView) findViewById(R.id.create_spot_start_hour);
-        end_hour = (TextView) findViewById(R.id.create_spot_end_hour);
+        address = (TextView) findViewById(R.id.addressCreateSpot);
         price_field = (TextView) findViewById(R.id.create_spot_price_field);
         description_field = (TextView) findViewById(R.id.create_spot_description_field);
 
@@ -55,81 +53,129 @@ public class CreateSpotActivity extends AppCompatActivity {
         upload_photo_button = (Button) findViewById(R.id.upload_photo_button);
         submit_button = (Button) findViewById(R.id.create_spot_submit_button);
 
-        Calendar c = Calendar.getInstance();
+
+        Intent intent = getIntent();
+
+        if (intent != null) {
+            setActionListeners();
+        }
+    }
+
+    private void getCurrentTime(){
+        // Use the current date as the default date in the picker
+        c = Calendar.getInstance();
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
+
+        // Use the current date as the default date in the picker
         hour = c.get(Calendar.HOUR_OF_DAY);
         minute = c.get(Calendar.MINUTE);
-
-        setActionListeners();
     }
 
-    private void createPickers(){
-        //===StartDatePicker===//
-        start_date.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {startDatePicker.show();}
-        });
-        DatePickerDialog.OnDateSetListener onStartDateSetHandler = new DatePickerDialog.OnDateSetListener(){
+    private void createDatePickers(){
+        date_button_lower = (Button) findViewById(R.id.date_button_lower_search);
+        date_button_upper = (Button) findViewById(R.id.date_button_upper_search);
+        //===Search by date: DatePicker===//
+
+        //create the listener for the DatePickerDialog
+        //first the lower
+        DatePickerDialog.OnDateSetListener onDateSetHandlerLower = new DatePickerDialog.OnDateSetListener(){
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 // Update the TextView with the date chosen by the user
-                start_date.setText(month + "/" + day + "/" + year );
+                date_button_lower.setText(formatDate(year, month, day));
             }
         };
-        startDatePicker = new DatePickerDialog(this, onStartDateSetHandler, year, month, day);
-
-        //===EndDatePicker===//
-        end_date.setOnClickListener(new View.OnClickListener(){
+        datePicker_lower = new DatePickerDialog(this, onDateSetHandlerLower, year, month, day);
+        date_button_lower.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) {startDatePicker.show();}
+            public void onClick(View view) {showDatePickerLower();}
         });
-        DatePickerDialog.OnDateSetListener onEndDateSetHandler = new DatePickerDialog.OnDateSetListener(){
+
+        //now upper
+        DatePickerDialog.OnDateSetListener onDateSetHandlerUpper = new DatePickerDialog.OnDateSetListener(){
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 // Update the TextView with the date chosen by the user
-                end_date.setText(month + "/" + day + "/" + year );
+                date_button_upper.setText(formatDate(year,month,day));
             }
         };
-        endDatePicker = new DatePickerDialog(this, onEndDateSetHandler, year, month, day);
-
-        //===Search by time===//
-        start_hour.setOnClickListener(new View.OnClickListener(){
+        datePicker_upper = new DatePickerDialog(this, onDateSetHandlerUpper, year, month, day);
+        date_button_upper.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) {startTimePicker.show();};
+            public void onClick(View view) {showDatePickerUpper();}
         });
-        TimePickerDialog.OnTimeSetListener onStartTimeSetHandler =new TimePickerDialog.OnTimeSetListener(){
+    }
+
+    private String formatDate(int year, int month, int day){
+        return year + "-" + month + "-" + day;
+    }
+
+    //Date Picker
+    private void showDatePickerLower(){
+        datePicker_lower.show();
+    }
+    private void showDatePickerUpper(){ datePicker_upper.show();}
+
+
+    //
+    //time picker
+    private void createTimePickers() {
+        //===Search by date: DatePicker===//
+        time_button_lower = (Button) findViewById(R.id.time_button_lower_search);
+        time_button_upper = (Button) findViewById(R.id.time_button_upper_search);
+        //create the listener for the DatePickerDialog
+        TimePickerDialog.OnTimeSetListener onTimeSetHandlerLower = new TimePickerDialog.OnTimeSetListener(){
             @Override
             public void onTimeSet(TimePicker view, int hour, int minute) {
                 // Update the TextView with the date chosen by the user
-                start_hour.setText(hour + ":" + minute);
+                time_button_lower.setText(formatTime(hour, minute));
             }
         };
-        startTimePicker = new TimePickerDialog(this, onStartTimeSetHandler, hour, minute,
+        timePicker_lower = new TimePickerDialog(this, onTimeSetHandlerLower, hour, minute,
                 DateFormat.is24HourFormat(this));
 
-        //===End Hour Picker===//
-        end_hour.setOnClickListener(new View.OnClickListener(){
+        time_button_lower.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) {endTimePicker.show();};
+            public void onClick(View view) {showTimePickerLower(view);}
         });
-        TimePickerDialog.OnTimeSetListener onEndTimeSetHandler =new TimePickerDialog.OnTimeSetListener(){
+
+        TimePickerDialog.OnTimeSetListener onTimeSetHandlerUpper = new TimePickerDialog.OnTimeSetListener(){
             @Override
             public void onTimeSet(TimePicker view, int hour, int minute) {
                 // Update the TextView with the date chosen by the user
-                end_hour.setText(hour + ":" + minute);
+                time_button_upper.setText(formatTime(hour, minute));
             }
         };
-        endTimePicker = new TimePickerDialog(this, onEndTimeSetHandler, hour, minute,
+        timePicker_upper = new TimePickerDialog(this, onTimeSetHandlerUpper, hour, minute,
                 DateFormat.is24HourFormat(this));
+
+        time_button_upper.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {showTimePickerUpper(view);}
+        });
+    }
+
+    private String formatTime(int hour, int minute){
+        return hour + ":" + minute;
+    }
+
+    //Time Picker
+    private void showTimePickerLower(View view){
+        timePicker_lower.show();
+    }
+    private void showTimePickerUpper(View view){
+        timePicker_upper.show();
     }
 
 
     private void setActionListeners(){
         setCancellationPolicyListener();
-        createPickers();
+        createDatePickers();
+        createTimePickers();
         setUploadButtonListener();
+        setSubmitButtonListener();
     }
 
     private void setCancellationPolicyListener(){
@@ -185,5 +231,32 @@ public class CreateSpotActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void createSpot(){
+        String addressString = (String)address.getText();
+
+
+        double price = Double.parseDouble((String)price_field.getText());
+        String description = (String)description_field.getText();
+        String cancellation = ((Spinner) findViewById(R.id.cancellation_policy_selection)).getSelectedItemPosition() + "";
+        String isCovered = "";
+        if (covered_checkbox.isChecked())
+            isCovered = "1";
+        else
+            isCovered = "0";
+        String spot_type = ((Spinner) findViewById(R.id.spot_type)).getSelectedItemPosition() + "";
+
+        //send data
+        //ServerConnector.createSpot(addressString, spot_type, isCovered, cancellation, price, startString, endString, description, 1);
+    }
+
+    private void setSubmitButtonListener(){
+        Button submitButton = (Button) findViewById(R.id.create_spot_submit_button);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                createSpot();
+            }
+        });
     }
 }

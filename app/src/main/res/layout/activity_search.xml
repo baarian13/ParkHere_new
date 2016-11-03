@@ -63,16 +63,16 @@
                 <LinearLayout
                     android:orientation="horizontal">
                     <Button
+                        android:id="@+id/date_button_lower_search"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/select"/>
                     <TextView
-                        android:id="@+id/search_date_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/date_hint_label"/>
+                        android:text="~"/>
                     <Button
-                        android:id="@+id/search_date_button"
+                        android:id="@+id/date_button_upper_search"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/select"/>
@@ -84,16 +84,16 @@
                 <LinearLayout
                     android:orientation="horizontal">
                     <Button
+                        android:id="@+id/time_button_lower_search"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/select"/>
                     <TextView
-                        android:id="@+id/search_time_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="~"/>
                     <Button
-                        android:id="@+id/search_time_button"
+                        android:id="@+id/time_button_upper_search"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/select"/>
@@ -106,6 +106,7 @@
             android:layout_height="wrap_content"
             android:text="@string/search_button_label"
             android:layout_marginTop="20dp"
+            android:id="@+id/search_submit_button"
             />
     </LinearLayout>
 </RelativeLayout>

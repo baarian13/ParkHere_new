@@ -67,11 +67,11 @@ def postSpot(cookie, http_client, address, spotType, isCovered,
 if __name__ == '__main__':
     http_client = httpclient.HTTPClient()
     img = buildImgStr('/Users/henrylevy/Downloads/default.jpg')
-#     cookie = createUser(http_client, 'default123@test.com', 'password', 'first', 'last', '123-456-7890', 1, 1, img)
+    cookie = createUser(http_client, 'default123456@test.com', 'password1!', 'first', 'last', '123-456-7890', 1, 1, img)
     
-    cookie = signIn(http_client, 'default12@test.com', 'password')
-    postSpot(cookie, http_client, '707 West 28th street, Los Angeles CA, 90007', '0', '0',
-             "0", '10.00', "2016-10-12 12:00:00", "2016-10-12 14:00:00", '0')
+#     cookie = signIn(http_client, 'default1234@test.com', 'password1!')
+#     postSpot(cookie, http_client, '707 West 28th street, Los Angeles CA, 90007', '0', '0',
+#              "0", '10.00', "2016-10-12 12:00:00", "2016-10-12 14:00:00", '0')
     searchSpot(cookie, http_client, '700 West 28th street, Los Angeles CA, 90007')
     http_client.close()
     

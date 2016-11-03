@@ -1,10 +1,15 @@
 package com.lazeebear.parkhere;
 
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentUserDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.List;
+
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -17,7 +22,9 @@ public class ServerUserFunctionalityTest {
     public void search() throws Exception {
         ServerConnector.signin("rjason14@gmail.com", "jerome");
 
-        ServerConnector.search("707 West 28th Street, Los Angeles, CA 90007");
+        List<SpotDAO> spots = null;//ServerConnector.search("707 West 28th Street, Los Angeles, CA 90007");
+
+        assertTrue(!spots.isEmpty());
 
     }
 

@@ -11,6 +11,15 @@ from tornado.ioloop import IOLoop
 from Controller.UserHandlers.SingupHandler import SignUpHandler
 from Controller.SpotHandlers.PostSpotHandler import PostSpotHandler
 from Controller.SpotHandlers.SearchSpotHandler import SearchSpotHandler
+from Controller.SpotHandlers.BookSpotHandler import BookSpotHandler
+from Controller.SpotHandlers.DeleteSpotHandler import DeleteSpotHandler
+from Controller.SpotHandlers.ViewPostingsHandler import ViewPostingsHandler
+from Controller.SpotHandlers.ViewRentalsHandler import ViewRentalsHandler
+from Controller.SpotHandlers.ViewSpotHandler import ViewSpotHandler
+from Controller.UserHandlers.ModifyUserProfileHandler import ModifyUserProfileHandler
+from Controller.UserHandlers.RateUserHandler import RateUserHandler
+from Controller.UserHandlers.ViewUserProfileHandler import ViewUserProfileHandler
+from Controller.SpotHandlers.GetClientTokenHandler import GetClientTokenHandler
 settings = {
     "cookie_secret": "ADSFGHARY3457fgSDFHSDFjusdfASDFGH2345h=sdg",
     "login_url": "/signin",
@@ -20,8 +29,17 @@ application = tornado.web.Application([
     ("/", MainHandler),
     ("/signin", SigninHandler),
     ("/signup", SignUpHandler),
+    ("/book/spot", BookSpotHandler),
+    ("/delete/spot", DeleteSpotHandler),
+    ("/search/spot", SearchSpotHandler),
+    ("/view/postings", ViewPostingsHandler),
+    ("/view/rentals", ViewRentalsHandler),
+    ("/view/spot", ViewSpotHandler),
+    ("/view/user", ViewUserProfileHandler),
+    ("/modify/user", ModifyUserProfileHandler),
+    ("/rate/user", RateUserHandler),
     ("/post/spot", PostSpotHandler),
-    ("/search/spot", SearchSpotHandler)
+    ("/get/token", GetClientTokenHandler)
 ], ssl_options={
     "certfile": os.path.join(data_dir, "server.crt"),
     "keyfile": os.path.join(data_dir, "server.key"),
