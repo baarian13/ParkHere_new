@@ -39,8 +39,8 @@ class SQLDatabaseManager(object):
                                    db     = self.database)
         self._cursor = self.db.cursor()
         print os.getenv('AWS_ACCESS_KEY_ID', '')
-        self._objStorageManager = ObjectStorageManager('parkhereapp')
-
+        # self._objStorageManager = ObjectStorageManager('parkhereapp')
+        # TODO implement our own storage
     @property
     def objStorageManager(self):
         if not self._objStorageManager:

@@ -6,8 +6,8 @@ Created on Oct 27, 2016
 from tornado import httpclient
 import urllib, base64
 
-ip = '35.160.111.133'
-
+# ip = '35.160.111.133'
+ip = 'localhost'
 def buildImgStr(path):
     with open(path, 'rb') as image_file:
         return base64.b64encode(image_file.read())
