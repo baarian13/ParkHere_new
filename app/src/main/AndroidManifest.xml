@@ -49,7 +49,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lazeebear.parkhere.SpotListActivity" />
         </activity>
-
         <activity android:name=".AddUserRatingActivity" />
         <activity android:name=".Search" />
         <activity
@@ -81,7 +80,8 @@
                 <!-- <data android:scheme="${applicationId}.braintree" /> -->
             </intent-filter>
         </activity>
-        <activity android:name=".AddSpotRatingActivity"></activity>
+        <activity android:name=".AddSpotRatingActivity" />
+        <activity android:name=".Filter"></activity>
     </application>
 
 </manifest>

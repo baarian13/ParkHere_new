@@ -35,12 +35,7 @@ public class Search extends AppCompatActivity {
         createDatePickers();
         createTimePickers();
 
-        Button searchButton = (Button) findViewById(R.id.search_submit_button);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                search();
-            }
-        });
+        addActionListeners();
     }
 
     private void getCurrentTime(){
@@ -176,6 +171,16 @@ public class Search extends AppCompatActivity {
     //upper = 2
     private String formatDateTime(String date, String time){
         return date + " " + time + ":00";
+    }
+
+    private void addActionListeners(){
+
+        Button searchButton = (Button) findViewById(R.id.search_submit_button);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                search();
+            }
+        });
     }
 
 }

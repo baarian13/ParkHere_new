@@ -38,6 +38,7 @@ public class SpotListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String getAddress = intent.getStringExtra("address"+"0");
         populateList(getAddress);
+        addActionListeners();
     }
 
     private void populateList(String address) {
@@ -67,6 +68,20 @@ public class SpotListActivity extends AppCompatActivity {
         intent.putExtra("id",id+"");
         startActivity(intent);
     }
+
+    private void addActionListeners(){
+        Button filterButton = (Button) findViewById(R.id.search_filter_button_spotList);
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                goToFilterPage();
+            }
+        });
+    }
+    private void goToFilterPage(){
+        Intent intent = new Intent(this, Filter.class);
+        startActivity(intent);
+    }
+
 
 
 }
