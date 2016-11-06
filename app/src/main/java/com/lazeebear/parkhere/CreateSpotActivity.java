@@ -184,15 +184,10 @@ public class CreateSpotActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Resources res = getResources();
-                String[] options = res.getStringArray(R.array.cancellation_policy);
+                String[] optionDescriptions = res.getStringArray(R.array.cancellation_policy_description);
                 TextView description = (TextView) findViewById(R.id.cancellation_policy_description);
-                if ( parent.getSelectedItem().equals(options[0]) ){ //flexible
-                    description.setText(getString(R.string.flexible_option));
-                } else if  ( parent.getSelectedItem().equals(options[1]) ) { //moderate
-                    description.setText(getString(R.string.moderate_option));
-                } else if ( parent.getSelectedItem().equals(options[2]) ) { //strict
-                    description.setText(getString(R.string.strict_option));
-                }
+                int selectionPosition = parent.getSelectedItemPosition();
+                description.setText(optionDescriptions[selectionPosition]);
             }
 
             @Override

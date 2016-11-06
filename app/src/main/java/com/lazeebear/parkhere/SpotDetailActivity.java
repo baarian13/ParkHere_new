@@ -1,6 +1,7 @@
 package com.lazeebear.parkhere;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
@@ -43,6 +44,15 @@ public class SpotDetailActivity extends AppCompatActivity {
         price.setText("$" + 2.00);
         TextView owner = (TextView) findViewById(R.id.owner_spotDetail);
         owner.setText("First" + " " + "Last");
+        int cancellationIndex = 1;
+        Resources res = getResources();
+        TextView cancellationPolicyName = (TextView) findViewById(R.id.cancellation_policy_spotDetail);
+        String[] nameOptions = res.getStringArray(R.array.cancellation_policy);
+        cancellationPolicyName.setText("Cancellation Policy   " + nameOptions[cancellationIndex]);
+        TextView cancellationPolicyDescription = (TextView) findViewById(R.id.cancellation_policy_description_spotDetail);
+        String[] descriptionOptions = res.getStringArray(R.array.cancellation_policy_description);
+        String description = descriptionOptions[cancellationIndex];
+        cancellationPolicyDescription.setText(description);
 
     }
 

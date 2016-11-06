@@ -10,7 +10,7 @@ from Model.SpotDatabaseManager import SQLSpotDatabaseManager
 class AbstractSpotHandler(AbstractBaseHandler):
     def __init__(self, *args, **kwargs):
         super(AbstractSpotHandler, self).__init__(*args, **kwargs)
-        self.db = SQLSpotDatabaseManager('parkhereapp.csgoykinzoiq.us-west-2.rds.amazonaws.com',
+        self.db = SQLSpotDatabaseManager('parkhere.cghr1zvgeuqd.us-west-1.rds.amazonaws.com',
                                          'zhichenw', 'zhichenw', 3306, 'parkhere')
 
     @tornado.web.authenticated # ensures that user has valid token/is signed in
