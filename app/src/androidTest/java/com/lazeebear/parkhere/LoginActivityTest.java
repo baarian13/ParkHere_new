@@ -75,4 +75,4 @@ public class LoginActivityTest {
         //wait for login page to appear.
         assertTrue(mDevice.wait(Until.hasObject(loginButtonSelector), UI_TIMEOUT));
     }
-
+}
