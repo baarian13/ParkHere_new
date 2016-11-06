@@ -10,6 +10,7 @@ import android.support.test.uiautomator.BySelector;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.Until;
+import android.util.Log;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -62,17 +63,28 @@ public class LoginActivityTest {
     // Byselector is used for UI elements that are Activity-dependent and may not exist on-screen if the View changes.
     @Test
     public void testLoadingPageAndLoginPageUponLaunch() {
+        Log.i("STATE","Starting testLoadingPageAndLoginPageUponLaunch()");
+
+        Log.i("STATE","  Checking for loading page...");
         // check for existence of loading page.
         // message string on the loading page (to identify the loading page)
         BySelector loadingPageSelector = By.clazz(CLASS_TEXT_VIEW).textContains(LOADING_MESSAGE);
 
         //wait for the loading page to appear.
         assertTrue(mDevice.wait(Until.hasObject(loadingPageSelector), UI_TIMEOUT));
+        Log.i("STATE","  Complete.");
 
+        Log.i("STATE","  Checking for login page...");
         // button on the login page (to identify the login page)
         BySelector loginButtonSelector = By.clazz(CLASS_BUTTON);
 
         //wait for login page to appear.
         assertTrue(mDevice.wait(Until.hasObject(loginButtonSelector), UI_TIMEOUT));
+        Log.i("STATE","  Complete.");
     }
 
+    @Test
+    public void testLoginPageRegisterButton(){
+
+    }
+}
