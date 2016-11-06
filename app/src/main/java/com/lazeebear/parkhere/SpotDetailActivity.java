@@ -27,13 +27,28 @@ public class SpotDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             spotID = Integer.parseInt(intent.getStringExtra("id"));
-            setInformation(spotID);
+            hideInformation();
+            setInformation();
             setActionListeners();
         }
 
     }
 
-    private void setInformation(int spotID){
+    private void hideInformation(){
+        if (isSpotOwner()){
+            Button reserveSpotButton = (Button) findViewById(R.id.reserveButton_spotDetail);
+            reserveSpotButton.setVisibility(View.GONE);
+            Button rateUserButton = (Button) findViewById(R.id.rateUserButton_spotDetail);
+            rateUserButton.setVisibility(View.GONE);
+            Button rateSpotButton = (Button) findViewById(R.id.rateSpotButton_spotDetail);
+            rateSpotButton.setVisibility(View.GONE);
+        } else {
+            Button deleteSpotButton = (Button) findViewById(R.id.deleteSpotButton_spotDetail);
+            deleteSpotButton.setVisibility(View.GONE);
+        }
+    }
+
+    private void setInformation(){
         userUniqueID = "email";
 
         TextView addressField = (TextView) findViewById(R.id.address_spotDetail);
@@ -76,6 +91,14 @@ public class SpotDetailActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void deleteSpot() {
+        //delete spot first
+        //then redirect to account page
+        Intent intent = new Intent(this, Account.class);
+        intent.putExtra("id",userUniqueID);
+        startActivity(intent);
+    }
+
     private void setActionListeners(){
         Button reserveSpotButton = (Button) findViewById(R.id.reserveButton_spotDetail);
         reserveSpotButton.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +124,17 @@ public class SpotDetailActivity extends AppCompatActivity {
             }
         });
 
+        Button deleteSpotButton = (Button) findViewById(R.id.deleteSpotButton_spotDetail);
+        deleteSpotButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteSpot();
+            }
+        });
+    }
 
+    //TODO
+    private boolean isSpotOwner(){
+        return false;
     }
 }
