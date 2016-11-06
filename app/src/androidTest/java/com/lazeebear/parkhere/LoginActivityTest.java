@@ -87,4 +87,5 @@ public class LoginActivityTest {
     public void testLoginPageRegisterButton(){
 
     }
+    
 }

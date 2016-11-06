@@ -1,6 +1,7 @@
 package com.lazeebear.parkhere;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
@@ -26,13 +27,28 @@ public class SpotDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             spotID = Integer.parseInt(intent.getStringExtra("id"));
-            setInformation(spotID);
+            hideInformation();
+            setInformation();
             setActionListeners();
         }
 
     }
 
-    private void setInformation(int spotID){
+    private void hideInformation(){
+        if (isSpotOwner()){
+            Button reserveSpotButton = (Button) findViewById(R.id.reserveButton_spotDetail);
+            reserveSpotButton.setVisibility(View.GONE);
+            Button rateUserButton = (Button) findViewById(R.id.rateUserButton_spotDetail);
+            rateUserButton.setVisibility(View.GONE);
+            Button rateSpotButton = (Button) findViewById(R.id.rateSpotButton_spotDetail);
+            rateSpotButton.setVisibility(View.GONE);
+        } else {
+            Button deleteSpotButton = (Button) findViewById(R.id.deleteSpotButton_spotDetail);
+            deleteSpotButton.setVisibility(View.GONE);
+        }
+    }
+
+    private void setInformation(){
         userUniqueID = "email";
 
         TextView addressField = (TextView) findViewById(R.id.address_spotDetail);
@@ -43,6 +59,15 @@ public class SpotDetailActivity extends AppCompatActivity {
         price.setText("$" + 2.00);
         TextView owner = (TextView) findViewById(R.id.owner_spotDetail);
         owner.setText("First" + " " + "Last");
+        int cancellationIndex = 1;
+        Resources res = getResources();
+        TextView cancellationPolicyName = (TextView) findViewById(R.id.cancellation_policy_spotDetail);
+        String[] nameOptions = res.getStringArray(R.array.cancellation_policy);
+        cancellationPolicyName.setText("Cancellation Policy   " + nameOptions[cancellationIndex]);
+        TextView cancellationPolicyDescription = (TextView) findViewById(R.id.cancellation_policy_description_spotDetail);
+        String[] descriptionOptions = res.getStringArray(R.array.cancellation_policy_description);
+        String description = descriptionOptions[cancellationIndex];
+        cancellationPolicyDescription.setText(description);
 
     }
 
@@ -63,6 +88,14 @@ public class SpotDetailActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AddUserRatingActivity.class);
         //putExtra needs string??
         intent.putExtra("id", spotID+"");
+        startActivity(intent);
+    }
+
+    private void deleteSpot() {
+        //delete spot first
+        //then redirect to account page
+        Intent intent = new Intent(this, Account.class);
+        intent.putExtra("id",userUniqueID);
         startActivity(intent);
     }
 
@@ -91,6 +124,17 @@ public class SpotDetailActivity extends AppCompatActivity {
             }
         });
 
+        Button deleteSpotButton = (Button) findViewById(R.id.deleteSpotButton_spotDetail);
+        deleteSpotButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteSpot();
+            }
+        });
+    }
 
+    //TODO
+    private boolean isSpotOwner(){
+        return false;
     }
 }

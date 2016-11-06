@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer-array name="rating_range">
+    <string-array name="rating_range">
         <item>1</item>
         <item>2</item>
         <item>3</item>
         <item>4</item>
         <item>5</item>
-    </integer-array>
+    </string-array>
 
     <string-array name="car_types">
         <item>Motorcycle</item>
@@ -24,5 +24,22 @@
         <item>Flexible</item>
         <item>Moderate</item>
         <item>Strict</item>
+    </string-array>
+
+    <string-array name="cancellation_policy_description" formatted="false">
+        <item>
+       Users will receive a full refund, excluding ParkHere fee (10%), if cancellation occurs 24 hours or more before rental period.\n
+       Users will receive no refund if their cancellation occurs less 24 hours before the rental period.\n
+       Users who leave early will receive a refund for the hours not spent in the space 24 hours after their cancellation.
+       </item>
+       <item>
+           Users will receive a full refund, excluding ParkHere fee (10%), if cancellation occurs five days or more before rental period.\n
+           Users will receive a refund for 50% of the rental fees for the entire rental period excluding the first 24 hours.\n
+           Users who leave early will receive a refund for 50% of the hours not spent in the space 24 hours after their cancellation.
+       </item>
+       <item>
+           Users will receive a 50% refund if cancellation occurs seven days or more before rental period.\n
+           If the user cancels less than 7 days in advance of the rental period, no value will be refunded.
+       </item>
     </string-array>
 </resources>

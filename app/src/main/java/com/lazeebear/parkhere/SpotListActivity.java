@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ public class SpotListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String getAddress = intent.getStringExtra("address"+"0");
         populateList(getAddress);
+        addActionListeners();
     }
 
     private void populateList(String address) {
@@ -52,6 +54,8 @@ public class SpotListActivity extends AppCompatActivity {
     private Button createSpotButton(final String address) {
         final Button button = new Button(this);
         button.setText(address);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        button.setLayoutParams(params);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 //send to spot detail page
@@ -67,6 +71,20 @@ public class SpotListActivity extends AppCompatActivity {
         intent.putExtra("id",id+"");
         startActivity(intent);
     }
+
+    private void addActionListeners(){
+        Button filterButton = (Button) findViewById(R.id.search_filter_button_spotList);
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                goToFilterPage();
+            }
+        });
+    }
+    private void goToFilterPage(){
+        Intent intent = new Intent(this, Filter.class);
+        startActivity(intent);
+    }
+
 
 
 }

@@ -31,7 +31,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/owner_label"/>
+            android:text="@string/owner_label"
+            android:layout_marginRight="20dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,6 +43,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/owner_phonenum_label"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancellation Policy:"
+        android:id="@+id/cancellation_policy_spotDetail"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/cancellation_policy_description_spotDetail"
+        android:layout_marginLeft="10dp"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,5 +78,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/rateSpotButton_spotDetail"
             android:visibility="visible"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/deleteSpotButton_spotDetail"
+            android:text="Delete"/>
     </LinearLayout>
 </LinearLayout>

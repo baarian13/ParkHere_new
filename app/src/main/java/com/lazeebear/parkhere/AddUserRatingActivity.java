@@ -14,7 +14,7 @@ public class AddUserRatingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_user_rating);
+        setContentView(R.layout.activity_add_review);
         Button submit = (Button) findViewById(R.id.submitReviewUser);
         //receives intent from Account class and from Spot class?
         Intent intent = getIntent();
