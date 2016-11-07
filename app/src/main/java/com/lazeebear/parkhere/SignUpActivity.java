@@ -1,7 +1,10 @@
 package com.lazeebear.parkhere;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +23,8 @@ import static com.lazeebear.parkhere.R.layout.activity_sign_up;
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText sEmailView, sFirstName, sLastName, sPassword, sPasswordRe, sPhoneNum;
+    private static final int SELECT_PICTURE = 1;
+    private String selectedImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,14 @@ public class SignUpActivity extends AppCompatActivity {
         sPassword = (EditText) findViewById(R.id.password_sign_up);
         sPasswordRe = (EditText) findViewById(R.id.passwordConfirm_sign_up);
         sPhoneNum = (EditText) findViewById(R.id.phoneNum_sign_up);
+
+        Button sSelectPictureButton = (Button) findViewById(R.id.sign_up_profile_picture_button);
+        sSelectPictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectAFile();
+            }
+        });
 
         Button sSignInButton = (Button) findViewById(R.id.sign_up_button);
         sSignInButton.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +65,15 @@ public class SignUpActivity extends AppCompatActivity {
                 backToRegister();
             }
         });
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                Uri selectedImageUri = data.getData();
+                selectedImagePath = getPath(selectedImageUri);
+            }
+        }
     }
 
     private boolean validationBoxes() {
@@ -165,4 +187,36 @@ public class SignUpActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void selectAFile() {
+        // in onCreate or any event where your want the user to
+        // select a file
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,
+                "Select Picture"), SELECT_PICTURE);
+    }
+
+    /**
+     * helper to retrieve the path of an image URI
+     */
+    public String getPath(Uri uri) {
+        // just some safety built in
+        if( uri == null ) {
+            // TODO perform some logging or show user feedback
+            return null;
+        }
+        // try to retrieve the image from the media store first
+        // this will only work for images selected from gallery
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        if( cursor != null ){
+            int column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        }
+        // this is our fallback here
+        return uri.getPath();
+    }
 }

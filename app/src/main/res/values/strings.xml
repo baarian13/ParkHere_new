@@ -23,6 +23,7 @@
 
     <!-- Strings related to Sign Up -->
     <string name="title_activity_sign_up">Sign Up</string>
+    <string name="choose_profile_picture">Choose Profile Picture</string>
 
     <!--filter search results-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
