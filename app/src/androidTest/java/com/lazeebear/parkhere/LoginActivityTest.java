@@ -3,19 +3,30 @@ package com.lazeebear.parkhere;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.Contacts;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.BySelector;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
+import android.support.test.uiautomator.UiObjectNotFoundException;
+import android.support.test.uiautomator.UiSelector;
 import android.support.test.uiautomator.Until;
 import android.util.Log;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.util.Assert;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -31,15 +42,19 @@ public class LoginActivityTest {
     private static final int UI_TIMEOUT = 2000; //2 seconds
     private static final String PACKAGE_NAME = "com.lazeebear.parkhere"; //from AndroidManifest.xml
 
-    private static final String CLASS_TEXT_VIEW = "android.widget.TextView";
-    private static final String CLASS_BUTTON = "android.widget.Button";
-    private static final String LOADING_MESSAGE = "Loading";//R.string.loading_screen_message;
+    private static final String USERNAME_VERIFIED = ""; //TODO
+    private static final String PASSWORD_VERIFIED = ""; //TODO
 
     private Instrumentation instr;
     private UiDevice mDevice;
+    private boolean testMode;
 
+    // uses Ui Automator
+    // NOTE: turns the DEBUG_MODE off for all tests, as all these tests assume the app is at the
+    // login page, which will happen automatically if the debug mode is off.
     @Before
-    public void launchAppFromHome() {
+    public void launchAppFromHome() throws InterruptedException {
+        MainActivity.setDebugMode(false);
         instr = InstrumentationRegistry.getInstrumentation();
         mDevice = UiDevice.getInstance(instr); //this is returning null
 
@@ -60,32 +75,32 @@ public class LoginActivityTest {
         mDevice.wait(Until.hasObject(By.pkg(PACKAGE_NAME).depth(0)), LAUNCH_TIMEOUT);
     }
 
-    // Byselector is used for UI elements that are Activity-dependent and may not exist on-screen if the View changes.
+    // uses Espresso.
+    // checks if, at the end of loading, the login page appears.
     @Test
     public void testLoadingPageAndLoginPageUponLaunch() {
         Log.i("STATE","Starting testLoadingPageAndLoginPageUponLaunch()");
-
-        Log.i("STATE","  Checking for loading page...");
-        // check for existence of loading page.
-        // message string on the loading page (to identify the loading page)
-        BySelector loadingPageSelector = By.clazz(CLASS_TEXT_VIEW).textContains(LOADING_MESSAGE);
-
-        //wait for the loading page to appear.
-        assertTrue(mDevice.wait(Until.hasObject(loadingPageSelector), UI_TIMEOUT));
-        Log.i("STATE","  Complete.");
-
-        Log.i("STATE","  Checking for login page...");
-        // button on the login page (to identify the login page)
-        BySelector loginButtonSelector = By.clazz(CLASS_BUTTON);
-
-        //wait for login page to appear.
-        assertTrue(mDevice.wait(Until.hasObject(loginButtonSelector), UI_TIMEOUT));
-        Log.i("STATE","  Complete.");
+        onView(withId(R.id.register_button)).check(matches(isDisplayed()));
+        Log.i("STATE","  Completed successfully");
     }
 
     @Test
-    public void testLoginPageRegisterButton(){
-
+    public void testLoginPageRegisterButton() {
+        Log.i("STATE","Starting testLoginPageRegisterButton()");
+        onView(withId(R.id.register_button)).perform(click());
+        onView(withId(R.id.sign_up_button)).check(matches(isDisplayed()));
+        Log.i("STATE","  Complete");
     }
-    
+
+    @Test
+    public void testLoginPageInputVerification() {
+        Log.i("STATE","Starting testLoginPageInputVerification()");
+        onView(withId(R.id.email)).perform(typeText(USERNAME_VERIFIED));
+        onView(withId(R.id.password)).perform(typeText(PASSWORD_VERIFIED));
+        onView(withId(R.id.email_sign_in_button)).perform(click());
+        //check if the corresponding account page (identified by the rating bar) shows up.
+        onView(withId(R.id.ratingBar)).check(matches(isDisplayed()));
+        Log.i("STATE","  Complete");
+    }
+
 }
