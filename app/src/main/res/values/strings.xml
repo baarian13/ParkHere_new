@@ -2,6 +2,7 @@
     <string name="app_name">ParkHere</string>
     <string name="submit">Submit</string>
     <string name="select">Select</string>
+    <string name="loading">Loading...</string>
 
     <!-- Strings related to login -->
     <string name="title_activity_login">Sign In</string>

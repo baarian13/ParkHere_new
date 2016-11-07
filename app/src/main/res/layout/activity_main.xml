@@ -15,31 +15,46 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/mainpage_loading_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/loading" />
         <Button
+            android:id="@+id/mainpage_sign_in_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/action_sign_in"
-            android:onClick="openSignInActivity"/>
+            android:onClick="openSignInActivity"
+            android:visibility="invisible" />
         <Button
+            android:id="@+id/mainpage_forgot_pasword_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="forgot password"
-            android:onClick="openForgotPasswordActivity"/>
+            android:onClick="openForgotPasswordActivity"
+            android:visibility="invisible" />
         <Button
+            android:id="@+id/mainpage_search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Search"
-            android:onClick="openSearchActivity"/>
+            android:onClick="openSearchActivity"
+            android:visibility="invisible"/>
         <Button
+            android:id="@+id/mainpage_account_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Account"
-            android:onClick="openAccountActivity"/>
+            android:onClick="openAccountActivity"
+            android:visibility="invisible"/>
         <Button
+            android:id="@+id/mainpage_payment_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="payment"
-            android:onClick="openPaymentActivity"/>
+            android:onClick="openPaymentActivity"
+            android:visibility="invisible"/>
     </LinearLayout>
 
 </RelativeLayout>
