@@ -24,7 +24,7 @@ class Spot(DatabaseObject):
                     longitude FLOAT NOT NULL,
                     isCovered BOOL NOT NULL,
                     isRecurring BOOL NOT NULL,
-                    description VARCHAR,
+                    description VARCHAR(300),
                     picturePath VARCHAR(300),
                     cancelationPolicy SMALLINT NOT NULL,
                     FOREIGN KEY (renterEmail) REFERENCES USERS(email),

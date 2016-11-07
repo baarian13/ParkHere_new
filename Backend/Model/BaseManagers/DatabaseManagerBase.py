@@ -132,7 +132,8 @@ class SQLDatabaseManager(object):
         :type tablename: str
         '''
         database = database or self.database
-        return bool(len(self.execute(self.TABLE_EXISTS_QUERY.format(str(tablename).replace('\'', '')), database=database)[0]))
+        print bool(self.execute(self.TABLE_EXISTS_QUERY.format(str(tablename).replace('\'', '')), database=database)[0][0])
+        return bool(self.execute(self.TABLE_EXISTS_QUERY.format(str(tablename).replace('\'', '')), database=database)[0][0])
     
     def createDatabase(self, database):
         query = '''
