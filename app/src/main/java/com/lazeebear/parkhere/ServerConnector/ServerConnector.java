@@ -46,6 +46,11 @@ public class ServerConnector {
         }
     }
 
+    static String formatURL(String command){
+        //return "http://35.160.111.133:8888/" + command;
+        return "http://localhost/" + command;
+    }
+
     static class GetTokenTask extends AsyncTask<Void,Void,Void>
        {
                 String token;
@@ -61,7 +66,7 @@ public class ServerConnector {
                                     }
                 protected Void doInBackground(Void... params) {
                         try {
-                                String url = "http://35.160.111.133:8888/get/token";
+                                String url = formatURL("get/token");
                                 URL obj = new URL(url);
                                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                                 con.setRequestMethod("GET");
@@ -116,7 +121,7 @@ public class ServerConnector {
                                     }
                 protected Void doInBackground(Void... params) {
                         try {
-                                String url = "http://35.160.111.133:8888/search/spot?address="+ address.replace(' ', '+');
+                                String url = formatURL("search/spot?address="+ address.replace(' ', '+'));
                                 URL obj = new URL(url);
                                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                                 con.setRequestMethod("GET");
@@ -209,7 +214,7 @@ public class ServerConnector {
         }
         protected Void doInBackground(Void... params) {
             try {
-                String url = "http://35.160.111.133:8888/view/spot?spotid="+spotID;
+                String url = formatURL("view/spot?spotid="+spotID);
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setRequestMethod("GET");
@@ -278,7 +283,7 @@ public class ServerConnector {
         }
         protected Void doInBackground(Void... params) {
             try {
-                String url = "http://35.160.111.133:8888/signin";
+                String url = formatURL("signin");
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -372,7 +377,7 @@ public class ServerConnector {
         }
         protected Void doInBackground(Void... params) {
             try {
-                String url = "http://35.160.111.133:8888/signup";
+                String url = formatURL("signup");
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -487,7 +492,7 @@ public class ServerConnector {
         }
         protected Void doInBackground(Void... params) {
             try {
-                String url = "http://35.160.111.133:8888/book/spot";
+                String url = formatURL("book/spot");
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
