@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- To allow the app to save a photo -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- To allow the app to choose a photo from the SDK card -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!--
          To allow the owner to take photos.
         Be sure to call hasSystemFeature(PackageManager.FEATURE_CAMERA at runtime.
