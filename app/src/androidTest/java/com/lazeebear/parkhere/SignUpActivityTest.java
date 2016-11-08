@@ -15,6 +15,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -28,8 +34,12 @@ public class SignUpActivityTest {
     private static final int LAUNCH_TIMEOUT = 2000;
     private static final String PACKAGE_NAME = "com.lazeebear.parkhere"; //from AndroidManifest.xml
 
-    private static String UNVERIFIED_NEW_EMAIL = "";    //TODO
-    private static String UNVERIFIED_NEW_PASSWORD = ""; //TODO
+    private static String USER1_EMAIL = "abc";
+    private static String USER1_EMAIL_DOMAIN = "@yahoo.com";
+    private static String USER_PASSWORD = "Password!1";
+    private static String USER_FIRST = "First";
+    private static String USER_LAST = "Last";
+    private static String USER_PHONE = "1231231234";
 
     private Instrumentation instr;
     private UiDevice mDevice;
@@ -63,7 +73,19 @@ public class SignUpActivityTest {
     @Test
     public void testsSignUp() {
         Log.i("STATE","Starting testsSignUp()");
+        //fill in user info
+        onView(withId(R.id.EmailEditText)).perform(typeText(USER1_EMAIL+USER1_EMAIL_DOMAIN));
+        onView(withId(R.id.password_sign_up)).perform(typeText(USER_PASSWORD));
+        onView(withId(R.id.passwordConfirm_sign_up)).perform(typeText(USER_PASSWORD));
+        onView(withId(R.id.LastNameEditText)).perform(typeText(USER_FIRST));
+        onView(withId(R.id.FirstNameEditText)).perform(typeText(USER_LAST));
+        onView(withId(R.id.phoneNum_sign_up)).perform(typeText(USER_PHONE));
+        onView(withId(R.id.upload_verification_button)).perform(click());
+        //TODO take a photo http://stackoverflow.com/questions/28019657/camera-operation-ui-testing-with-espresso
+        //TODO choose user type
+        onView(withId(R.id.sign_up_button)).perform(click());
 
+        onView(withId(R.id.verification_needed_textView)).check(matches(isDisplayed()));
         Log.i("STATE","  Completed successfully");
     }
 }

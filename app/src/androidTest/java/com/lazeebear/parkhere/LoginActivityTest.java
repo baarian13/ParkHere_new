@@ -43,7 +43,9 @@ public class LoginActivityTest {
     private static final String PACKAGE_NAME = "com.lazeebear.parkhere"; //from AndroidManifest.xml
 
     private static final String USERNAME_VERIFIED = ""; //TODO
-    private static final String PASSWORD_VERIFIED = ""; //TODO
+    private static final String PASSWORD_VERIFIED = "Password!1";
+    private static final String USERNAME_UNVERIFIED = ""; //TODO
+    private static final String PASSWORD_UNVERIFIED = PASSWORD_VERIFIED;
 
     private Instrumentation instr;
     private UiDevice mDevice;
@@ -84,6 +86,7 @@ public class LoginActivityTest {
         Log.i("STATE","  Completed successfully");
     }
 
+    // checks if login page's "Register" button leads to the Sign Up page
     @Test
     public void testLoginPageRegisterButton() {
         Log.i("STATE","Starting testLoginPageRegisterButton()");
@@ -92,6 +95,7 @@ public class LoginActivityTest {
         Log.i("STATE","  Complete");
     }
 
+    // tests if signing in with a verified account will bring you to the account page
     @Test
     public void testLoginPageInputVerification() {
         Log.i("STATE","Starting testLoginPageInputVerification()");
@@ -103,4 +107,15 @@ public class LoginActivityTest {
         Log.i("STATE","  Complete");
     }
 
+    // tests if signing in with an unverified account will bring you to the verification needed page
+    @Test
+    public void testLoginPageUserVerificationPage() {
+        Log.i("STATE","Starting testLoginPageUserVerification()");
+        onView(withId(R.id.email)).perform(typeText(USERNAME_UNVERIFIED));
+        onView(withId(R.id.password)).perform(typeText(PASSWORD_UNVERIFIED));
+        onView(withId(R.id.email_sign_in_button)).perform(click());
+        // check if user verification page shows up
+        onView(withId(R.id.verification_needed_textView)).check(matches(isDisplayed()));
+        Log.i("STATE","  Complete");
+    }
 }
