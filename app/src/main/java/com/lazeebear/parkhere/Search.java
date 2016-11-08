@@ -61,7 +61,8 @@ public class Search extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 // Update the TextView with the date chosen by the user
-                date_button_lower.setText(formatDate(year, month, day));
+                if (canChangeDateButtonLower(year, month, day))
+                    date_button_lower.setText(formatDate(year, month, day));
             }
         };
         datePicker_lower = new DatePickerDialog(this, onDateSetHandlerLower, year, month, day);
@@ -75,7 +76,8 @@ public class Search extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 // Update the TextView with the date chosen by the user
-                date_button_upper.setText(formatDate(year,month,day));
+                if (canChangeDateButtonUpper(year, month, day))
+                    date_button_upper.setText(formatDate(year,month,day));
             }
         };
         datePicker_upper = new DatePickerDialog(this, onDateSetHandlerUpper, year, month, day);
@@ -83,6 +85,39 @@ public class Search extends AppCompatActivity {
             @Override
             public void onClick(View view) {showDatePickerUpper();}
         });
+    }
+
+    private boolean canChangeDateButtonLower(int year, int month, int day){
+        //assuming createDatePicker populates date_button_upper
+        String upperString = date_button_upper.getText().toString();
+        if (upperString.equals(R.string.select))
+            return true;
+        String lowerString = formatDate(year, month, day);
+        //s1.compareTo(s2)
+        //compareTo returns + if s1 > s2
+        // - if s2 > s1
+        if (lowerString.compareTo(upperString) > 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    private boolean canChangeDateButtonUpper(int year, int month, int day){
+        //assuming createDatePicker populates date_button_upper
+        String lowerString = date_button_lower.getText().toString();
+        if (lowerString.equals(R.string.select))
+            return true;
+        String upperString = formatDate(year, month, day);
+        //s1.compareTo(s2)
+        //compareTo returns + if s1 > s2
+        // - if s2 > s1
+        if (lowerString.compareTo(upperString) > 0)
+            return false;
+        else
+            return true;
+
     }
 
     private String formatDate(int year, int month, int day){
