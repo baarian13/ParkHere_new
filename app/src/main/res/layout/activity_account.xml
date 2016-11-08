@@ -7,7 +7,15 @@
     android:weightSum="1"
     tools:context="com.lazeebear.parkhere.Account">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="33dp"
@@ -45,35 +53,68 @@
         android:layout_height="45dp"
         android:id="@+id/email"
         android:text="email"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:text="User Type : "/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:id="@+id/userType_account"
+            android:text="type"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="edit"
+            android:id="@+id/editUserTypeButton_account"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/user_types"
+                android:id="@+id/editUserTypeSpinner_account"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/confirmUserTypeButton_account"
+                android:text="Confirm"/>
+        </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.10"
         >
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Search A Spot"
             android:id="@+id/searchSpotButton_account"
-            android:layout_weight="0.50" />
+            android:layout_weight="01" />
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Creat A Spot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create A Spot"
             android:id="@+id/createSpotButton"
-            android:layout_weight="0.50" />
+            android:layout_weight="1" />
 
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.10">
 
@@ -81,7 +122,7 @@
             android:text="Spots History"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/spotHistoryButton"
+            android:id="@+id/spotHistoryButton_account"
             android:layout_weight="1" />
 
         <Button
@@ -92,30 +133,20 @@
             android:layout_weight="1" />
     </LinearLayout>
 
-    <ScrollView
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/toggle_public_profile_button"
+        android:id="@+id/toggleButton_account"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50pt"
-        android:layout_weight="0.15">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/spotList_account"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/spotHistoryList"/>
+
+    </LinearLayout>
     </ScrollView>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_weight="0.40"
-        >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/ownedSpotsList"/>
-    </ScrollView>
-
 
 </LinearLayout>

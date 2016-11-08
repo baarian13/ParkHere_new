@@ -78,4 +78,9 @@
     <string name="pay_by_paypal_label">Pay by Paypal</string>
     <string name="pay_by_credit_card_label">Pay by Credit Card</string>
     <string name="account_name">Account Name</string>
+
+    <!--account-->
+    <string name="toggle_public_profile_button">View Public Profile</string>
+    <string name="toggle_private_profile_button">View Private Profile</string>
+
 </resources>

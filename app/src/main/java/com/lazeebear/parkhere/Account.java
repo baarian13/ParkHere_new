@@ -9,27 +9,95 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.content.res.Resources;
+
 /**
  * Created by Zhicheng on 10/22/2016.
  */
 
 public class Account extends AppCompatActivity {
-
+    private boolean isViewingOwnAccount = true;
+    private int userType = 0;
+    private boolean isOwner = true;
+    private boolean isSeeker = true;
+    private boolean spotHistoryOpen = false;
+    private boolean ownedSpotsOpen = false;
+    private boolean userTypeEditorsShown = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
         Intent intent = getIntent();
+
+        //grab info, setUserType(), fillInfo
         if (intent != null) {
-            hideComponentsOnStartUp();
-            fillInformationOnStartUp();
+            resetViewVisibility();
+            hideComponents();
+            hideToggleButton();
+            fillInformation();
             addActionListeners();
         }
     }
 
-    private void hideComponentsOnStartUp() {
+    private void resetViewVisibility(){
+        Button createSpotButton = (Button) findViewById(R.id.createSpotButton);
+        createSpotButton.setVisibility(View.VISIBLE);
+        Button searchSpotButton = (Button) findViewById(R.id.searchSpotButton_account);
+        searchSpotButton.setVisibility(View.VISIBLE);
+        Button spotHistoryButton = (Button) findViewById(R.id.spotHistoryButton_account);
+        spotHistoryButton.setVisibility(View.VISIBLE);
+        LinearLayout spotList = (LinearLayout) findViewById(R.id.spotList_account);
+        spotList.setVisibility(View.VISIBLE);
+        TextView phoneNumber = (TextView) findViewById(R.id.phoneNumber);
+        phoneNumber.setVisibility(View.VISIBLE);
+        TextView email = (TextView) findViewById(R.id.email);
+        email.setVisibility(View.VISIBLE);
+
+        hideUserTypeEditors();
+        spotList.removeAllViews();
+    }
+
+    //the only component that sticks on the screen
+    //even if the user wants to toggle between
+    //your own profile and public profile
+    private void hideToggleButton(){
+        Button toggleButton = (Button) findViewById(R.id.toggleButton_account);
+        if (!isViewingOwnAccount()){
+            toggleButton.setVisibility(View.GONE);
+        }
+    }
+
+    //only show when need to edit
+    private void hideUserTypeEditors(){
+        Spinner userTypeSpinner = (Spinner) findViewById(R.id.editUserTypeSpinner_account);
+        userTypeSpinner.setVisibility(View.GONE);
+        Button confirmUserTypeButton = (Button) findViewById(R.id.confirmUserTypeButton_account);
+        confirmUserTypeButton.setVisibility(View.GONE);
+        userTypeEditorsShown = false;
+    }
+
+    private void showUserTypeEditors(){
+        Spinner userTypeSpinner = (Spinner) findViewById(R.id.editUserTypeSpinner_account);
+        userTypeSpinner.setVisibility(View.VISIBLE);
+        Button confirmUserTypeButton = (Button) findViewById(R.id.confirmUserTypeButton_account);
+        confirmUserTypeButton.setVisibility(View.VISIBLE);
+        userTypeEditorsShown = true;
+    }
+
+
+    private void changeToggleButtonText(){
+        Button toggleButton = (Button) findViewById(R.id.toggleButton_account);
+        if (isViewingOwnAccount()){
+            toggleButton.setText(getString(R.string.toggle_public_profile_button));
+        } else{
+            toggleButton.setText(getString(R.string.toggle_private_profile_button));
+        }
+    }
+
+    private void hideComponents() {
         Button createSpotButton = (Button) findViewById(R.id.createSpotButton);
         if (!isViewingOwnAccount())
             createSpotButton.setVisibility(View.GONE);
@@ -43,20 +111,19 @@ public class Account extends AppCompatActivity {
         } else
             searchSpotButton.setVisibility(View.GONE);
 
-        LinearLayout spotHistoryList = (LinearLayout) findViewById(R.id.spotHistoryList);
-        Button spotHistoryButton = (Button) findViewById(R.id.spotHistoryButton);
+        LinearLayout spotList = (LinearLayout) findViewById(R.id.spotList_account);
+        Button spotHistoryButton = (Button) findViewById(R.id.spotHistoryButton_account);
         if (!isViewingOwnAccount()) {
-            spotHistoryList.setVisibility(View.GONE);
+            spotList.setVisibility(View.GONE);
             spotHistoryButton.setVisibility(View.GONE);
         } else if (!isSeeker()) {
-            spotHistoryList.setVisibility(View.GONE);
+            spotList.setVisibility(View.GONE);
             spotHistoryButton.setVisibility(View.GONE);
         }
 
-        LinearLayout ownedSpotsList = (LinearLayout) findViewById(R.id.ownedSpotsList);
         Button ownedSpotsButton = (Button) findViewById(R.id.ownedSpotsButton);
         if (!isOwner()) {
-            ownedSpotsList.setVisibility(View.GONE);
+            spotList.setVisibility(View.GONE);
             ownedSpotsButton.setVisibility(View.GONE);
         }
 
@@ -70,7 +137,7 @@ public class Account extends AppCompatActivity {
 
     }
 
-    private void fillInformationOnStartUp() {
+    private void fillInformation() {
         TextView accountName = (TextView) findViewById(R.id.accountName_account);
         accountName.setText(getDisplayName());
         RatingBar ratingOfUser = (RatingBar) findViewById(R.id.ratingBar);
@@ -81,27 +148,12 @@ public class Account extends AppCompatActivity {
 
         TextView email = (TextView) findViewById(R.id.email);
         email.setText(User.email);
-    }
 
-
-    private void populateSpotsHistory() {
-        LinearLayout list = (LinearLayout) findViewById(R.id.ownedSpotsList);
-        for (int i = 0; i < 5; i++) {
-            Button spotButton = createSpotsHistoryButton("Address " + i);
-            list.addView(spotButton);
-        }
-    }
-
-    private Button createSpotsHistoryButton(String address) {
-        Button button = new Button(this);
-        button.setText(address);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-
-            }
-        });
-
-        return button;
+        TextView userTypeTextView = (TextView) findViewById(R.id.userType_account);
+        Resources res= getResources();
+        String[] userTypeArray = res.getStringArray(R.array.user_types);
+        String userTypeString = userTypeArray[userType].toString();
+        userTypeTextView.setText(userTypeString);
     }
 
     private void addActionListeners() {
@@ -110,6 +162,9 @@ public class Account extends AppCompatActivity {
         addSearchSpotButtonActionListener();
         addCreateSpotButtonActionListener();
         addLogoutButtonActionListener();
+        addToggleButtonActionListener();
+        addEditUserTypeListener();
+        addConfirmUserTypeListener();
     }
 
     private void addOwnedSpotsButtonActionListener() {
@@ -121,11 +176,36 @@ public class Account extends AppCompatActivity {
         });
     }
 
+    private void clearSpotList(){
+        LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
+        list.removeAllViews();
+    }
+
+    //we only have one list to show
+    //so remove everything already there and replace with the new content
     private void populateOwnedSpots() {
-        LinearLayout list = (LinearLayout) findViewById(R.id.ownedSpotsList);
-        for (int i=0; i<5; i++) {
-            Button spotButton = createOwnedSpotButton("Address " + i);
-            list.addView(spotButton);
+        if (!ownedSpotsOpen) {
+            clearSpotList();
+            LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
+            for (int i = 0; i < 5; i++) {
+                Button spotButton = createOwnedSpotButton("Owned Address " + i);
+                list.addView(spotButton);
+            }
+            ownedSpotsOpen = true;
+            spotHistoryOpen = false;
+        }
+    }
+
+    private void populateSpotsHistory() {
+        if (!spotHistoryOpen) {
+            clearSpotList();
+            LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
+            for (int i = 0; i < 5; i++) {
+                Button spotButton = createSpotHistoryButton("History Address " + i);
+                list.addView(spotButton);
+            }
+            spotHistoryOpen = true;
+            ownedSpotsOpen = false;
         }
     }
 
@@ -141,9 +221,21 @@ public class Account extends AppCompatActivity {
         return button;
     }
 
+    private Button createSpotHistoryButton(String address) {
+        Button button = new Button(this);
+        button.setText(address);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+
+            }
+        });
+
+        return button;
+    }
+
     private void addSpotHistoryButtonActionListener() {
-        Button ownedSpotsButton = (Button) findViewById(R.id.ownedSpotsButton);
-        ownedSpotsButton.setOnClickListener(new View.OnClickListener() {
+        Button spotHistoryButton = (Button) findViewById(R.id.spotHistoryButton_account);
+        spotHistoryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 populateSpotsHistory();
             }
@@ -186,21 +278,31 @@ public class Account extends AppCompatActivity {
             }
         }));
     }
+
+    private void addToggleButtonActionListener(){
+        Button toggleButton = (Button) findViewById(R.id.toggleButton_account);
+        toggleButton.setOnClickListener((new View.OnClickListener() {
+            public void onClick(View view) {
+                toggleViewingOwnAccount();
+            }
+        }));
+    }
+
     private void logout(){
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
     private boolean isSeeker() {
-        return true;
+        return isSeeker;
     }
 
     private boolean isOwner() {
-        return false;
+        return isOwner;
     }
 
     private boolean isViewingOwnAccount() {
-        return true;
+        return isViewingOwnAccount;
     }
 
     private String getDisplayName() {
@@ -211,4 +313,79 @@ public class Account extends AppCompatActivity {
             //return "First Name Only";
             return User.firstName;
     }
+
+    //we should only show this initially when we verify that the user is viewing own account
+    private void toggleViewingOwnAccount() {
+        if (isViewingOwnAccount()){
+            //we need to show public profile
+            isViewingOwnAccount = false;
+
+        } else {
+            isViewingOwnAccount = true;
+        }
+
+        resetViewVisibility();
+        hideComponents();
+        //redundant code except for user name
+        fillInformation();
+        changeToggleButtonText();
+    }
+
+    private void addConfirmUserTypeListener(){
+        Button confirmUserTypeButton = (Button) findViewById(R.id.confirmUserTypeButton_account);
+        confirmUserTypeButton.setOnClickListener((new View.OnClickListener() {
+            public void onClick(View view) {
+                confirmUserType();
+            }
+        }));
+    }
+
+    private void confirmUserType(){
+        //get chosen user type
+        Spinner spinner = (Spinner) findViewById(R.id.editUserTypeSpinner_account);
+        //I assume the user types are by index?
+        int choiceIndex = spinner.getSelectedItemPosition();
+        //send
+        setUserType(choiceIndex);
+
+        //update view
+        resetViewVisibility();
+        hideComponents();
+        fillInformation();
+
+    }
+
+    private void setUserType(int index){
+        userType = index;
+        if (index == 0) {
+            //both
+            isOwner = true;
+            isSeeker = true;
+        } else if (index == 1){
+            //owner
+            isOwner = true;
+            isSeeker = false;
+        } else if (index == 2){
+            isOwner = false;
+            isSeeker = true;
+        }
+    }
+
+    private void addEditUserTypeListener(){
+        Button editUserTypeButton = (Button) findViewById(R.id.editUserTypeButton_account);
+        editUserTypeButton.setOnClickListener((new View.OnClickListener() {
+            public void onClick(View view) {
+                toggleUserTypeEditors();
+            }
+        }));
+    }
+
+    private void toggleUserTypeEditors(){
+        if (userTypeEditorsShown)
+            hideUserTypeEditors();
+        else
+            showUserTypeEditors();
+    }
+
+
 }

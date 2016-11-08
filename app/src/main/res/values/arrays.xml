@@ -15,6 +15,12 @@
         <item>Truck</item>
     </string-array>
 
+    <string-array name="user_types">
+        <item>Both</item>
+        <item>Owner</item>
+        <item>Seeker</item>
+    </string-array>
+
     <string-array name="yes_no">
         <item>Yes</item>
         <item>No</item>
