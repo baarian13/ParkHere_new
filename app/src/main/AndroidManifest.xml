@@ -67,6 +67,9 @@
             android:label="Forgot Password"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".CreateSpotActivity" />
+        <activity android:name=".UserVerificationActivity"
+            android:label="User Verification"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <!-- braintree requirement to allow the application to switch to Paypal, detailed here: https://developers.braintreepayments.com/guides/client-sdk/setup/android/v2#browser-switch-setup -->
         <activity
             android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"

@@ -90,6 +90,12 @@
         android:layout_height="wrap_content"
         android:text="@string/choose_profile_picture"/>
 
+    <Button
+        android:id="@+id/upload_verification_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/take_verification_photo"/>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

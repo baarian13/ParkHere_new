@@ -180,6 +180,10 @@ public class SignUpActivity extends AppCompatActivity {
         User.email = sEmailView.getText().toString();
         Intent intent = new Intent(this, Account.class);
         startActivity(intent);
+
+        //if user not verified
+        // Intent intent = new Intent(this, UserVerificationActivity.class);
+        // startActivity(intent);
     }
 
     private void backToRegister() {
