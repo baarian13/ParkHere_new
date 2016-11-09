@@ -276,7 +276,7 @@ public class ServerConnector {
         boolean success = false;
 
         public UserDetailsTask(String email){
-            this.email = email
+            this.email = email;
         }
 
         protected void onPreExecute() {
@@ -334,7 +334,7 @@ public class ServerConnector {
         boolean success = false;
 
         public SpotsOwnedTask(String email){
-            this.email = email
+            this.email = email;
         }
 
         protected void onPreExecute() {
@@ -414,7 +414,7 @@ public class ServerConnector {
         boolean success = false;
 
         public CheckUserTask(String email){
-            this.email = email
+            this.email = email;
         }
 
         protected void onPreExecute() {
@@ -570,11 +570,11 @@ public class ServerConnector {
         String phone;
         int seeker;
         int owner;
-        Base64 profilePic;
+        Base64 profilePic = null;
         boolean done = false;
         boolean success = false;
 
-        public SignUpTask(String email, String password, String first, String last, String phone, int seeker, int owner, Base64 profilePic){
+        public SignUpTask(String email, String password, String first, String last, String phone, int seeker, int owner/*, Base64 profilePic*/){
             this.email = email;
             this.password = password;
             this.first = first;
@@ -582,7 +582,7 @@ public class ServerConnector {
             this.phone = phone;
             this.seeker = seeker;
             this.owner = owner;
-            this.profilePic = profilePic;
+            //this.profilePic = profilePic;
         }
 
         protected void onPreExecute() {
@@ -672,8 +672,8 @@ public class ServerConnector {
         return entity.getStatusCode().value();
     }
     */
-    public static int signup(String email, String password, String first, String last, String phone, int seeker, int owner, Base64 profilePic) {
-        SignUpTask s = new SignUpTask(email, password, first, last, phone, seeker, owner, profilePic);
+    public static int signup(String email, String password, String first, String last, String phone, int seeker, int owner/*, Base64 profilePic*/) {
+        SignUpTask s = new SignUpTask(email, password, first, last, phone, seeker, owner);
         s.execute();
         while(!s.done)
             ;
