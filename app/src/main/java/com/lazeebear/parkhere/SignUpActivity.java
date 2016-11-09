@@ -32,7 +32,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private EditText sEmailView, sFirstName, sLastName, sPassword, sPasswordRe, sPhoneNum;
     private CheckBox seekerBox, ownerBox;
-    private boolean isSeeker = true, isOwner = false;
+    private int isSeeker = 1, isOwner = 0;
     private Button sTakeVerificationPhotoButton;
     private static final int SELECT_PICTURE = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
@@ -151,7 +151,7 @@ public class SignUpActivity extends AppCompatActivity {
             cancel = true;
         }
         if (ownerBox.isChecked()){
-            isOwner = true;
+            isOwner = 1;
         }
         // Phone number
         if (TextUtils.isEmpty(phoneNum)){
@@ -234,7 +234,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
                 sFirstName.getText().toString(), sLastName.getText().toString(),
-                sPhoneNum.getText().toString(), 0, 1); //, null);//, convertBitmapToByteArray(imageBitmap));
+                sPhoneNum.getText().toString(), isSeeker, isOwner); //, null);//, convertBitmapToByteArray(imageBitmap));
 
         //save locally
         boolean verified = true; //TODO
