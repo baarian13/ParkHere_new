@@ -84,5 +84,10 @@
             android:layout_height="wrap_content"
             android:id="@+id/deleteSpotButton_spotDetail"
             android:text="Delete"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit"
+            android:id="@+id/editSpotButton_spotDetail"/>
     </LinearLayout>
 </LinearLayout>
