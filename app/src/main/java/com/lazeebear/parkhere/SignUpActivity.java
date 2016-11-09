@@ -198,12 +198,13 @@ public class SignUpActivity extends AppCompatActivity {
             cancel = true;
         }
 
+        /*
         // User Verification Photo Upload
         if (imageBitmap == null) {
             sTakeVerificationPhotoButton.setError("This field is required");
             focusView = sTakeVerificationPhotoButton;
             cancel = true;
-        }
+        }*/
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -218,7 +219,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
                 sFirstName.getText().toString(), sLastName.getText().toString(),
-                sPhoneNum.getText().toString(), 0, 1, null);//, convertBitmapToByteArray(imageBitmap));
+                sPhoneNum.getText().toString(), 0, 1); //, null);//, convertBitmapToByteArray(imageBitmap));
 
         //save locally
         boolean verified = true; //TODO
