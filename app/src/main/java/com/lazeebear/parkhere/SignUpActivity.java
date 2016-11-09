@@ -14,6 +14,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,7 @@ import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -216,9 +218,11 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void attemptSignUp() {
-        /*ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
+
+        ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
                 sFirstName.getText().toString(), sLastName.getText().toString(),
-                sPhoneNum.getText().toString(), 0, 1, null);*/
+                sPhoneNum.getText().toString(), 0, 1, convertBitmapToBase64(imageBitmap));
+
         //save locally
 
 
@@ -294,5 +298,12 @@ public class SignUpActivity extends AppCompatActivity {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
+    }
+
+    private Base64 convertBitmapToBase64(Bitmap bitmap){
+        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOS);
+        byte[] encoded = Base64.encode(byteArrayOS.toByteArray(), Base64.DEFAULT);
+        return encoded;
     }
 }
