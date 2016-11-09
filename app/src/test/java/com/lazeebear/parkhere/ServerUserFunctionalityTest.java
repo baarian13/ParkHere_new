@@ -30,7 +30,7 @@ public class ServerUserFunctionalityTest {
 
     @Test
     public void signup() throws Exception {
-        int result = ServerConnector.signup("rjason14@gmail.com", "jerome", "Jason", "Roodman", "3147911267", 1, 1, null);
+        int result = ServerConnector.signup("rjason14@gmail.com", "jerome", "Jason", "Roodman", "3147911267", 1, 1);
         assertEquals(200, result);
     }
 

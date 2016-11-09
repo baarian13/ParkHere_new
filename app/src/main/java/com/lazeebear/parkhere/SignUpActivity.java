@@ -216,9 +216,9 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void attemptSignUp() {
 
-        ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
+        /*int result = ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
                 sFirstName.getText().toString(), sLastName.getText().toString(),
-                sPhoneNum.getText().toString(), 0, 1, null);//, convertBitmapToByteArray(imageBitmap));
+                sPhoneNum.getText().toString(), 0, 1);//, convertBitmapToByteArray(imageBitmap));*/
 
         //save locally
         boolean verified = true; //TODO
