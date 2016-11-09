@@ -50,7 +50,7 @@ public class SignUpActivity extends AppCompatActivity {
         sPasswordRe = (EditText) findViewById(R.id.passwordConfirm_sign_up);
         sPhoneNum = (EditText) findViewById(R.id.phoneNum_sign_up);
 
-        Button sSelectPictureButton = (Button) findViewById(R.id.sign_up_profile_picture_button);
+        /*Button sSelectPictureButton = (Button) findViewById(R.id.sign_up_profile_picture_button);
         sSelectPictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +67,7 @@ public class SignUpActivity extends AppCompatActivity {
                     sendTakePictureIntent();
                 }
             }
-        });
+        });*/
 
         Button sSignInButton = (Button) findViewById(R.id.sign_up_button);
         sSignInButton.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +88,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+    /*
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
@@ -109,12 +110,12 @@ public class SignUpActivity extends AppCompatActivity {
                         Log.i("TAG", "Ioexception while storing the thumbnail of the retrieved photo");
                     }
                 }
-                */
+                * /
                 // to set the image { mImageView.setImageBitmap(imageBitmap); }
             }
         }
     }
-
+    */
     private boolean validationBoxes() {
         // reset errors
         sEmailView.setError(null);

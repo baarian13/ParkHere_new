@@ -83,7 +83,7 @@
         android:text="User Type"
         android:id="@+id/userType"
         android:layout_weight="0.09" />
-
+<!--
     <Button
         android:id="@+id/sign_up_profile_picture_button"
         android:layout_width="match_parent"
@@ -95,7 +95,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/take_verification_photo"/>
-
+-->
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
