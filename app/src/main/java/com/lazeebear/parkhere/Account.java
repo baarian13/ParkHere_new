@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.content.res.Resources;
@@ -20,11 +20,13 @@ import android.content.res.Resources;
 public class Account extends AppCompatActivity {
     private boolean isViewingOwnAccount = true;
     private int userType = 0;
+    private String userPhoneNumber = "";
     private boolean isOwner = true;
     private boolean isSeeker = true;
     private boolean spotHistoryOpen = false;
     private boolean ownedSpotsOpen = false;
     private boolean userTypeEditorsShown = true;
+    private boolean phoneNumberEditorsShown = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class Account extends AppCompatActivity {
         email.setVisibility(View.VISIBLE);
 
         hideUserTypeEditors();
+        hidePhoneNumberEditors();
         spotList.removeAllViews();
     }
 
@@ -85,6 +88,29 @@ public class Account extends AppCompatActivity {
         Button confirmUserTypeButton = (Button) findViewById(R.id.confirmUserTypeButton_account);
         confirmUserTypeButton.setVisibility(View.VISIBLE);
         userTypeEditorsShown = true;
+    }
+
+    private void hidePhoneNumberEditors(){
+        EditText phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText_account);
+        phoneNumberEditText.setVisibility(View.GONE);
+        Button confirmPhoneNumberButton = (Button) findViewById(R.id.confirmPhoneNumberButton_account);
+        confirmPhoneNumberButton.setVisibility(View.GONE);
+        //also show phone number
+        //because we hide it when we show the editText
+        TextView phoneNumberTextView = (TextView) findViewById(R.id.phoneNumber);
+        phoneNumberTextView.setVisibility(View.VISIBLE);
+        phoneNumberEditorsShown = false;
+    }
+
+    private void showPhoneNumberEditors(){
+        EditText phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText_account);
+        phoneNumberEditText.setVisibility(View.VISIBLE);
+        Button confirmPhoneNumberButton = (Button) findViewById(R.id.confirmPhoneNumberButton_account);
+        confirmPhoneNumberButton.setVisibility(View.VISIBLE);
+        //hide the phone number to give room for editText
+        TextView phoneNumberTextView = (TextView) findViewById(R.id.phoneNumber);
+        phoneNumberTextView.setVisibility(View.GONE);
+        phoneNumberEditorsShown = true;
     }
 
 
@@ -135,6 +161,13 @@ public class Account extends AppCompatActivity {
         if (!isViewingOwnAccount())
             email.setVisibility(View.GONE);
 
+        Button editPhoneNumberButton = (Button) findViewById(R.id.editPhoneNumberButton_account);
+        Button editUserTypeButton = (Button) findViewById(R.id.editUserTypeButton_account);
+        if (!isViewingOwnAccount()){
+            editPhoneNumberButton.setVisibility(View.GONE);
+            editUserTypeButton.setVisibility(View.GONE);
+        }
+
     }
 
     private void fillInformation() {
@@ -143,8 +176,12 @@ public class Account extends AppCompatActivity {
         RatingBar ratingOfUser = (RatingBar) findViewById(R.id.ratingBar);
         ratingOfUser.setRating(User.rating);
 
+        userPhoneNumber = User.phoneNumber;
         TextView phoneNumber = (TextView) findViewById(R.id.phoneNumber);
         phoneNumber.setText(User.phoneNumber);
+        //Do this after knowing what the phone number input type can accept
+       // EditText phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText_account);
+       // phoneNumberEditText.setText(User.phoneNumber);
 
         TextView email = (TextView) findViewById(R.id.email);
         email.setText(User.email);
@@ -154,6 +191,9 @@ public class Account extends AppCompatActivity {
         String[] userTypeArray = res.getStringArray(R.array.user_types);
         String userTypeString = userTypeArray[userType].toString();
         userTypeTextView.setText(userTypeString);
+        //also change the preset value for edit
+        Spinner editSpinner = (Spinner) findViewById(R.id.editUserTypeSpinner_account);
+        editSpinner.setSelection(userType);
     }
 
     private void addActionListeners() {
@@ -164,7 +204,9 @@ public class Account extends AppCompatActivity {
         addLogoutButtonActionListener();
         addToggleButtonActionListener();
         addEditUserTypeListener();
+        addEditPhoneNumberListener();
         addConfirmUserTypeListener();
+        addConfirmPhoneNumberListener();
     }
 
     private void addOwnedSpotsButtonActionListener() {
@@ -346,7 +388,37 @@ public class Account extends AppCompatActivity {
         //I assume the user types are by index?
         int choiceIndex = spinner.getSelectedItemPosition();
         //send
+
+        //this is not a temporary fix!
         setUserType(choiceIndex);
+
+        //update view
+        resetViewVisibility();
+        hideComponents();
+        fillInformation();
+
+    }
+
+    private void addConfirmPhoneNumberListener(){
+        Button confirmUserTypeButton = (Button) findViewById(R.id.confirmUserTypeButton_account);
+        confirmUserTypeButton.setOnClickListener((new View.OnClickListener() {
+            public void onClick(View view) {
+                confirmPhoneNumber();
+            }
+        }));
+    }
+
+    private void confirmPhoneNumber(){
+        //get chosen phoneNumber
+        EditText phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText_account);
+        String phoneNumberString = phoneNumberEditText.getText().toString();
+
+        //if (ValidationFunctions.isPhoneNum(phoneNumberString)){
+        //send
+        //}
+
+        //this is not a temporary variable so do not erase!
+        this.userPhoneNumber = phoneNumberString;
 
         //update view
         resetViewVisibility();
@@ -380,11 +452,27 @@ public class Account extends AppCompatActivity {
         }));
     }
 
+    private void addEditPhoneNumberListener(){
+        Button editPhoneNumberButton = (Button) findViewById(R.id.editPhoneNumberButton_account);
+        editPhoneNumberButton.setOnClickListener((new View.OnClickListener() {
+            public void onClick(View view) {
+                togglePhoneNumberEditors();
+            }
+        }));
+    }
+
     private void toggleUserTypeEditors(){
         if (userTypeEditorsShown)
             hideUserTypeEditors();
         else
             showUserTypeEditors();
+    }
+
+    private void togglePhoneNumberEditors(){
+        if (phoneNumberEditorsShown)
+            hidePhoneNumberEditors();
+        else
+            showPhoneNumberEditors();
     }
 
 

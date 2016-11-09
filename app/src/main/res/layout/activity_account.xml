@@ -38,19 +38,39 @@
 
     <RatingBar
         android:layout_width="wrap_content"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:id="@+id/ratingBar"
         android:layout_gravity="center_horizontal"
         android:isIndicator="true"/>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/phoneNumber"
+            android:text="phoneNumber"/>
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/phoneNumberEditText_account"
+            android:hint="New phone number"
+            android:inputType="phone"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm"
+            android:id="@+id/confirmPhoneNumberButton_account"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editPhoneNumberButton_account"
+            android:text="Edit"/>
+    </LinearLayout>
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:id="@+id/phoneNumber"
-        android:text="phoneNumber"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:id="@+id/email"
         android:text="email"/>
     <LinearLayout
@@ -58,11 +78,11 @@
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:text="User Type : "/>
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/userType_account"
             android:text="type"/>
         <Button

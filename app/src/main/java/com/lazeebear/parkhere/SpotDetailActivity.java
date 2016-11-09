@@ -45,6 +45,8 @@ public class SpotDetailActivity extends AppCompatActivity {
         } else {
             Button deleteSpotButton = (Button) findViewById(R.id.deleteSpotButton_spotDetail);
             deleteSpotButton.setVisibility(View.GONE);
+            Button editSpotButton = (Button) findViewById(R.id.editSpotButton_spotDetail);
+            editSpotButton.setVisibility(View.GONE);
         }
     }
 
@@ -99,6 +101,10 @@ public class SpotDetailActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void toggleEditForm(){
+
+    }
+
     private void setActionListeners(){
         Button reserveSpotButton = (Button) findViewById(R.id.reserveButton_spotDetail);
         reserveSpotButton.setOnClickListener(new View.OnClickListener() {
@@ -129,6 +135,14 @@ public class SpotDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 deleteSpot();
+            }
+        });
+
+        Button editSpotButton = (Button) findViewById(R.id.editSpotButton_spotDetail);
+        editSpotButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleEditForm();
             }
         });
     }
