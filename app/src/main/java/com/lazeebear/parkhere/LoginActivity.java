@@ -232,6 +232,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //            showProgress(true);
             if(ServerConnector.signin(email, password)){
                 //get verification status
+                boolean verified = true; //TODO
                 if (verified) {
                     Intent intent = new Intent(this, Account.class);
                     setUserInformation();
