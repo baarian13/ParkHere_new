@@ -16,6 +16,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
@@ -30,6 +31,8 @@ import static com.lazeebear.parkhere.R.layout.activity_sign_up;
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText sEmailView, sFirstName, sLastName, sPassword, sPasswordRe, sPhoneNum;
+    private CheckBox seekerBox, ownerBox;
+    private int isSeeker = 1, isOwner = 0;
     private Button sTakeVerificationPhotoButton;
     private static final int SELECT_PICTURE = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
@@ -49,6 +52,8 @@ public class SignUpActivity extends AppCompatActivity {
         sPassword = (EditText) findViewById(R.id.password_sign_up);
         sPasswordRe = (EditText) findViewById(R.id.passwordConfirm_sign_up);
         sPhoneNum = (EditText) findViewById(R.id.phoneNum_sign_up);
+        seekerBox = (CheckBox) findViewById(R.id.isSeeker_checkBox_signup);
+        ownerBox = (CheckBox) findViewById(R.id.isOwner_checkBox_signup);
 
         /*Button sSelectPictureButton = (Button) findViewById(R.id.sign_up_profile_picture_button);
         sSelectPictureButton.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +129,7 @@ public class SignUpActivity extends AppCompatActivity {
         sPassword.setError(null);
         sPasswordRe.setError(null);
         sPhoneNum.setError(null);
+        seekerBox.setError(null);
 
         // Store values at the time of the login attempt.
         String email = sEmailView.getText().toString();
@@ -138,6 +144,15 @@ public class SignUpActivity extends AppCompatActivity {
 
            // check every boxes
 
+        // User type
+        if (!seekerBox.isChecked()){
+            seekerBox.setError("This type is required by default");
+            focusView = seekerBox;
+            cancel = true;
+        }
+        if (ownerBox.isChecked()){
+            isOwner = 1;
+        }
         // Phone number
         if (TextUtils.isEmpty(phoneNum)){
             sPhoneNum.setError("This field is required");
@@ -198,12 +213,13 @@ public class SignUpActivity extends AppCompatActivity {
             cancel = true;
         }
 
+        /*
         // User Verification Photo Upload
         if (imageBitmap == null) {
             sTakeVerificationPhotoButton.setError("This field is required");
             focusView = sTakeVerificationPhotoButton;
             cancel = true;
-        }
+        }*/
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -216,9 +232,9 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void attemptSignUp() {
 
-        /*int result = ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
+        ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
                 sFirstName.getText().toString(), sLastName.getText().toString(),
-                sPhoneNum.getText().toString(), 0, 1);//, convertBitmapToByteArray(imageBitmap));*/
+                sPhoneNum.getText().toString(), isSeeker, isOwner); //, null);//, convertBitmapToByteArray(imageBitmap));
 
         //save locally
         boolean verified = true; //TODO
