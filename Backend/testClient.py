@@ -70,7 +70,7 @@ if __name__ == '__main__':
     #img = buildImgStr('/Users/henrylevy/Downloads/default.jpg')
     #cookie = createUser(http_client, '', '', 'first', 'last', '123-456-7890', 1, 1)
     
-    cookie = signIn(http_client, 'default1234@test.com', 'password1!')
+    cookie = signIn(http_client, 'rob@rob.com', 'Password1$')
     postSpot(cookie, http_client, '707 West 28th street, Los Angeles CA, 90007', '0', '0', "0", '10.00', "2016-10-12 12:00:00", "2016-10-12 14:00:00", '0')
     searchSpot(cookie, http_client, '700 West 28th street, Los Angeles CA, 90007')
     http_client.close()
