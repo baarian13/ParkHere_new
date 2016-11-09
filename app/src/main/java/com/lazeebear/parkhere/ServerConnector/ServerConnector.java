@@ -405,6 +405,80 @@ public class ServerConnector {
         }
         return null;
     }
+
+    static class CheckUserTask extends AsyncTask<Void,Void,Void>
+    {
+        String email;
+        boolean ret;
+        boolean done = false;
+        boolean success = false;
+
+        public CheckUserTask(String email){
+            this.email = email
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL("check/user?email="+email);
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                setConnCookies(con);
+                con.connect();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'GET' request to URL : " + url);
+                System.out.println("Response Code : " + responseCode);
+
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                Gson gson = new Gson();
+                int val = Integer.parseInt(response.toString());
+                if (val == 1)
+                    ret = true;
+                else
+                    ret = false;
+                //print result
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+
+    public static boolean checkUser(String email) throws Exception {
+        CheckUserTask s = new CheckUserTask(email);
+        boolean same;
+        s.execute();
+        while(!s.done)
+            ;
+        if(s.success) {
+            return s.ret;
+        }
+        return false;
+    }
     static class SignInTask extends AsyncTask<Void,Void,Void>
     {
         String email;

@@ -20,6 +20,7 @@ from Controller.UserHandlers.ModifyUserProfileHandler import ModifyUserProfileHa
 from Controller.UserHandlers.RateUserHandler import RateUserHandler
 from Controller.UserHandlers.ViewUserProfileHandler import ViewUserProfileHandler
 from Controller.SpotHandlers.GetClientTokenHandler import GetClientTokenHandler
+from Controller.UserHandlers.CheckUserHandler import CheckUserHandler
 settings = {
     "cookie_secret": "ADSFGHARY3457fgSDFHSDFjusdfASDFGH2345h=sdg",
     "login_url": "/signin",
@@ -39,7 +40,8 @@ application = tornado.web.Application([
     ("/modify/user", ModifyUserProfileHandler),
     ("/rate/user", RateUserHandler),
     ("/post/spot", PostSpotHandler),
-    ("/get/token", GetClientTokenHandler)
+    ("/get/token", GetClientTokenHandler),
+    ("/check/user", CheckUserHandler)
 ], ssl_options={
     "certfile": os.path.join(data_dir, "server.crt"),
     "keyfile": os.path.join(data_dir, "server.key"),
