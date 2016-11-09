@@ -12,8 +12,13 @@ class ViewUserProfileHandler(AbstractUserHandler):
     def get(self):
         email = self.get_argument("email")
         if email:
-            results = [{'email'         : res[0],
-                        'rating'        : res[1],
-                        'phoneNumber'   : str(res[2])}
+            results = [{
+                        'first'         : res[0],
+                        'last'          : res[1],
+                        'isSeeker'      : res[2],
+                        'isOwner'       : res[3],
+                        'phoneNumber'   : str(res[4]),
+                        'email'         : res[5],
+                        'rating'        : res[6]}
                 for res in self.db.viewUserInfo(email)]
             self.write(json.dumps(results))

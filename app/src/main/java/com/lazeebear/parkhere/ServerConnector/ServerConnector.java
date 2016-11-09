@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -99,68 +100,78 @@ public class ServerConnector {
 
 
 
-                                        protected void onPostExecute(Void result) {
+           protected void onPostExecute(Void result) {
                         // dismiss progress dialog and update ui
-                            }
+           }
+       }
+
+    public static String getToken() {
+        GetTokenTask s = new GetTokenTask();
+        s.execute();
+        while(!s.done)
+            ;
+        if(s.success)
+            return s.token;
+        return null;
+    }
+
+    static class SearchSpotTask extends AsyncTask<Void,Void,Void>
+    {
+            List<SpotDAO> spots;
+            String address;
+            boolean done = false;
+            boolean success = false;
+
+            public SearchSpotTask(String address){
+                    this.address = address;
+                }
+
+            protected void onPreExecute() {
+                    //display progress dialog.
+
             }
-
-                static class SearchSpotTask extends AsyncTask<Void,Void,Void>
-        {
-                List<SpotDAO> spots;
-                String address;
-                boolean done = false;
-                boolean success = false;
-
-                        public SearchSpotTask(String address){
-                        this.address = address;
-                    }
-
-                        protected void onPreExecute() {
-                        //display progress dialog.
-
-                                    }
-                protected Void doInBackground(Void... params) {
-                        try {
-                                String url = formatURL("search/spot?address="+ address.replace(' ', '+'));
-                                URL obj = new URL(url);
-                                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                                con.setRequestMethod("GET");
-                                con.setRequestProperty("User-Agent", USER_AGENT);
-                                setConnCookies(con);
-                                con.connect();
-                                int responseCode = con.getResponseCode();
-                                System.out.println("\nSending 'GET' request to URL : " + url);
-                                System.out.println("Response Code : " + responseCode);
+            protected Void doInBackground(Void... params) {
+                    try {
+                            String url = formatURL("search/spot?address="+ address.replace(' ', '+'));
+                            URL obj = new URL(url);
+                            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                            con.setRequestMethod("GET");
+                            con.setRequestProperty("User-Agent", USER_AGENT);
+                            setConnCookies(con);
+                            con.connect();
+                            int responseCode = con.getResponseCode();
+                            System.out.println("\nSending 'GET' request to URL : " + url);
+                            System.out.println("Response Code : " + responseCode);
 
 
-                                                BufferedReader in = new BufferedReader(
-                                                new InputStreamReader(con.getInputStream()));
-                                String inputLine;
-                                StringBuffer response = new StringBuffer();
+                                            BufferedReader in = new BufferedReader(
+                                            new InputStreamReader(con.getInputStream()));
+                            String inputLine;
+                            StringBuffer response = new StringBuffer();
 
-                                        while ((inputLine = in.readLine()) != null) {
-                                        response.append(inputLine);
-                                    }
-                                in.close();
+                                    while ((inputLine = in.readLine()) != null) {
+                                    response.append(inputLine);
+                                }
+                            in.close();
 
-                            Gson gson = new Gson();
-                                Type typeOfT = new TypeToken<List<SpotDAO>>(){}.getType();
-                                spots = gson.fromJson(response.toString(), typeOfT);
-                                //print result
-                                        success = true;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        done = true;
-                        return null;
-                    }
+                        Gson gson = new Gson();
+                            Type typeOfT = new TypeToken<List<SpotDAO>>(){}.getType();
+                            spots = gson.fromJson(response.toString(), typeOfT);
+                            //print result
+                                    success = true;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    done = true;
+                    return null;
+                }
 
 
-            protected void onPostExecute(Void result) {
+        protected void onPostExecute(Void result) {
 
-                        // dismiss progress dialog and update ui
-                            }
-            }
+                    // dismiss progress dialog and update ui
+                        }
+    }
 
     public static List<SpotDAO> searchSpot(String address) throws Exception {
                 SearchSpotTask s = new SearchSpotTask(address);
@@ -187,15 +198,7 @@ public class ServerConnector {
      }
      */
 
-    public static String getToken() {
-                GetTokenTask s = new GetTokenTask();
-                s.execute();
-                while(!s.done)
-                        ;
-                if(s.success)
-                        return s.token;
-                return null;
-            }
+
 
     static class SpotDetailsTask extends AsyncTask<Void,Void,Void>
     {
@@ -265,6 +268,143 @@ public class ServerConnector {
         return null;
     }
 
+    static class UserDetailsTask extends AsyncTask<Void,Void,Void>
+    {
+        String email;
+        ReturnedUserDAO user;
+        boolean done = false;
+        boolean success = false;
+
+        public UserDetailsTask(String email){
+            this.email = email
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL("view/user?email="+email);
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                setConnCookies(con);
+                con.connect();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'GET' request to URL : " + url);
+                System.out.println("Response Code : " + responseCode);
+
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                Gson gson = new Gson();
+                Type typeOfT = new TypeToken<ReturnedUserDAO>(){}.getType();
+                user = gson.fromJson(response.toString(), typeOfT);
+                //print result
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+    static class SpotsOwnedTask extends AsyncTask<Void,Void,Void>
+    {
+        String email;
+        List<Integer> spots;
+        boolean done = false;
+        boolean success = false;
+
+        public SpotsOwnedTask(String email){
+            this.email = email
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL("view/postings?email="+email);
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                setConnCookies(con);
+                con.connect();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'GET' request to URL : " + url);
+                System.out.println("Response Code : " + responseCode);
+
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                Gson gson = new Gson();
+                Type typeOfT = new TypeToken<List<Integer>>(){}.getType();
+                spots = gson.fromJson(response.toString(), typeOfT);
+                //print result
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+    public static ReturnedUserDAO userDetails(String email) throws Exception {
+        UserDetailsTask s = new UserDetailsTask(email);
+        ReturnedUserDAO user;
+        s.execute();
+        while(!s.done)
+            ;
+        if(s.success) {
+            user = s.user;
+            SpotsOwnedTask o = new SpotsOwnedTask(email);
+            o.execute();
+            while(!o.done)
+                ;
+            if(o.success){
+                user.setSpots(o.spots);
+            }
+
+
+            return user;
+        }
+        return null;
+    }
     static class SignInTask extends AsyncTask<Void,Void,Void>
     {
         String email;
