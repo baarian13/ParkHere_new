@@ -178,10 +178,10 @@ public class Account extends AppCompatActivity {
 
         userPhoneNumber = User.phoneNumber;
         TextView phoneNumber = (TextView) findViewById(R.id.phoneNumber);
-        phoneNumber.setText(User.phoneNumber);
+        phoneNumber.setText(userPhoneNumber);
         //Do this after knowing what the phone number input type can accept
-       // EditText phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText_account);
-       // phoneNumberEditText.setText(User.phoneNumber);
+        EditText phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText_account);
+        phoneNumberEditText.setText(User.phoneNumber);
 
         TextView email = (TextView) findViewById(R.id.email);
         email.setText(User.email);
@@ -400,7 +400,7 @@ public class Account extends AppCompatActivity {
     }
 
     private void addConfirmPhoneNumberListener(){
-        Button confirmUserTypeButton = (Button) findViewById(R.id.confirmUserTypeButton_account);
+        Button confirmUserTypeButton = (Button) findViewById(R.id.confirmPhoneNumberButton_account);
         confirmUserTypeButton.setOnClickListener((new View.OnClickListener() {
             public void onClick(View view) {
                 confirmPhoneNumber();
@@ -418,7 +418,7 @@ public class Account extends AppCompatActivity {
         //}
 
         //this is not a temporary variable so do not erase!
-        this.userPhoneNumber = phoneNumberString;
+        User.phoneNumber = phoneNumberString;
 
         //update view
         resetViewVisibility();
