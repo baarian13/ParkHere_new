@@ -8,8 +8,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,13 +18,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
-
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static com.lazeebear.parkhere.R.layout.activity_sign_up;
@@ -221,21 +217,32 @@ public class SignUpActivity extends AppCompatActivity {
 
         ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
                 sFirstName.getText().toString(), sLastName.getText().toString(),
-                sPhoneNum.getText().toString(), 0, 1, convertBitmapToBase64(imageBitmap));
+                sPhoneNum.getText().toString(), 0, 1, null);//, convertBitmapToByteArray(imageBitmap));
 
         //save locally
+        boolean verified = true; //TODO
+        if (verified) {
+            setUserInformation();
+            Intent intent = new Intent(this, Account.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, UserVerificationActivity.class);
+            startActivity(intent);
+        }
+    }
 
-
-        User.firstName = sFirstName.getText().toString();
-        User.lastName = sLastName.getText().toString();
-        User.phoneNumber = sPhoneNum.getText().toString();
-        User.email = sEmailView.getText().toString();
-        Intent intent = new Intent(this, Account.class);
-        startActivity(intent);
-
-        //if user not verified
-        // Intent intent = new Intent(this, UserVerificationActivity.class);
-        // startActivity(intent);
+    private void setUserInformation() {
+        try{
+            ReturnedUserDAO user = ServerConnector.userDetails(sEmailView.getText().toString());
+            //send as part of info to the Account class
+            User.firstName = user.getFirst();
+            User.lastName = user.getLast();
+            User.phoneNumber = user.getPhoneNumber()+"";
+            User.email = user.getEmail();
+            User.rating = user.getRating();
+        } catch (Exception e) {
+            Log.i("ERROR", "Exception while getting user details after successful login");
+        }
     }
 
     private void backToRegister() {
@@ -300,7 +307,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    private Base64 convertBitmapToBase64(Bitmap bitmap){
+    private byte[] convertBitmapToByteArray(Bitmap bitmap){
         ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOS);
         byte[] encoded = Base64.encode(byteArrayOS.toByteArray(), Base64.DEFAULT);

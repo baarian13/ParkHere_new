@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +31,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
 import java.util.ArrayList;
@@ -228,15 +230,31 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
 //            showProgress(true);
-            //if(ServerConnector.signin(email, password)){
-            Intent intent = new Intent(this, Account.class);
-            User.firstName = "Sam";
-            User.lastName = "Smith";
-            User.phoneNumber = "901-901-9011";
-            User.email = "a@a.com";
-            User.rating = 3;
-            startActivity(intent);
-            //}
+            if(ServerConnector.signin(email, password)){
+                //get verification status
+                if (verified) {
+                    Intent intent = new Intent(this, Account.class);
+                    setUserInformation();
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(this, UserVerificationActivity.class);
+                    startActivity(intent);
+                }
+            }
+        }
+    }
+
+    private void setUserInformation() {
+        try{
+            ReturnedUserDAO user = ServerConnector.userDetails(mEmailView.getText().toString());
+            //send as part of info to the Account class
+            User.firstName = user.getFirst();
+            User.lastName = user.getLast();
+            User.phoneNumber = user.getPhoneNumber()+"";
+            User.email = user.getEmail();
+            User.rating = user.getRating();
+        } catch (Exception e) {
+            Log.i("ERROR", "Exception while getting user details after successful login");
         }
     }
 
