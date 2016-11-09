@@ -1,15 +1,20 @@
 package com.lazeebear.parkhere;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,13 +23,20 @@ import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import static com.lazeebear.parkhere.R.layout.activity_sign_up;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText sEmailView, sFirstName, sLastName, sPassword, sPasswordRe, sPhoneNum;
+    private Button sTakeVerificationPhotoButton;
     private static final int SELECT_PICTURE = 1;
-    private String selectedImagePath;
+    private static final int REQUEST_IMAGE_CAPTURE = 2;
+    private String selectedImagePath, mCurrentPhotoPath;
+    private Bitmap imageBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +57,17 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 selectAFile();
+            }
+        });
+
+        sTakeVerificationPhotoButton = (Button) findViewById(R.id.upload_verification_button);
+        sTakeVerificationPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                //check if the device has a camera.
+                if(getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+                    sendTakePictureIntent();
+                }
             }
         });
 
@@ -72,6 +95,24 @@ public class SignUpActivity extends AppCompatActivity {
             if (requestCode == SELECT_PICTURE) {
                 Uri selectedImageUri = data.getData();
                 selectedImagePath = getPath(selectedImageUri);
+            } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+
+               // Bundle extras = data.getExtras();
+
+                //get the photo
+                //try {
+                //imageBitmap = (Bitmap) extras.get("data");
+                /* } catch (FileNotFoundException e) {
+                    try {
+                        imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
+                        //or imageBitmap = Uri.parse(mCurrentPhotoPath)); ??
+                    } catch (IOException ioe) {
+                        Log.i("TAG", "Ioexception while storing the thumbnail of the retrieved photo");
+                    }
+                }
+                */
+                // to set the image { mImageView.setImageBitmap(imageBitmap); }
             }
         }
     }
@@ -158,6 +199,13 @@ public class SignUpActivity extends AppCompatActivity {
             cancel = true;
         }
 
+        // User Verification Photo Upload
+        if (imageBitmap == null) {
+            sTakeVerificationPhotoButton.setError("This field is required");
+            focusView = sTakeVerificationPhotoButton;
+            cancel = true;
+        }
+
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -191,6 +239,7 @@ public class SignUpActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // for uploading or selecting a profile picture
     private void selectAFile() {
         // in onCreate or any event where your want the user to
         // select a file
@@ -222,5 +271,28 @@ public class SignUpActivity extends AppCompatActivity {
         }
         // this is our fallback here
         return uri.getPath();
+    }
+
+    // for taking a photo of user verification
+    private void sendTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager())!=null){
+            //create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = ValidationFunctions.createImageFile(getApplicationContext());
+                //mCurrentPhotoPath = "file:" + photoFile.getAbsolutePath();
+                mCurrentPhotoPath = photoFile.getAbsolutePath();
+            } catch (IOException e) {
+                //...error while creating the File
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.lazeebear.parkhere.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
     }
 }
