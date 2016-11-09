@@ -87,6 +87,16 @@
         </activity>
         <activity android:name=".AddSpotRatingActivity" />
         <activity android:name=".Filter"></activity>
+        <!-- Configure the fileprovider for Android API 24+ when taking photos -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.lazeebear.parkhere.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
     </application>
 
 </manifest>

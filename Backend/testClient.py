@@ -65,13 +65,25 @@ def postSpot(cookie, http_client, address, spotType, isCovered,
     
     http_client.fetch(req)
 
+def checkUser(cookie, http_client, email):
+    url = 'http://{0}:8888/check/user'.format(ip)
+    headers = {'Cookie'  : cookie}
+    args = urllib.urlencode({'email' : email})
+    url = url + '?' + args
+    req = httpclient.HTTPRequest(url, 'GET', headers=headers)
+    
+    res = http_client.fetch(req)
+    print "check user result:"
+    print res.body
+
 if __name__ == '__main__':
     http_client = httpclient.HTTPClient()
     #img = buildImgStr('/Users/henrylevy/Downloads/default.jpg')
-    #cookie = createUser(http_client, '', '', 'first', 'last', '123-456-7890', 1, 1)
-    
-    cookie = signIn(http_client, 'default1234@test.com', 'password1!')
-    postSpot(cookie, http_client, '707 West 28th street, Los Angeles CA, 90007', '0', '0', "0", '10.00', "2016-10-12 12:00:00", "2016-10-12 14:00:00", '0')
+    #cookie = createUser(http_client, 'rob@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
+    cookie = signIn(http_client, 'rob@rob.com', 'Password1$')
+    checkUser(cookie, http_client, "rob1@rob.com")
+    checkUser(cookie, http_client, "rob@rob.com")
+    #postSpot(cookie, http_client, '707 West 28th street, Los Angeles CA, 90007', '0', '0', "0", '10.00', "2016-10-12 12:00:00", "2016-10-12 14:00:00", '0')
     searchSpot(cookie, http_client, '700 West 28th street, Los Angeles CA, 90007')
     http_client.close()
     

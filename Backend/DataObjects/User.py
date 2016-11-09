@@ -120,7 +120,7 @@ class User(DatabaseObject):
     @classmethod
     def viewUserInfoQuery(cls, email):
         return '''SELECT firstName, lastName, isSeeker, isOwner,
-                    phone, email, rating, numReviews FROM {0}
+                    phone, email, rating FROM {0}
                     WHERE email = \'{1}\';'''.format(cls.TABLE_NAME, email)
 
     @classmethod

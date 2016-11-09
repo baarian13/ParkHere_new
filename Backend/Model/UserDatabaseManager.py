@@ -36,6 +36,7 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         :type email: str
         :type password: str
         '''
+        print password
         saltedPwd = self.hash(password, self.getSalt(email))
         self.cursor.execute(User.getUserInfoQuery(email, saltedPwd))
         return len(self.cursor.fetchall()) > 0
@@ -78,9 +79,9 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
     def viewUserInfo(self, email):
         self.cursor.execute(User.viewUserInfoQuery(email))
         info = self.cursor.fetchall()[0]
-        self.cursor.execute(User.getPicturePath(email))
-        picturePath = self.cursor.fetchall()
-        info.append(self.objStorageManager.downloadPictureAsString(picturePath))
+        #self.cursor.execute(User.getPicturePath(email))
+        #picturePath = self.cursor.fetchall()
+        #info.append(self.objStorageManager.downloadPictureAsString(picturePath))
         return info
 
     def rateUser(self, email, rating):
