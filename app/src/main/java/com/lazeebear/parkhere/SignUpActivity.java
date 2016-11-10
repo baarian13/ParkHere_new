@@ -239,15 +239,17 @@ public class SignUpActivity extends AppCompatActivity {
         //save locally
         boolean verified = true; //TODO
         if (verified) {
-            setUserInformation();
             Intent intent = new Intent(this, Account.class);
+            intent.putExtra("id",sEmailView.getText().toString());
             startActivity(intent);
         } else {
             Intent intent = new Intent(this, UserVerificationActivity.class);
+            intent.putExtra("id",sEmailView.getText().toString());
             startActivity(intent);
         }
     }
 
+    //this was for a temporary class to store data locally
     private void setUserInformation() {
         try{
             ReturnedUserDAO user = ServerConnector.userDetails(sEmailView.getText().toString());
