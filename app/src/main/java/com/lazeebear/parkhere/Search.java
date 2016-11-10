@@ -201,7 +201,7 @@ public class Search extends AppCompatActivity {
         }
         Intent intent = new Intent(this, SpotListActivity.class);
         for (int i=0; i< spots.size(); i++) {
-            intent.putExtra("address"+i, spots.get(i).getAddress() + ":" + spots.get(i).getId());
+            intent.putExtra("id",spots.get(i).getId()+"");
         }
         startActivity(intent);
     }

@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
+import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 import com.lazeebear.parkhere.dummy.DummyContent;
 
 import java.util.List;
@@ -37,18 +40,21 @@ public class SpotListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spot_list);
         Intent intent = getIntent();
-        String getAddress = intent.getStringExtra("address"+"0");
-        populateList(getAddress);
+        int spotID = Integer.parseInt(intent.getStringExtra("id"));
+        populateList(spotID);
         addActionListeners();
     }
 
-    private void populateList(String address) {
-        //address + : + id
-        String[] arr = address.split(":");
-        LinearLayout list = (LinearLayout) findViewById(R.id.spotList);
-        Button spotButton = createSpotButton(arr[0]);
-        spotButton.setId(Integer.parseInt(arr[1]));
-        list.addView(spotButton);
+    private void populateList(int id) {
+        try {
+            SpotDetailsDAO spot = ServerConnector.spotDetails(id);
+            LinearLayout list = (LinearLayout) findViewById(R.id.spotList);
+            Button spotButton = createSpotButton(spot.getAddress());
+            spotButton.setId(id);
+            list.addView(spotButton);
+        } catch (Exception e){
+            Log.i("ERROR", "Exception while getting spot details creating spot list");
+        }
     }
 
     private Button createSpotButton(final String address) {
