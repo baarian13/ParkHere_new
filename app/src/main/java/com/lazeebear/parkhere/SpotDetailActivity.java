@@ -3,6 +3,7 @@ package com.lazeebear.parkhere;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.AdapterView;
@@ -11,6 +12,10 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
+import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
 /**
  * An activity representing a single Spot detail screen. This
@@ -22,6 +27,7 @@ public class SpotDetailActivity extends AppCompatActivity {
 
     private int spotID;
     private String userUniqueID;
+    private boolean isSpotOwner = false;
 
     private boolean editPriceOpen = true;
     private boolean editCancellationPolicyOpen = true;
@@ -36,8 +42,8 @@ public class SpotDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             spotID = Integer.parseInt(intent.getStringExtra("id"));
-            hideInformation();
             setInformation();
+            hideInformation();
             setActionListeners();
         }
 
@@ -63,36 +69,43 @@ public class SpotDetailActivity extends AppCompatActivity {
     }
 
     private void setInformation(){
-        userUniqueID = "email";
-        int rating = 3;
-        double price = 2.00;
-        String firstName = "First";
-        String lastName = "Last";
-        int cancellationIndex = 1;
+        try {
+            SpotDetailsDAO spot = ServerConnector.spotDetails(spotID);
+            userUniqueID = spot.getOwnerEmail();
+            //TO-DO
+            int rating = 3;
+            double price = 2.00;
+            ReturnedUserDAO userInfo = ServerConnector.userDetails(userUniqueID);
+            String firstName = userInfo.getFirst();
+            int cancellationIndex = spot.getCancelationPolicy();
 
-        TextView addressField = (TextView) findViewById(R.id.address_spotDetail);
-        addressField.setText(spotID+"");
-        RatingBar spotRating = (RatingBar) findViewById(R.id.rating_spot_spotDetail);
-        spotRating.setRating(rating);
-        TextView priceTextView = (TextView) findViewById(R.id.price_spotDetail);
-        priceTextView.setText("$" + price);
-        EditText priceEditText = (EditText) findViewById(R.id.priceEditText_spotDetail);
-        priceEditText.setText(price+"");
-        TextView owner = (TextView) findViewById(R.id.owner_spotDetail);
-        owner.setText(firstName + " " + lastName);
+            isSpotOwner = ServerConnector.checkUser(userUniqueID);
 
-        Resources res = getResources();
-        TextView cancellationPolicyName = (TextView) findViewById(R.id.cancellation_policy_spotDetail);
-        String[] nameOptions = res.getStringArray(R.array.cancellation_policy);
-        cancellationPolicyName.setText("Cancellation Policy   " + nameOptions[cancellationIndex]);
-        TextView cancellationPolicyDescription = (TextView) findViewById(R.id.cancellation_policy_description_spotDetail);
-        String[] descriptionOptions = res.getStringArray(R.array.cancellation_policy_description);
-        String description = descriptionOptions[cancellationIndex];
-        cancellationPolicyDescription.setText(description);
-        Spinner cancellationPolicySpinner = (Spinner) findViewById(R.id.cancellationPolicySpinner_spotDetail);
-        cancellationPolicySpinner.setSelection(cancellationIndex);
-        defaultCancellationPolicyIndex = cancellationIndex;
+            TextView addressField = (TextView) findViewById(R.id.address_spotDetail);
+            addressField.setText(spot.getAddress());
+            RatingBar spotRating = (RatingBar) findViewById(R.id.rating_spot_spotDetail);
+            spotRating.setRating(rating);
+            TextView priceTextView = (TextView) findViewById(R.id.price_spotDetail);
+            priceTextView.setText("$" + price);
+            EditText priceEditText = (EditText) findViewById(R.id.priceEditText_spotDetail);
+            priceEditText.setText(price + "");
+            TextView owner = (TextView) findViewById(R.id.owner_spotDetail);
+            owner.setText(firstName);
 
+            Resources res = getResources();
+            TextView cancellationPolicyName = (TextView) findViewById(R.id.cancellation_policy_spotDetail);
+            String[] nameOptions = res.getStringArray(R.array.cancellation_policy);
+            cancellationPolicyName.setText("Cancellation Policy   " + nameOptions[cancellationIndex]);
+            TextView cancellationPolicyDescription = (TextView) findViewById(R.id.cancellation_policy_description_spotDetail);
+            String[] descriptionOptions = res.getStringArray(R.array.cancellation_policy_description);
+            String description = descriptionOptions[cancellationIndex];
+            cancellationPolicyDescription.setText(description);
+            Spinner cancellationPolicySpinner = (Spinner) findViewById(R.id.cancellationPolicySpinner_spotDetail);
+            cancellationPolicySpinner.setSelection(cancellationIndex);
+            defaultCancellationPolicyIndex = cancellationIndex;
+        } catch (Exception e){
+            Log.i("ERROR", "Exception while getting spot details creating spotDetail view");
+        }
     }
 
 
@@ -159,7 +172,8 @@ public class SpotDetailActivity extends AppCompatActivity {
         EditText priceEditText = (EditText) findViewById(R.id.priceEditText_spotDetail);
         String price = priceEditText.getText().toString();
         //update price
-
+        SpotDetailsDAO updatedSpot = new SpotDetailsDAO();
+        //ServerConnector.modifySpot(updateSpot);
         refreshView();
 
     }
@@ -205,7 +219,8 @@ public class SpotDetailActivity extends AppCompatActivity {
         Spinner cancellationPolicySpinner = (Spinner) findViewById(R.id.cancellationPolicySpinner_spotDetail);
         int index = cancellationPolicySpinner.getSelectedItemPosition();
 
-        //send index
+        SpotDetailsDAO updatedSpot = new SpotDetailsDAO();
+        //ServerConnector.modifySpot(updateSpot);
 
         refreshView();
     }
@@ -303,8 +318,7 @@ public class SpotDetailActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //TODO
     private boolean isSpotOwner(){
-        return true;
+        return isSpotOwner;
     }
 }
