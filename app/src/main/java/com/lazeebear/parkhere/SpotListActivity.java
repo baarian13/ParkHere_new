@@ -51,6 +51,7 @@ public class SpotListActivity extends AppCompatActivity {
             LinearLayout list = (LinearLayout) findViewById(R.id.spotList);
             Button spotButton = createSpotButton(spot.getAddress());
             spotButton.setId(id);
+            spotButton.setId(R.id.reservedSpotId); //for testing, since "id" is hidden on the Server side for now. they don't need to be unique.
             list.addView(spotButton);
         } catch (Exception e){
             Log.i("ERROR", "Exception while getting spot details creating spot list");
