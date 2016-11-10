@@ -249,6 +249,7 @@ public class Account extends AppCompatActivity {
             int spotCt = spotList.size();
             for (int i = 0; i < spotCt; i++) {
                 Button spotButton = createOwnedSpotButton(spotList.get(i));
+                spotButton.setId(R.id.reservedSpotId); //for referencing from tests. doesn't need to be unique.
                 list.addView(spotButton);
             }
 
@@ -263,6 +264,7 @@ public class Account extends AppCompatActivity {
             LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
             for (int i = 0; i < 5; i++) {
                 Button spotButton = createSpotHistoryButton("Owned Address " + i);
+                spotButton.setId(R.id.reservedSpotId); //for referencing from tests. doesn't need to be unique.
                 list.addView(spotButton);
             }
             spotHistoryOpen = true;
