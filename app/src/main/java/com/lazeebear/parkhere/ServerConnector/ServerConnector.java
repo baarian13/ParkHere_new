@@ -728,8 +728,18 @@ public class ServerConnector {
 //                            "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner + "&profilePic="
 //                            + profilePic.toString();
 //                } else {
-                urlParameters = "email=" + email + "&password=" + password + "&first=" + first +
-                            "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner;
+                urlParameters = "";
+                if (email != null)
+                    urlParameters += "email=" + email;
+                if(password != null)
+                    urlParameters += "&password=" + password;
+                if(first != null)
+                    urlParameters += "&first=" + first;
+                if(last != null)
+                    urlParameters += "&last=" + last;
+                if(phone != null)
+                    urlParameters += "&phone=" + phone;
+                urlParameters += "&seeker=" + seeker + "&owner=" + owner;
 //                }
 
                 // Send post request
