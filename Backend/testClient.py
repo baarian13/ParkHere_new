@@ -7,8 +7,9 @@ from tornado import httpclient
 import urllib, base64
 
 # ip = '35.160.111.133'
-ip = 'localhost'
+ip = '35.163.38.167'
 #ip = 'parkhere.cghr1zvgeuqd.us-west-1.rds.amazonaws.com'
+#ip = 'ec2-35-163-38-167.us-west-2.compute.amazonaws.com'
 def buildImgStr(path):
     with open(path, 'rb') as image_file:
         return base64.b64encode(image_file.read())
@@ -79,7 +80,7 @@ def checkUser(cookie, http_client, email):
 if __name__ == '__main__':
     http_client = httpclient.HTTPClient()
     #img = buildImgStr('/Users/henrylevy/Downloads/default.jpg')
-    #cookie = createUser(http_client, 'rob@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
+    cookie = createUser(http_client, 'rob1@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
     cookie = signIn(http_client, 'rob@rob.com', 'Password1$')
     checkUser(cookie, http_client, "rob1@rob.com")
     checkUser(cookie, http_client, "rob@rob.com")
