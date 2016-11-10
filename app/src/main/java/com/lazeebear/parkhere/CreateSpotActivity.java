@@ -20,6 +20,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.lazeebear.parkhere.ServerConnector.ServerConnector;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Calendar;
@@ -34,7 +36,6 @@ public class CreateSpotActivity extends AppCompatActivity {
     private int year, month, day, hour, minute;
     public static final int GET_FROM_GALLERY = 3; //request code for opening the gallery
 
-    private String userUniqueID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

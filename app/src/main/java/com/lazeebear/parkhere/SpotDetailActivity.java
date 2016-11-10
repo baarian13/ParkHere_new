@@ -130,6 +130,7 @@ public class SpotDetailActivity extends AppCompatActivity {
 
     private void deleteSpot() {
         //delete spot first
+        //ServerConnector.deleteSpot(spotID);
         //then redirect to account page
         Intent intent = new Intent(this, Account.class);
         intent.putExtra("id",userUniqueID);
