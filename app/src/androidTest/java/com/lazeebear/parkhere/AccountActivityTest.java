@@ -178,6 +178,21 @@ public class AccountActivityTest {
     }
 
     /*
+     * Tests that an Owner can delete a spot, and that they are redirected to the Account Page
+     * when they have deleted a spot.
+     */
+    @Test
+    public void testOwnerDeleteSpot() {
+        Log.i("STATE", "Starting testOwnerDeleteSpot()");
+        signInAsAnOwner();
+        onView(withId(R.id.spotHistoryButton_account)).perform(click());
+        onView(withId(R.id.deleteSpotButton_spotDetail)).perform(click());
+        onView(withId(R.id.ratingBar)).check(matches(isDisplayed()));
+        Log.i("STATE", " Success: returned to user account page.");
+        Log.i("STATE", "  Completed");
+    }
+
+    /*
      * Tests that a Seeker can view the policy of a spot that they reserved.
      */
     @Test
