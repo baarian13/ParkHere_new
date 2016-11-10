@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -184,21 +185,24 @@ public class Search extends AppCompatActivity {
     private void search(){
         TextView address = (TextView) findViewById(R.id.address);
         String addressString = address.getText().toString();
-        //String lowerDateTime = getDateTime(lowerInt);
-        //String upperDateTime = getDateTime(upperInt);
-        /*
+        String lowerDate = date_button_lower.getText().toString();
+        String lowerTime = time_button_lower.getText().toString();
+        String lowerDateTime = formatDateTime(lowerDate, lowerTime);
+        String upperDate = date_button_upper.getText().toString();
+        String upperTime = time_button_upper.getText().toString();
+        String upperDateTime = formatDateTime(upperDate, upperTime);
+
+
         List<SpotDAO> spots = null;
         try {
             spots = ServerConnector.searchSpot(addressString);
         } catch (Exception e) {
-
+            Log.i("ERROR", "Exception while getting spot list during search");
         }
         Intent intent = new Intent(this, SpotListActivity.class);
         for (int i=0; i< spots.size(); i++) {
             intent.putExtra("address"+i, spots.get(i).getAddress() + ":" + spots.get(i).getId());
-        }*/
-        Intent intent = new Intent(this, SpotListActivity.class);
-        intent.putExtra("address0",addressString+":"+"0");
+        }
         startActivity(intent);
     }
 

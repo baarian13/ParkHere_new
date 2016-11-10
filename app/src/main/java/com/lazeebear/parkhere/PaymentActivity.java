@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.braintreepayments.api.BraintreePaymentActivity;
 import com.braintreepayments.api.PaymentRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
 public class PaymentActivity extends AppCompatActivity {
@@ -23,16 +25,19 @@ public class PaymentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_page);
 
-        costOfSpot=""; email = ""; spotID = "";
-        // get this stuff from the server
 
         Intent intent = getIntent();
         if (intent != null) {
             spotID = intent.getStringExtra("id");
             //get data
-            //costOfSpot = intent.getStringExtra("costOfSpot");
-            //email = intent.getStringExtra("email");
-            //spotID = intent.getStringExtra("spotID:");
+            try {
+                SpotDetailsDAO spot = ServerConnector.spotDetails(Integer.parseInt(spotID));
+                costOfSpot = "2.00";
+                email = spot.getOwnerEmail();
+
+            } catch (Exception e){
+                Log.i("ERROR", "Exception while getting spot details at creating payment page");
+            }
             addActionListeners();
         }
     }
