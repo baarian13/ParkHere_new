@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
+import com.lazeebear.parkhere.DAOs.SentObjects.SentUserDAO;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -674,6 +675,137 @@ public class ServerConnector {
     */
     public static int signup(String email, String password, String first, String last, String phone, int seeker, int owner/*, Base64 profilePic*/) {
         SignUpTask s = new SignUpTask(email, password, first, last, phone, seeker, owner);
+        s.execute();
+        while(!s.done)
+            ;
+        if(s.success)
+            return 200;
+        else
+            return 401;
+    }
+
+    static class ModifyUserTask extends AsyncTask<Void,Void,Void>
+    {
+        String email;
+        String password;
+        String first;
+        String last;
+        String phone;
+        int seeker;
+        int owner;
+        boolean done = false;
+        boolean success = false;
+
+        public ModifyUserTask(String email, String password, String first, String last, String phone, boolean seeker, boolean owner/*, Base64 profilePic*/){
+            this.email = email;
+            this.password = password;
+            this.first = first;
+            this.last = last;
+            this.phone = phone;
+            this.seeker = seeker ? 1 : 0;
+            this.owner = owner ? 1 : 0;
+            //this.profilePic = profilePic;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL("signup");
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                String urlParameters = null;
+//
+//                if (profilePic != null) {
+//                    urlParameters = "email=" + email + "&password=" + password + "&first=" + first +
+//                            "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner + "&profilePic="
+//                            + profilePic.toString();
+//                } else {
+                urlParameters = "";
+                if (email != null)
+                    urlParameters += "email=" + email;
+                if(password != null)
+                    urlParameters += "&password=" + password;
+                if(first != null)
+                    urlParameters += "&first=" + first;
+                if(last != null)
+                    urlParameters += "&last=" + last;
+                if(phone != null)
+                    urlParameters += "&phone=" + phone;
+                urlParameters += "&seeker=" + seeker + "&owner=" + owner;
+//                }
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                con.connect();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+//            con.setDoOutput(false);
+//            con.setDoInput(true);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+
+    /*
+    Success - 200 returned
+    Partial Success - 206 returned (Profile photo submission unsuccessful
+    Failure - 401 returned
+     */
+    /*
+    public static int signup(SentUserDAO user) {
+        String url = Configs.baseURL + Configs.signupEndpoint;
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity entity = restTemplate.postForEntity(url, user, Object.class);
+
+        return entity.getStatusCode().value();
+    }
+    */
+    public static int modifyUser(SentUserDAO user) {
+        ModifyUserTask s = new ModifyUserTask(user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.isSeaker(), user.isOwner());
         s.execute();
         while(!s.done)
             ;

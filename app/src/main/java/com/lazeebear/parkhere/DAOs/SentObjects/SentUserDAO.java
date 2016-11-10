@@ -14,17 +14,17 @@ public class SentUserDAO {
     private String firstName;
     private String lastName;
     private String phoneNumber; // No delimters
-    private Base64 profilePic;
+    //private Base64 profilePic;
     private boolean seaker;
     private boolean owner;
 
-    public SentUserDAO(String email, String password, String firstName, String lastName, String phoneNumber, Base64 profilePic, boolean seaker, boolean owner) {
+    public SentUserDAO(String email, String password, String firstName, String lastName, String phoneNumber, boolean seaker, boolean owner) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.profilePic = profilePic;
+        //this.profilePic = profilePic;
         this.seaker = seaker;
         this.owner = owner;
     }
@@ -77,13 +77,13 @@ public class SentUserDAO {
         this.phoneNumber = phoneNumber;
     }
 
-    public Base64 getProfilePic() {
-        return profilePic;
-    }
+//    public Base64 getProfilePic() {
+//        return profilePic;
+//    }
 
-    public void setProfilePic(Base64 profilePic) {
-        this.profilePic = profilePic;
-    }
+//    public void setProfilePic(Base64 profilePic) {
+//        this.profilePic = profilePic;
+//    }
 
     public boolean isSeaker() {
         return seaker;
