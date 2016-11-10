@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,14 +14,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.content.res.Resources;
 
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
+import com.lazeebear.parkhere.ServerConnector.ServerConnector;
+
 /**
  * Created by Zhicheng on 10/22/2016.
  */
 
 public class Account extends AppCompatActivity {
     private boolean isViewingOwnAccount = true;
-    private int userType = 0;
-    private String userPhoneNumber = "";
+    private String uniqueID = "";
     private boolean isOwner = true;
     private boolean isSeeker = true;
     private boolean spotHistoryOpen = false;
@@ -36,10 +39,12 @@ public class Account extends AppCompatActivity {
 
         //grab info, setUserType(), fillInfo
         if (intent != null) {
+            String[] idArray = intent.getStringArrayExtra("id");
+            uniqueID = idArray[0];
             resetViewVisibility();
-            hideComponents();
-            hideToggleButton();
             fillInformation();
+            hideToggleButton();
+            hideComponents();
             addActionListeners();
         }
     }
@@ -171,29 +176,34 @@ public class Account extends AppCompatActivity {
     }
 
     private void fillInformation() {
-        TextView accountName = (TextView) findViewById(R.id.accountName_account);
-        accountName.setText(getDisplayName());
-        RatingBar ratingOfUser = (RatingBar) findViewById(R.id.ratingBar);
-        ratingOfUser.setRating(User.rating);
+        try {
+            ReturnedUserDAO userInfo = ServerConnector.userDetails(uniqueID);
+            isOwner = userInfo.isOwner();
+            isSeeker = userInfo.isSeeker();
+            isViewingOwnAccount = ServerConnector.checkUser(uniqueID);
 
-        userPhoneNumber = User.phoneNumber;
-        TextView phoneNumber = (TextView) findViewById(R.id.phoneNumber);
-        phoneNumber.setText(userPhoneNumber);
-        //Do this after knowing what the phone number input type can accept
-        EditText phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText_account);
-        phoneNumberEditText.setText(User.phoneNumber);
+            TextView accountName = (TextView) findViewById(R.id.accountName_account);
+            accountName.setText(getDisplayName(userInfo.getFirst(), userInfo.getLast()));
+            RatingBar ratingOfUser = (RatingBar) findViewById(R.id.ratingBar);
+            ratingOfUser.setRating(userInfo.getRating());
 
-        TextView email = (TextView) findViewById(R.id.email);
-        email.setText(User.email);
+            TextView phoneNumberTextView = (TextView) findViewById(R.id.phoneNumber);
+            phoneNumberTextView.setText(userInfo.getPhoneNumber()+"");
+            EditText phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText_account);
+            phoneNumberEditText.setText(userInfo.getPhoneNumber()+"");
 
-        TextView userTypeTextView = (TextView) findViewById(R.id.userType_account);
-        Resources res= getResources();
-        String[] userTypeArray = res.getStringArray(R.array.user_types);
-        String userTypeString = userTypeArray[userType].toString();
-        userTypeTextView.setText(userTypeString);
-        //also change the preset value for edit
-        Spinner editSpinner = (Spinner) findViewById(R.id.editUserTypeSpinner_account);
-        editSpinner.setSelection(userType);
+            TextView email = (TextView) findViewById(R.id.email);
+            email.setText(userInfo.getEmail());
+
+            TextView userTypeTextView = (TextView) findViewById(R.id.userType_account);
+
+            userTypeTextView.setText(getUserTypeString());
+            //also change the preset value for edit
+            Spinner editSpinner = (Spinner) findViewById(R.id.editUserTypeSpinner_account);
+            editSpinner.setSelection(getUserType());
+        } catch (Exception e){
+            Log.i("ERROR", "Exception while getting user details opening account");
+        }
     }
 
     private void addActionListeners() {
@@ -347,13 +357,13 @@ public class Account extends AppCompatActivity {
         return isViewingOwnAccount;
     }
 
-    private String getDisplayName() {
+    private String getDisplayName(String first, String last) {
         if (isViewingOwnAccount())
             //return "First and Last Name";
-            return User.firstName + " " + User.lastName;
+            return first + " " + last;
         else
             //return "First Name Only";
-            return User.firstName;
+            return first;
     }
 
     //we should only show this initially when we verify that the user is viewing own account
@@ -388,9 +398,6 @@ public class Account extends AppCompatActivity {
         //I assume the user types are by index?
         int choiceIndex = spinner.getSelectedItemPosition();
         //send
-
-        //this is not a temporary fix!
-        setUserType(choiceIndex);
 
         //update view
         resetViewVisibility();
@@ -427,22 +434,6 @@ public class Account extends AppCompatActivity {
 
     }
 
-    private void setUserType(int index){
-        userType = index;
-        if (index == 0) {
-            //both
-            isOwner = true;
-            isSeeker = true;
-        } else if (index == 1){
-            //owner
-            isOwner = true;
-            isSeeker = false;
-        } else if (index == 2){
-            isOwner = false;
-            isSeeker = true;
-        }
-    }
-
     private void addEditUserTypeListener(){
         Button editUserTypeButton = (Button) findViewById(R.id.editUserTypeButton_account);
         editUserTypeButton.setOnClickListener((new View.OnClickListener() {
@@ -475,5 +466,28 @@ public class Account extends AppCompatActivity {
             showPhoneNumberEditors();
     }
 
+    private int getUserType(){
+        if (isOwner() && isSeeker()){
+            return 0;
+        } else if (isOwner()){
+            return 1;
+        } else {
+            return 2;
+        }
+    }
 
+    private String getUserTypeString(){
+        Resources res = getResources();
+        String[] userTypeArray = res.getStringArray(R.array.user_types);
+        int index = -1;
+        if (isOwner() && isSeeker()){
+            index = 0;
+        } else if (isOwner()){
+            index = 1;
+        } else {
+            index = 2;
+        }
+
+        return userTypeArray[index].toString();
+    }
 }

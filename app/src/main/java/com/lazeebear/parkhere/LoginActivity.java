@@ -235,7 +235,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 boolean verified = true; //TODO
                 if (verified) {
                     Intent intent = new Intent(this, Account.class);
-                    setUserInformation();
+                    //setUserInformation();
+                    intent.putExtra("id", mEmailView.getText().toString());
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(this, UserVerificationActivity.class);
@@ -245,6 +246,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    //this is only temporary
     private void setUserInformation() {
         try{
             ReturnedUserDAO user = ServerConnector.userDetails(mEmailView.getText().toString());
