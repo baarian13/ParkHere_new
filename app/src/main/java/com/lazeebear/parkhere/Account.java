@@ -15,7 +15,11 @@ import android.widget.TextView;
 import android.content.res.Resources;
 
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
+import com.lazeebear.parkhere.DAOs.SentObjects.SentUserDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
+
+import java.util.List;
 
 /**
  * Created by Zhicheng on 10/22/2016.
@@ -30,6 +34,7 @@ public class Account extends AppCompatActivity {
     private boolean ownedSpotsOpen = false;
     private boolean userTypeEditorsShown = true;
     private boolean phoneNumberEditorsShown = true;
+    private List<Integer>  spotList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,6 +206,8 @@ public class Account extends AppCompatActivity {
             //also change the preset value for edit
             Spinner editSpinner = (Spinner) findViewById(R.id.editUserTypeSpinner_account);
             editSpinner.setSelection(getUserType());
+
+            spotList = userInfo.getSpots();
         } catch (Exception e){
             Log.i("ERROR", "Exception while getting user details opening account");
         }
@@ -239,10 +246,12 @@ public class Account extends AppCompatActivity {
         if (!ownedSpotsOpen) {
             clearSpotList();
             LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
-            for (int i = 0; i < 5; i++) {
-                Button spotButton = createOwnedSpotButton("Owned Address " + i);
+            int spotCt = spotList.size();
+            for (int i = 0; i < spotCt; i++) {
+                Button spotButton = createOwnedSpotButton(spotList.get(i));
                 list.addView(spotButton);
             }
+
             ownedSpotsOpen = true;
             spotHistoryOpen = false;
         }
@@ -253,7 +262,7 @@ public class Account extends AppCompatActivity {
             clearSpotList();
             LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
             for (int i = 0; i < 5; i++) {
-                Button spotButton = createSpotHistoryButton("History Address " + i);
+                Button spotButton = createSpotHistoryButton("Owned Address " + i);
                 list.addView(spotButton);
             }
             spotHistoryOpen = true;
@@ -261,16 +270,29 @@ public class Account extends AppCompatActivity {
         }
     }
 
-    private Button createOwnedSpotButton(String address) {
+    private Button createOwnedSpotButton(final int id) {
+        String address = "";
+        try {
+            SpotDetailsDAO spot = ServerConnector.spotDetails(id);
+            address = spot.getAddress();
+        } catch (Exception e){
+            Log.i("ERROR", "Exception while getting spot info on account page");
+        }
         Button button = new Button(this);
         button.setText(address);
         button.setOnClickListener( new View.OnClickListener(){
             public void onClick(View view){
-
+                addIntentOwnedSpotButton(id);
             }
         });
 
         return button;
+    }
+
+    private void addIntentOwnedSpotButton(int id){
+        Intent intent = new Intent(this, SpotDetailActivity.class);
+        intent.putExtra("id", id+"");
+        startActivity(intent);
     }
 
     private Button createSpotHistoryButton(String address) {
@@ -397,8 +419,10 @@ public class Account extends AppCompatActivity {
         Spinner spinner = (Spinner) findViewById(R.id.editUserTypeSpinner_account);
         //I assume the user types are by index?
         int choiceIndex = spinner.getSelectedItemPosition();
+        setUserType(choiceIndex);
         //send
-
+        SentUserDAO updatedUser = new SentUserDAO(null, null, null, null, null, isSeeker(), isOwner());
+        ServerConnector.modifyUser(updatedUser);
         //update view
         resetViewVisibility();
         hideComponents();
@@ -420,9 +444,10 @@ public class Account extends AppCompatActivity {
         EditText phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText_account);
         String phoneNumberString = phoneNumberEditText.getText().toString();
 
-        //if (ValidationFunctions.isPhoneNum(phoneNumberString)){
-        //send
-        //}
+        if (ValidationFunctions.isPhoneNum(phoneNumberString)){
+            SentUserDAO updatedUser = new SentUserDAO(null, null, null, null, phoneNumberString, isSeeker(), isOwner());
+            ServerConnector.modifyUser(updatedUser);
+        }
 
         //this is not a temporary variable so do not erase!
         User.phoneNumber = phoneNumberString;
@@ -473,6 +498,19 @@ public class Account extends AppCompatActivity {
             return 1;
         } else {
             return 2;
+        }
+    }
+
+    private void setUserType(int index){
+        if (index == 0){
+            isOwner = true;
+            isSeeker = true;
+        } else if (index == 1){
+            isOwner = true;
+            isSeeker = false;
+        } else{
+            isOwner = false;
+            isSeeker = true;
         }
     }
 
