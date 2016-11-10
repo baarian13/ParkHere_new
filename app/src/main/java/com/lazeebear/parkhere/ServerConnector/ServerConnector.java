@@ -50,7 +50,7 @@ public class ServerConnector {
 
     static String formatURL(String command){
         //return "http://35.160.111.133:8888/" + command;
-        return "http://localhost/" + command;
+        return "http://10.0.2.2:8888/" + command;
     }
 
     static class GetTokenTask extends AsyncTask<Void,Void,Void>
