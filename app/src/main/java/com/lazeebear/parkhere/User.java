@@ -6,9 +6,9 @@ package com.lazeebear.parkhere;
 //work around
     //to avoid calling server connector
 public class User {
-    public static String firstName = "";
-    public static String lastName = "";
-    public static String phoneNumber = "";
-    public static int rating = 0;
-    public static String email = "";
+    public static String firstName = "sam";
+    public static String lastName = "smith";
+    public static String phoneNumber = "2222222222";
+    public static int rating = 1;
+    public static String email = "a@i.com";
 }

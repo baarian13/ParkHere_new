@@ -80,8 +80,8 @@ public class SignUpActivityTest {
         onView(withId(R.id.LastNameEditText)).perform(typeText(USER_FIRST));
         onView(withId(R.id.FirstNameEditText)).perform(typeText(USER_LAST));
         onView(withId(R.id.phoneNum_sign_up)).perform(typeText(USER_PHONE));
-        //onView(withId(R.id.upload_verification_button)).perform(click()); //deferred
-        //deferred TODO take a photo http://stackoverflow.com/questions/28019657/camera-operation-ui-testing-with-espresso
+        //onView(withId(R.id.upload_verification_button)).perform(click());
+        //TODO take a photo http://stackoverflow.com/questions/28019657/camera-operation-ui-testing-with-espresso
         //TODO choose user type
         onView(withId(R.id.sign_up_button)).perform(click());
 

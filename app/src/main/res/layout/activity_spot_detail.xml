@@ -19,11 +19,30 @@
         android:id="@+id/rating_spot_spotDetail"
         android:isIndicator="true"/>
 
-    <TextView
-        android:id="@+id/price_spotDetail"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/price_label"/>
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/price_spotDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/price_label"/>
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/priceEditText_spotDetail"
+            android:inputType="numberDecimal"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/confirmPriceButton_spotDetail"
+            android:text="Confirm"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit"
+            android:id="@+id/editPriceButton_spotDetail"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -44,11 +63,30 @@
         android:layout_height="wrap_content"
         android:text="@string/owner_phonenum_label"/>
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cancellation Policy:"
-        android:id="@+id/cancellation_policy_spotDetail"/>
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Policy"
+            android:id="@+id/cancellation_policy_spotDetail"/>
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cancellationPolicySpinner_spotDetail"
+            android:entries="@array/cancellation_policy"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/confirmCancellationPolicy_spotDetail"
+            android:text="Confirm"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editCancellationPolicy_spotDetail"
+            android:text="Edit"/>
+    </LinearLayout>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -84,10 +122,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/deleteSpotButton_spotDetail"
             android:text="Delete"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Edit"
-            android:id="@+id/editSpotButton_spotDetail"/>
+
     </LinearLayout>
 </LinearLayout>

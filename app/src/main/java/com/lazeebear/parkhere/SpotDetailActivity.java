@@ -5,8 +5,11 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 /**
@@ -19,6 +22,12 @@ public class SpotDetailActivity extends AppCompatActivity {
 
     private int spotID;
     private String userUniqueID;
+
+    private boolean editPriceOpen = true;
+    private boolean editCancellationPolicyOpen = true;
+    //for resetting the description when the user closes (not confirms) editor
+    private int defaultCancellationPolicyIndex = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,23 +54,33 @@ public class SpotDetailActivity extends AppCompatActivity {
         } else {
             Button deleteSpotButton = (Button) findViewById(R.id.deleteSpotButton_spotDetail);
             deleteSpotButton.setVisibility(View.GONE);
-            Button editSpotButton = (Button) findViewById(R.id.editSpotButton_spotDetail);
-            editSpotButton.setVisibility(View.GONE);
+            Button editPriceButton = (Button) findViewById(R.id.editPriceButton_spotDetail);
+            editPriceButton.setVisibility(View.GONE);
         }
+
+        hideEditPrice();
+        hideEditCancellationPolicy();
     }
 
     private void setInformation(){
         userUniqueID = "email";
+        int rating = 3;
+        double price = 2.00;
+        String firstName = "First";
+        String lastName = "Last";
+        int cancellationIndex = 1;
 
         TextView addressField = (TextView) findViewById(R.id.address_spotDetail);
         addressField.setText(spotID+"");
         RatingBar spotRating = (RatingBar) findViewById(R.id.rating_spot_spotDetail);
-        spotRating.setRating(3);
-        TextView price = (TextView) findViewById(R.id.price_spotDetail);
-        price.setText("$" + 2.00);
+        spotRating.setRating(rating);
+        TextView priceTextView = (TextView) findViewById(R.id.price_spotDetail);
+        priceTextView.setText("$" + price);
+        EditText priceEditText = (EditText) findViewById(R.id.priceEditText_spotDetail);
+        priceEditText.setText(price+"");
         TextView owner = (TextView) findViewById(R.id.owner_spotDetail);
-        owner.setText("First" + " " + "Last");
-        int cancellationIndex = 1;
+        owner.setText(firstName + " " + lastName);
+
         Resources res = getResources();
         TextView cancellationPolicyName = (TextView) findViewById(R.id.cancellation_policy_spotDetail);
         String[] nameOptions = res.getStringArray(R.array.cancellation_policy);
@@ -70,6 +89,9 @@ public class SpotDetailActivity extends AppCompatActivity {
         String[] descriptionOptions = res.getStringArray(R.array.cancellation_policy_description);
         String description = descriptionOptions[cancellationIndex];
         cancellationPolicyDescription.setText(description);
+        Spinner cancellationPolicySpinner = (Spinner) findViewById(R.id.cancellationPolicySpinner_spotDetail);
+        cancellationPolicySpinner.setSelection(cancellationIndex);
+        defaultCancellationPolicyIndex = cancellationIndex;
 
     }
 
@@ -101,8 +123,91 @@ public class SpotDetailActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void toggleEditForm(){
+    //edit price methods
+    private void toggleEditPrice(){
+        if (editPriceOpen){
+            hideEditPrice();
+            editPriceOpen = false;
+        } else {
+            showEditPrice();
+            editPriceOpen = true;
+        }
+    }
 
+    private void hideEditPrice(){
+        EditText priceEditText = (EditText) findViewById(R.id.priceEditText_spotDetail);
+        priceEditText.setVisibility(View.GONE);
+        Button priceConfirmButton = (Button) findViewById(R.id.confirmPriceButton_spotDetail);
+        priceConfirmButton.setVisibility(View.GONE);
+        TextView priceTextView = (TextView) findViewById(R.id.price_spotDetail);
+        priceTextView.setVisibility(View.VISIBLE);
+
+        editPriceOpen = false;
+    }
+
+    private void showEditPrice(){
+        EditText priceEditText = (EditText) findViewById(R.id.priceEditText_spotDetail);
+        priceEditText.setVisibility(View.VISIBLE);
+        Button priceConfirmButton = (Button) findViewById(R.id.confirmPriceButton_spotDetail);
+        priceConfirmButton.setVisibility(View.VISIBLE);
+        TextView priceTextView = (TextView) findViewById(R.id.price_spotDetail);
+        priceTextView.setVisibility(View.GONE);
+        editPriceOpen = true;
+    }
+
+    private void confirmPrice(){
+        EditText priceEditText = (EditText) findViewById(R.id.priceEditText_spotDetail);
+        String price = priceEditText.getText().toString();
+        //update price
+
+        refreshView();
+
+    }
+
+    //cancellation policy editors
+    private void toggleEditCancellationPolicy() {
+        if (editCancellationPolicyOpen) {
+            hideEditCancellationPolicy();
+        } else {
+            showEditCancellationPolicy();
+        }
+    }
+
+    private void hideEditCancellationPolicy(){
+        Spinner cancellationPolicySpinner = (Spinner) findViewById(R.id.cancellationPolicySpinner_spotDetail);
+        cancellationPolicySpinner.setVisibility(View.GONE);
+        Button cancellationConfirmButton = (Button) findViewById(R.id.confirmCancellationPolicy_spotDetail);
+        cancellationConfirmButton.setVisibility(View.GONE);
+        TextView cancellationPolicyTextView = (TextView) findViewById(R.id.cancellation_policy_spotDetail);
+        cancellationPolicyTextView.setVisibility(View.VISIBLE);
+        //reset description
+        Resources res = getResources();
+        TextView cancellationPolicyDescription = (TextView) findViewById(R.id.cancellation_policy_description_spotDetail);
+        String[] descriptionOptions = res.getStringArray(R.array.cancellation_policy_description);
+        String description = descriptionOptions[defaultCancellationPolicyIndex];
+        cancellationPolicyDescription.setText(description);
+        //also change the spinner back to default for when they decide to click edit again
+        cancellationPolicySpinner.setSelection(defaultCancellationPolicyIndex);
+        editCancellationPolicyOpen = false;
+    }
+
+    private void showEditCancellationPolicy(){
+        Spinner cancellationPolicySpinner = (Spinner) findViewById(R.id.cancellationPolicySpinner_spotDetail);
+        cancellationPolicySpinner.setVisibility(View.VISIBLE);
+        Button cancellationConfirmButton = (Button) findViewById(R.id.confirmCancellationPolicy_spotDetail);
+        cancellationConfirmButton.setVisibility(View.VISIBLE);
+        TextView cancellationPolicyTextView = (TextView) findViewById(R.id.cancellation_policy_spotDetail);
+        cancellationPolicyTextView.setVisibility(View.GONE);
+        editCancellationPolicyOpen = true;
+    }
+
+    private void confirmCancellationPolicy(){
+        Spinner cancellationPolicySpinner = (Spinner) findViewById(R.id.cancellationPolicySpinner_spotDetail);
+        int index = cancellationPolicySpinner.getSelectedItemPosition();
+
+        //send index
+
+        refreshView();
     }
 
     private void setActionListeners(){
@@ -138,17 +243,68 @@ public class SpotDetailActivity extends AppCompatActivity {
             }
         });
 
-        Button editSpotButton = (Button) findViewById(R.id.editSpotButton_spotDetail);
-        editSpotButton.setOnClickListener(new View.OnClickListener() {
+        Button editPriceButton = (Button) findViewById(R.id.editPriceButton_spotDetail);
+        editPriceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toggleEditForm();
+                toggleEditPrice();
             }
         });
+
+        Button editCancellationPolicyButton = (Button) findViewById(R.id.editCancellationPolicy_spotDetail);
+        editCancellationPolicyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleEditCancellationPolicy();
+            }
+        });
+
+        Button confirmPriceButton = (Button) findViewById(R.id.confirmPriceButton_spotDetail);
+        confirmPriceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                confirmPrice();
+            }
+        });
+
+        Button confirmCancellationPolicyButton = (Button) findViewById(R.id.confirmCancellationPolicy_spotDetail);
+        confirmCancellationPolicyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                confirmCancellationPolicy();
+            }
+        });
+
+        Spinner cancellationPolicySpinner = (Spinner) findViewById(R.id.cancellationPolicySpinner_spotDetail);
+        cancellationPolicySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Resources res = getResources();
+                TextView cancellationPolicyDescription = (TextView) findViewById(R.id.cancellation_policy_description_spotDetail);
+                String[] descriptionOptions = res.getStringArray(R.array.cancellation_policy_description);
+                int selectionPosition = parent.getSelectedItemPosition();
+                String description = descriptionOptions[selectionPosition];
+                cancellationPolicyDescription.setText(description);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent){
+
+            }
+        });
+
+
+
+    }
+
+    private void refreshView(){
+        Intent intent = new Intent(this, SpotDetailActivity.class);
+        intent.putExtra("id", spotID+"");
+        startActivity(intent);
     }
 
     //TODO
     private boolean isSpotOwner(){
-        return false;
+        return true;
     }
 }
