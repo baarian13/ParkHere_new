@@ -30,7 +30,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 public class SearchActivityTest {
 
-    private static final String SEARCH_ADDRESS = ""; //TODO
+    private static final String SEARCH_ADDRESS = "707 West 28th Street, Los Angeles, CA 90007";
 
     private static final int LAUNCH_TIMEOUT = 2000;
     private static final String PACKAGE_NAME = "com.lazeebear.parkhere"; //from AndroidManifest.xml

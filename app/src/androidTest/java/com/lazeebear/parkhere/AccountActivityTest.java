@@ -36,12 +36,12 @@ public class AccountActivityTest {
     private static final String OWNER_PASSWORD = "";
     private static final String SEEKER_USERNAME = "";
     private static final String SEEKER_PASSWORD = "";
-    private static final String BOTH_USERNAME = "";
-    private static final String BOTH_PASSWORD = "";
+    private static final String BOTH_USERNAME = "rjason14@gmail.com";
+    private static final String BOTH_PASSWORD = "jerome";
 
-    private static final String both = getContext().getResources().getStringArray(R.array.user_types)[1];
-    private static final String owner = getContext().getResources().getStringArray(R.array.user_types)[2];
-    private static final String seeker = getContext().getResources().getStringArray(R.array.user_types)[3];
+    private static final String both = getContext().getResources().getStringArray(R.array.user_types)[0];
+    private static final String owner = getContext().getResources().getStringArray(R.array.user_types)[1];
+    private static final String seeker = getContext().getResources().getStringArray(R.array.user_types)[2];
 
     private static int LAUNCH_TIMEOUT = 2000;
     private static String PACKAGE_NAME = "com.lazeebear.parkhere";
@@ -50,7 +50,7 @@ public class AccountActivityTest {
     private UiDevice mDevice;
 
     @Before
-    public void launchAppFromHomeAndGoToSignUpActivity() throws InterruptedException {
+    public void launchAppFromHomeAndGoToSignInActivity() throws InterruptedException {
         MainActivity.setDebugMode(true);
         instr = InstrumentationRegistry.getInstrumentation();
         mDevice = UiDevice.getInstance(instr);

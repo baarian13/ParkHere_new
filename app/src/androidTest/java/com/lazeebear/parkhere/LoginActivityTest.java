@@ -42,9 +42,9 @@ public class LoginActivityTest {
     private static final int UI_TIMEOUT = 2000; //2 seconds
     private static final String PACKAGE_NAME = "com.lazeebear.parkhere"; //from AndroidManifest.xml
 
-    private static final String USERNAME_VERIFIED = ""; //TODO
+    private static final String USERNAME_VERIFIED = "rjason14@gmail.com"; //TODO.
     private static final String PASSWORD_VERIFIED = "Password!1";
-    private static final String USERNAME_UNVERIFIED = ""; //TODO
+    private static final String USERNAME_UNVERIFIED = ""; //TODO verification not yet implemented
     private static final String PASSWORD_UNVERIFIED = PASSWORD_VERIFIED;
 
     private Instrumentation instr;
