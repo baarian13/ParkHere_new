@@ -10,14 +10,14 @@ public class ReturnedUserDAO {
 
     private String first;
     private String last;
-    private boolean isSeeker;
-    private boolean isOwner;
+    private int isSeeker;
+    private int isOwner;
     private int phoneNumber;
     private String email;
     private int rating;
     List<Integer> spots;
 
-    public ReturnedUserDAO(String first, String last, boolean isSeeker, boolean isOwner, int phoneNumber, String email, int rating) {
+    public ReturnedUserDAO(String first, String last, int isSeeker, int isOwner, int phoneNumber, String email, int rating) {
         this.rating = rating;
         this.first = first;
         this.last = last;
@@ -44,19 +44,19 @@ public class ReturnedUserDAO {
         this.last = last;
     }
 
-    public boolean isSeeker() {
+    public int isSeeker() {
         return isSeeker;
     }
 
-    public void setSeeker(boolean seeker) {
+    public void setSeeker(int seeker) {
         isSeeker = seeker;
     }
 
-    public boolean isOwner() {
+    public int isOwner() {
         return isOwner;
     }
 
-    public void setOwner(boolean owner) {
+    public void setOwner(int owner) {
         isOwner = owner;
     }
 

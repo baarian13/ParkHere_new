@@ -266,11 +266,11 @@ public class CreateSpotActivity extends AppCompatActivity {
     }
 
     private void createSpot(){
-        String addressString = (String)address.getText();
+        String addressString = address.getText().toString();
 
 
         String price = price_field.getText().toString();
-        String description = (String)description_field.getText();
+        String description = description_field.getText().toString();
         int cancellation = ((Spinner) findViewById(R.id.cancellation_policy_selection)).getSelectedItemPosition();
         boolean isCovered = true;
         if (covered_checkbox.isChecked())

@@ -28,8 +28,8 @@ import java.util.List;
 public class Account extends AppCompatActivity {
     private boolean isViewingOwnAccount = true;
     private String uniqueID = "";
-    private int isOwner = 1;
-    private int isSeeker = 1;
+    private boolean isOwner = true;
+    private boolean isSeeker = true;
     private boolean spotHistoryOpen = false;
     private boolean ownedSpotsOpen = false;
     private boolean userTypeEditorsShown = true;
@@ -184,14 +184,15 @@ public class Account extends AppCompatActivity {
         try {
             System.out.println("In Account page0: " + uniqueID);
             ReturnedUserDAO userInfo = ServerConnector.userDetails(uniqueID);
-            if(userInfo.isOwner())
-                isOwner = 1;
+            System.out.println("In Account page0.0: " + uniqueID);
+            if(userInfo.isOwner()==1)
+                isOwner = true;
             else
-                isOwner = 0;
-            if (userInfo.isSeeker())
-                isSeeker = 1;
+                isOwner = false;
+            if (userInfo.isSeeker()==1)
+                isSeeker = true;
             else
-                isSeeker = 0;
+                isSeeker = false;
             isViewingOwnAccount = ServerConnector.checkUser(uniqueID);
 
             TextView accountName = (TextView) findViewById(R.id.accountName_account);
@@ -381,11 +382,11 @@ public class Account extends AppCompatActivity {
     }
 
     private boolean isSeeker() {
-        return isSeeker==1;
+        return isSeeker;
     }
 
     private boolean isOwner() {
-        return isOwner==1;
+        return isOwner;
     }
 
     private boolean isViewingOwnAccount() {
@@ -516,14 +517,14 @@ public class Account extends AppCompatActivity {
 
     private void setUserType(int index){
         if (index == 0){
-            isOwner = 1;
-            isSeeker = 1;
+            isOwner = true;
+            isSeeker = true;
         } else if (index == 1){
-            isOwner = 1;
-            isSeeker = 0;
+            isOwner = true;
+            isSeeker = false;
         } else{
-            isOwner = 0;
-            isSeeker = 1;
+            isOwner = false;
+            isSeeker = true;
         }
     }
 
