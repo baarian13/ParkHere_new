@@ -6,6 +6,7 @@ Created on Oct 27, 2016
 from tornado import httpclient
 import urllib, base64
 import unittest
+import json
 
 
 # ip = '35.160.111.133'
@@ -91,9 +92,17 @@ def viewUser(cookie, http_client, email):
     args = urllib.urlencode({'email' : email})
     url = url + '?' + args
     req = httpclient.HTTPRequest(url, 'GET', headers=headers)
-    
     res = http_client.fetch(req)
     return res.body
+
+def rateUser(cookie, http_client, email, rating):
+    headers = {"Cookie": cookie}
+    url = 'http://{0}:8888/rate/user'.format(ip)
+    body = urllib.urlencode({'email'        : email,
+                             'rating'       : rating})
+    req = httpclient.HTTPRequest(url, 'POST', body=body, headers=headers)
+    
+    http_client.fetch(req)
 
 # if __name__ == '__main__':
 #     http_client = httpclient.HTTPClient()
@@ -146,13 +155,39 @@ class TestParkHereMethods(unittest.TestCase):
     #     # with self.assertRaises(TypeError):
     #     #     s.split(2)
 
-    def test_view_user(self):
-        http_client = httpclient.HTTPClient()
-        cookie, code = signIn(http_client, 'rob@rob.com', 'Password1$')
+    # def test_view_user(self):
+    #     http_client = httpclient.HTTPClient()
+    #     cookie, code = signIn(http_client, 'rob@rob.com', 'Password1$')
 
-        info = viewUser(cookie, http_client, "rob@rob.com")
-        print info
-        http_client.close()
+    #     info = viewUser(cookie, http_client, "rob@rob.com")
+    #     jsondata = json.loads(info)[0]
+    #     self.assertEqual(jsondata["rating"], 0.0)
+    #     self.assertEqual(jsondata["last"], 'last')
+    #     self.assertEqual(jsondata["first"], 'first')
+    #     self.assertEqual(jsondata["isSeeker"], 1)
+    #     self.assertEqual(jsondata["isOwner"], 1)
+    #     self.assertEqual(jsondata["phoneNumber"], '123-456-7890')
+    #     self.assertEqual(jsondata["email"], 'rob@rob.com')
+    #     http_client.close()
+
+    def test_rate_user(self):
+        http_client = httpclient.HTTPClient()
+        #cookie, code = createUser(http_client, 'rate@user.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
+        cookie = signIn(http_client, 'rob@rob.com', 'Password1$')
+        info = viewUser(cookie, http_client, "rate@user.com")
+        jsondata = json.loads(info)[0]
+        print jsondata["rating"]
+        self.assertEqual(jsondata["rating"], 0.0)
+        rateUser('rate@user.com', 5)
+        info = viewUser(cookie, http_client, "rate@user.com")
+        jsondata = json.loads(info)[0]
+        print jsondata["rating"]
+        self.assertEqual(jsondata["rating"], 5.0)
+        http_client = httpclient.HTTPClient()
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
