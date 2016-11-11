@@ -123,7 +123,7 @@ public class SpotDetailActivity extends AppCompatActivity {
     }
 
     private void openRateSpot() {
-        Intent intent = new Intent(this, AddUserRatingActivity.class);
+        Intent intent = new Intent(this, AddSpotRatingActivity.class);
         //putExtra needs string??
         intent.putExtra("id", spotID+"");
         startActivity(intent);
