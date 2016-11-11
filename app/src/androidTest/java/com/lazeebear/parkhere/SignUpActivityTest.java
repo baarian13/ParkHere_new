@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -67,6 +68,9 @@ public class SignUpActivityTest {
 
         // Wait for the app to appear
         mDevice.wait(Until.hasObject(By.pkg(PACKAGE_NAME).depth(0)), LAUNCH_TIMEOUT);
+
+        onView(withId(R.id.mainpage_sign_in_button)).perform(click());
+        onView(withId(R.id.register_button)).perform(click());
     }
 
     // Tests that after inputting fresh input, a verification page should pop up.
@@ -79,13 +83,18 @@ public class SignUpActivityTest {
         onView(withId(R.id.passwordConfirm_sign_up)).perform(typeText(USER_PASSWORD));
         onView(withId(R.id.LastNameEditText)).perform(typeText(USER_FIRST));
         onView(withId(R.id.FirstNameEditText)).perform(typeText(USER_LAST));
+        closeSoftKeyboard();
         onView(withId(R.id.phoneNum_sign_up)).perform(typeText(USER_PHONE));
+        closeSoftKeyboard();
         //onView(withId(R.id.upload_verification_button)).perform(click());
         //TODO take a photo http://stackoverflow.com/questions/28019657/camera-operation-ui-testing-with-espresso
         //TODO choose user type
+        onView(withId(R.id.isOwner_checkBox_signup)).perform(click());
+        onView(withId(R.id.isSeeker_checkBox_signup)).perform(click());
         onView(withId(R.id.sign_up_button)).perform(click());
 
-        onView(withId(R.id.verification_needed_textView)).check(matches(isDisplayed()));
+        onView(withId(R.id.ratingBar)).check(matches(isDisplayed()));
+        //onView(withId(R.id.verification_needed_textView)).check(matches(isDisplayed()));
         Log.i("STATE","  Completed successfully");
     }
 }
