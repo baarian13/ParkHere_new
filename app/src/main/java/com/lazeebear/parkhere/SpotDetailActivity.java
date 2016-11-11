@@ -42,6 +42,7 @@ public class SpotDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             spotID = Integer.parseInt(intent.getStringExtra("id"));
+            System.out.println("SpotDetail spot id: " + spotID);
             setInformation();
             hideInformation();
             setActionListeners();
@@ -74,7 +75,7 @@ public class SpotDetailActivity extends AppCompatActivity {
             userUniqueID = spot.getOwnerEmail();
             //TO-DO
             int rating = 3;
-            double price = 2.00;
+            double price = 10.00;
             ReturnedUserDAO userInfo = ServerConnector.userDetails(userUniqueID);
             String firstName = userInfo.getFirst();
             int cancellationIndex = spot.getCancelationPolicy();
