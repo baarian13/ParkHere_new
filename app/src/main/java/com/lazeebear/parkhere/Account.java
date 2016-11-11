@@ -44,8 +44,8 @@ public class Account extends AppCompatActivity {
 
         //grab info, setUserType(), fillInfo
         if (intent != null) {
-            String[] idArray = intent.getStringArrayExtra("id");
-            uniqueID = idArray[0];
+            String idArray = intent.getStringExtra("id");
+            uniqueID = idArray;
             resetViewVisibility();
             fillInformation();
             hideToggleButton();
