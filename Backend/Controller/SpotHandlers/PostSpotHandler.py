@@ -50,4 +50,8 @@ class PostSpotHandler(AbstractSpotHandler):
                 'description'       : self.get_argument("description", ""),
                 'isRecurring'       : bool(self.get_argument("isRecurring", ""))}
         spot = Spot(**args)
-        self.db.insertIntoTable(spot)
+        try:
+            self.db.insertIntoTable(spot)
+            self.write('200')
+        except:
+            self.write('401')

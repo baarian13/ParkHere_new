@@ -29,7 +29,7 @@ def createUser(http_client, email, password, first, last, phone, seeker, owner, 
     req = httpclient.HTTPRequest(url, 'POST', body=body)
     
     res = http_client.fetch(req)
-    return res.headers['Set-Cookie'], res.code
+    return res.headers['set-cookie'], res.code
     
 def signIn(http_client, email, password):
     url = 'http://{0}:8888/signin'.format(ip)
@@ -89,34 +89,40 @@ def checkUser(cookie, http_client, email):
 #     searchSpot(cookie, http_client, '700 West 28th street, Los Angeles CA, 90007')
 #     http_client.close()
 
-http_client = httpclient.HTTPClient()
 
 class TestParkHereMethods(unittest.TestCase):
-    http_client = httpclient.HTTPClient()
 
     def test_signup(self):
-        cookie, code = createUser(http_client, 'rob2@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
-        self.assertEqual(code, '200')
+        http_client = httpclient.HTTPClient()
+        cookie, code = createUser(http_client, 'rob3@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
+        self.assertEqual(code, 200)
         cookie, code = createUser(http_client, 'rob@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
-        self.assertEqual(code, '401')
+        self.assertEqual(code, 401)
+        http_client.close()
+
 
     def test_signin(self):
+        http_client = httpclient.HTTPClient()
         cookie, code = signIn(http_client, 'rob@rob.com', 'Password1$')
-        self.assertEqual(code, '200')
-        cookie, code = signIn(httpclient, 'rob@rob.com', 'Password1')
-        self.assertEqual(code, '401')
-        cookie, code = signIn(httpclient, 'ob@rob.com', 'Password1')
-        self.assertEqual(code, '401')
+        self.assertEqual(code, 200)
+        cookie, code = signIn(http_client, 'rob@rob.com', 'Password1')
+        self.assertEqual(code, 401)
+        cookie, code = signIn(http_client, 'ob@rob.com', 'Password1')
+        self.assertEqual(code, 401)
+        http_client.close()
+
 
 
     def test_check_user(self):
-        cookie, code = signIn(httpclient, 'rob@rob.com', 'Password1')
+        http_client = httpclient.HTTPClient()
+        cookie, code = signIn(http_client, 'rob@rob.com', 'Password1')
         res = checkUser(cookie, http_client, "rob@rob.com")
         self.assertTrue(res)
         res = checkUser(cookie, http_client, "rob1@rob.com")
         self.assertTrue(res)
         es = checkUser(cookie, http_client, "rob45@rob.com")
         self.assertFalse(res)
+        http_client.close()
         # self.assertEqual(s.split(), ['hello', 'world'])
         # # check that s.split fails when the separator is not a string
         # with self.assertRaises(TypeError):

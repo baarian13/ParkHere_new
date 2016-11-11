@@ -16,6 +16,15 @@ public class SpotDetailsDAO {
     private int isCovered;
     private int cancelationPolicy;
     private String description;
+    private double price;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     public String getAddress() {
         return address;
