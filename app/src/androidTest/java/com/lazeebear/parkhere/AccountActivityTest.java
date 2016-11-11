@@ -9,7 +9,12 @@ import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.Until;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,16 +37,17 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 public class AccountActivityTest {
 
-    private static final String OWNER_USERNAME = "";
-    private static final String OWNER_PASSWORD = "";
-    private static final String SEEKER_USERNAME = "";
-    private static final String SEEKER_PASSWORD = "";
+    private static final String OWNER_USERNAME = "rjason14@gmail.com";
+    private static final String OWNER_PASSWORD = "jerome";
+    private static final String SEEKER_USERNAME = "rjason14@gmail.com";
+    private static final String SEEKER_PASSWORD = "jerome";
     private static final String BOTH_USERNAME = "rjason14@gmail.com";
     private static final String BOTH_PASSWORD = "jerome";
 
-    private static final String both = getContext().getResources().getStringArray(R.array.user_types)[0];
-    private static final String owner = getContext().getResources().getStringArray(R.array.user_types)[1];
-    private static final String seeker = getContext().getResources().getStringArray(R.array.user_types)[2];
+    private static String[] userTypesArray;
+    private static String both;
+    private static String owner;
+    private static String seeker;
 
     private static int LAUNCH_TIMEOUT = 2000;
     private static String PACKAGE_NAME = "com.lazeebear.parkhere";
@@ -51,7 +57,7 @@ public class AccountActivityTest {
 
     @Before
     public void launchAppFromHomeAndGoToSignInActivity() throws InterruptedException {
-        MainActivity.setDebugMode(true);
+        MainActivity.setDebugMode(false);
         instr = InstrumentationRegistry.getInstrumentation();
         mDevice = UiDevice.getInstance(instr);
 
@@ -70,6 +76,15 @@ public class AccountActivityTest {
 
         // Wait for the app to appear
         mDevice.wait(Until.hasObject(By.pkg(PACKAGE_NAME).depth(0)), LAUNCH_TIMEOUT);
+
+        //initialize the strings above
+        //userTypesArray = context.getResources().getStringArray(R.array.user_types);
+        //both = String.valueOf(userTypesArray[0]);
+        //owner = String.valueOf(userTypesArray[1]);
+        //seeker = String.valueOf(userTypesArray[2]);
+        both = "Both";
+        owner = "Owner";
+        seeker = "Seeker";
     }
 
     /*
@@ -139,7 +154,8 @@ public class AccountActivityTest {
         onView(withId(R.id.spotHistoryButton_account)).perform(click());
         onView(withId(R.id.spotList_account)).check(matches(isDisplayed()));
         Log.i("STATE","  Success: spot list is displayed");
-        onView(withId(R.id.reservedSpotId)).check(matches(isDisplayed()));
+        //onView(withId(R.id.reservedSpotId)).check(matches(isDisplayed()));
+        onView(nthChildOf(withId(R.id.spotList_account), 0)).check(matches(isDisplayed()));
         Log.i("STATE","  Success: spot list is not empty");
         Log.i("STATE","  Completed");
     }
@@ -231,5 +247,24 @@ public class AccountActivityTest {
         onView(withId(R.id.password)).perform(typeText(BOTH_PASSWORD));
         onView(withId(R.id.email_sign_in_button)).perform(click());
         Log.i("STATE", "Completed signing in as Both.");
+    }
+
+    private static Matcher<View> nthChildOf(final Matcher<View> parentMatcher, final int childPosition) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with "+childPosition+" child view of type parentMatcher");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                if (!(view.getParent() instanceof ViewGroup)) {
+                    return parentMatcher.matches(view.getParent());
+                }
+
+                ViewGroup group = (ViewGroup) view.getParent();
+                return parentMatcher.matches(view.getParent()) && group.getChildAt(childPosition).equals(view);
+            }
+        };
     }
 }

@@ -22,7 +22,8 @@ public class ServerUserFunctionalityTest {
     public void search() throws Exception {
         ServerConnector.signin("rjason14@gmail.com", "jerome");
 
-        List<SpotDAO> spots = null;//ServerConnector.search("707 West 28th Street, Los Angeles, CA 90007");
+        List<SpotDAO> spots = null;
+        ServerConnector.searchSpot("707 West 28th Street, Los Angeles, CA 90007");
 
         assertTrue(!spots.isEmpty());
 
