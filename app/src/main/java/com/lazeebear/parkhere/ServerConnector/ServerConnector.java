@@ -219,7 +219,7 @@ public class ServerConnector {
         }
         protected Void doInBackground(Void... params) {
             try {
-                String url = formatURL("view/spot?spotid="+spotID);
+                String url = formatURL("view/spot?spotID="+spotID);
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setRequestMethod("GET");
