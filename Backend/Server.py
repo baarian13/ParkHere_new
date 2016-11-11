@@ -24,6 +24,7 @@ from Controller.UserHandlers.CheckUserHandler import CheckUserHandler
 settings = {
     "cookie_secret": "ADSFGHARY3457fgSDFHSDFjusdfASDFGH2345h=sdg",
     "login_url": "/signin",
+    "xsrf_cookies": False
 }
 data_dir = '/Users/henrylevy/ParkHere/Backend/'
 application = tornado.web.Application([
