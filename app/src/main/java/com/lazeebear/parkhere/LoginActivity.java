@@ -66,6 +66,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private static boolean verified = true; //by default
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,7 +233,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //            showProgress(true);
             if(ServerConnector.signin(email, password)){
                 //get verification status
-                boolean verified = true; //TODO
+                //verified = true; //TODO
                 if (verified) {
                     Intent intent = new Intent(this, Account.class);
                     //setUserInformation();
@@ -244,6 +245,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             }
         }
+    }
+
+    //this is only temporary
+    public static void setVerified(boolean value) {
+        //toggle the verified boolean
+        verified = value;
     }
 
     //this is only temporary

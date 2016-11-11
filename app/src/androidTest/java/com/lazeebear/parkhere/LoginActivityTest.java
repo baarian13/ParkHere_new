@@ -114,8 +114,11 @@ public class LoginActivityTest {
         onView(withId(R.id.email)).perform(typeText(USERNAME_UNVERIFIED));
         onView(withId(R.id.password)).perform(typeText(PASSWORD_UNVERIFIED));
         onView(withId(R.id.email_sign_in_button)).perform(click());
+        //since server can't check if the user if verified yet, manually set it to check the funcitonality.
+        LoginActivity.setVerified(false);
         // check if user verification page shows up
         onView(withId(R.id.verification_needed_textView)).check(matches(isDisplayed()));
+        LoginActivity.setVerified(true); //reset the verified boolean.
         Log.i("STATE","  Complete");
     }
 }
