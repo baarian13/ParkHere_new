@@ -15,7 +15,7 @@ class DeleteSpotHandler(AbstractSpotHandler):
     def post(self):
         result = SUCCESS
         try:
-            ownerEmail = self.get_current_user()
+            ownerEmail = self.get_secure_cookie("user")
             spotID = self.get_argument("spotID", "")
             self.db.deleteSpot(ownerEmail, spotID)
         except:

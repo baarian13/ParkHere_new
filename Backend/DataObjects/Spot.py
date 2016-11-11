@@ -102,7 +102,7 @@ class Spot(DatabaseObject):
 
     @classmethod
     def searchIDByRenterEmailQuery(cls, ownerEmail):
-        return '''SELECT ID FROM {0} WHERE ownerEmail=\'{3}\''''.format(cls.TABLE_NAME, ownerEmail)
+        return '''SELECT ID FROM {0} WHERE ownerEmail=\'{1}\''''.format(cls.TABLE_NAME, ownerEmail)
 
     @classmethod
     def bookSpot(cls, renterEmail, spotID, isRecurring):
@@ -111,7 +111,7 @@ class Spot(DatabaseObject):
 
     @classmethod
     def searchIDByOwnerEmailQuery(cls, ownerEmail):
-        return '''SELECT ID FROM {0} WHERE ownerEmail=\'{3}\''''.format(cls.TABLE_NAME, ownerEmail)
+        return '''SELECT ID FROM {0} WHERE ownerEmail=\'{1}\''''.format(cls.TABLE_NAME, ownerEmail)
 
     @classmethod
     def getPicturePath(cls, spotID):
