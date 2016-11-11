@@ -18,6 +18,7 @@ import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -200,9 +201,11 @@ public class Search extends AppCompatActivity {
             Log.i("ERROR", "Exception while getting spot list during search");
         }
         Intent intent = new Intent(this, SpotListActivity.class);
+        ArrayList<Integer> spotIDs = new ArrayList<Integer>();
         for (int i=0; i< spots.size(); i++) {
-            intent.putExtra("id",spots.get(i).getId()+"");
+            spotIDs.add(spots.get(i).getId());
         }
+        intent.putExtra("ids",spotIDs);
         startActivity(intent);
     }
 

@@ -23,6 +23,7 @@ import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 import com.lazeebear.parkhere.dummy.DummyContent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,8 +41,10 @@ public class SpotListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spot_list);
         Intent intent = getIntent();
-        int spotID = Integer.parseInt(intent.getStringExtra("id"));
-        populateList(spotID);
+        ArrayList<Integer> spotIDs = intent.getIntegerArrayListExtra("ids");
+        int loop = spotIDs.size();
+        for (int i=0; i<loop; i++)
+            populateList(spotIDs.get(i));
         addActionListeners();
     }
 
