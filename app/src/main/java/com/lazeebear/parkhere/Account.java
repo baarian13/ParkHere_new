@@ -3,6 +3,7 @@ package com.lazeebear.parkhere;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +20,10 @@ import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentUserDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Created by Zhicheng on 10/22/2016.
@@ -218,6 +222,128 @@ public class Account extends AppCompatActivity {
             editSpinner.setSelection(getUserType());
 
             spotList = userInfo.getSpots();
+            if (spotList == null)
+                spotList = new List<Integer>() {
+                    @Override
+                    public int size() {
+                        return 0;
+                    }
+
+                    @Override
+                    public boolean isEmpty() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean contains(Object o) {
+                        return false;
+                    }
+
+                    @NonNull
+                    @Override
+                    public Iterator<Integer> iterator() {
+                        return null;
+                    }
+
+                    @NonNull
+                    @Override
+                    public Object[] toArray() {
+                        return new Object[0];
+                    }
+
+                    @NonNull
+                    @Override
+                    public <T> T[] toArray(T[] ts) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean add(Integer integer) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean remove(Object o) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean containsAll(Collection<?> collection) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean addAll(Collection<? extends Integer> collection) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean addAll(int i, Collection<? extends Integer> collection) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean removeAll(Collection<?> collection) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean retainAll(Collection<?> collection) {
+                        return false;
+                    }
+
+                    @Override
+                    public void clear() {
+
+                    }
+
+                    @Override
+                    public Integer get(int i) {
+                        return null;
+                    }
+
+                    @Override
+                    public Integer set(int i, Integer integer) {
+                        return null;
+                    }
+
+                    @Override
+                    public void add(int i, Integer integer) {
+
+                    }
+
+                    @Override
+                    public Integer remove(int i) {
+                        return null;
+                    }
+
+                    @Override
+                    public int indexOf(Object o) {
+                        return 0;
+                    }
+
+                    @Override
+                    public int lastIndexOf(Object o) {
+                        return 0;
+                    }
+
+                    @Override
+                    public ListIterator<Integer> listIterator() {
+                        return null;
+                    }
+
+                    @NonNull
+                    @Override
+                    public ListIterator<Integer> listIterator(int i) {
+                        return null;
+                    }
+
+                    @NonNull
+                    @Override
+                    public List<Integer> subList(int i, int i1) {
+                        return null;
+                    }
+                };
         } catch (Exception e){
             Log.i("ERROR", "Exception while getting user details opening account");
         }
@@ -257,10 +383,10 @@ public class Account extends AppCompatActivity {
             clearSpotList();
             LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
             int spotCt = spotList.size();
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!account page on spot: " + spotCt);
+//            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!account page on spot: " + spotCt);
             for (int i = 0; i < spotCt; i++) {
                 Button spotButton = createOwnedSpotButton(spotList.get(i));
-                System.out.println("~~~~~~~~~~~~~~~~~~~~~~spotList: "+spotList.get(i));
+//                System.out.println("~~~~~~~~~~~~~~~~~~~~~~spotList: "+spotList.get(i));
                 spotButton.setId(spotList.get(i)); //for referencing from tests. doesn't need to be unique.
                 list.addView(spotButton);
             }
