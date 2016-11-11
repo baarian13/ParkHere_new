@@ -31,11 +31,11 @@ class SigninHandler(AbstractUserHandler):
         if email and password:
             if self.db.authenticate(email, password):
                 self.setCurrentUser(email)
-                self.write("authentication successful")
+                self.write(SUCCESS)
             else:
-                self.write("authentication failed")
+                self.write(FAILURE)
         else:
-            self.write("authentication failed")
+            self.write(FAILURE)
 
     @tornado.gen.coroutine
     def setCurrentUser(self, user):

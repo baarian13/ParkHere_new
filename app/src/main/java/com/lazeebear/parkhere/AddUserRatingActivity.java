@@ -3,9 +3,14 @@ package com.lazeebear.parkhere;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
+import android.widget.TextView;
+
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
+import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
 public class AddUserRatingActivity extends AppCompatActivity {
 
@@ -20,18 +25,28 @@ public class AddUserRatingActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             userID = intent.getStringExtra(userID);
-
+            fillInformation();
             submit.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    addReviewUser();
+                    addRatingUser();
                 }
             });
         }
     }
 
-    private void addReviewUser() {
+    private void fillInformation(){
+        try {
+            ReturnedUserDAO user = ServerConnector.userDetails(userID);
+            TextView nameTextView = (TextView) findViewById(R.id.name_addUserRating);
+            nameTextView.setText(user.getFirst());
+        } catch (Exception e){
+            Log.i("ERROR", "Exception while getting user details after successful login");
+        }
+    }
+
+    private void addRatingUser() {
         RatingBar ratingBar = (RatingBar) findViewById(R.id.rating);
         int rate = ratingBar.getNumStars();
-        //ServerConnector.addReviewUser(rate, userID);
+        //ServerConnector.addRatingUser(rate, userID);
     }
 }

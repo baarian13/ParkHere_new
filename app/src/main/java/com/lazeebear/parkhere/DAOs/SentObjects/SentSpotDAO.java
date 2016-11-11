@@ -9,15 +9,60 @@ import android.util.Base64;
 public class SentSpotDAO {
 
     private String address;
-    private int latitude;
-    private int longitude;
-    private int ownerRating;
-    private Base64 picture;
-    private String phoneNumber;
+//    private Base64 picture;
     private String startTime;
     private String endTime;
     private String description;
     private String price;
+    private int spotType;
+    private boolean isCovered;
+    private int cancellationPolicy;
+    private boolean isRecurring;
+
+    public SentSpotDAO(String address, String startTime, String endTime, String description, String price, int spotType, boolean isCovered, int cancellationPolicy, boolean isRecurring) {
+        this.address = address;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.description = description;
+        this.price = price;
+        this.spotType = spotType;
+        this.isCovered = isCovered;
+        this.cancellationPolicy = cancellationPolicy;
+        this.isRecurring = isRecurring;
+    }
+
+    public int getSpotType() {
+        return spotType;
+    }
+
+    public void setSpotType(int spotType) {
+        this.spotType = spotType;
+    }
+
+    public boolean isCovered() {
+        return isCovered;
+    }
+
+    public void setCovered(boolean covered) {
+        isCovered = covered;
+    }
+
+    public int getCancellationPolicy() {
+        return cancellationPolicy;
+    }
+
+    public void setCancellationPolicy(int cancellationPolicy) {
+        this.cancellationPolicy = cancellationPolicy;
+    }
+
+    public boolean isRecurring() {
+        return isRecurring;
+    }
+
+    public void setRecurring(boolean recurring) {
+        isRecurring = recurring;
+    }
+
 
     public String getPrice() {
         return price;
@@ -35,45 +80,14 @@ public class SentSpotDAO {
         this.address = address;
     }
 
-    public int getLatitude() {
-        return latitude;
-    }
+//    public Base64 getPicture() {
+//        return picture;
+//    }
+//
+//    public void setPicture(Base64 picture) {
+//        this.picture = picture;
+//    }
 
-    public void setLatitude(int latitude) {
-        this.latitude = latitude;
-    }
-
-    public int getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(int longitude) {
-        this.longitude = longitude;
-    }
-
-    public int getOwnerRating() {
-        return ownerRating;
-    }
-
-    public void setOwnerRating(int ownerRating) {
-        this.ownerRating = ownerRating;
-    }
-
-    public Base64 getPicture() {
-        return picture;
-    }
-
-    public void setPicture(Base64 picture) {
-        this.picture = picture;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 
     public String getStartTime() {
         return startTime;

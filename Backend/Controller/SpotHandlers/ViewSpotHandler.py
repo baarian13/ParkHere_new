@@ -20,5 +20,6 @@ class ViewSpotHandler(AbstractSpotHandler):
                         'isRecurring'       : res[6],
                         'isCovered'         : res[7],
                         'cancelationPolicy' : res[8],
-                        'description'       : res[9]}
+                        'description'       : res[9],
+                        'price'             : res[10]}
             self.write(json.dumps(results))

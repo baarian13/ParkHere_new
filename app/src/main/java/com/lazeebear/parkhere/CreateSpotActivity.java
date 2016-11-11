@@ -20,6 +20,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.lazeebear.parkhere.DAOs.SentObjects.SentSpotDAO;
+import com.lazeebear.parkhere.ServerConnector.ServerConnector;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Calendar;
@@ -34,7 +37,6 @@ public class CreateSpotActivity extends AppCompatActivity {
     private int year, month, day, hour, minute;
     public static final int GET_FROM_GALLERY = 3; //request code for opening the gallery
 
-    private String userUniqueID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -267,18 +269,22 @@ public class CreateSpotActivity extends AppCompatActivity {
         String addressString = (String)address.getText();
 
 
-        double price = Double.parseDouble((String)price_field.getText());
+        String price = price_field.getText().toString();
         String description = (String)description_field.getText();
-        String cancellation = ((Spinner) findViewById(R.id.cancellation_policy_selection)).getSelectedItemPosition() + "";
-        String isCovered = "";
+        int cancellation = ((Spinner) findViewById(R.id.cancellation_policy_selection)).getSelectedItemPosition();
+        boolean isCovered = true;
         if (covered_checkbox.isChecked())
-            isCovered = "1";
+            isCovered = true;
         else
-            isCovered = "0";
-        String spot_type = ((Spinner) findViewById(R.id.spot_type)).getSelectedItemPosition() + "";
+            isCovered = false;
+        int spot_type = ((Spinner) findViewById(R.id.spot_type)).getSelectedItemPosition();
+
+        String startString = formatDateTime(date_button_lower.getText().toString(), time_button_lower.getText().toString());
+        String endString = formatDateTime(date_button_upper.getText().toString(), time_button_upper.getText().toString());
 
         //send data
-        //ServerConnector.createSpot(addressString, spot_type, isCovered, cancellation, price, startString, endString, description, 1);
+        SentSpotDAO newSpot = new SentSpotDAO(addressString, startString, endString, description, price, spot_type, isCovered, cancellation, false);
+        ServerConnector.createSpot(newSpot);
     }
 
     private void setSubmitButtonListener(){
@@ -288,5 +294,9 @@ public class CreateSpotActivity extends AppCompatActivity {
                 createSpot();
             }
         });
+    }
+
+    private String formatDateTime(String date , String time){
+        return date + " " + time + ":00";
     }
 }

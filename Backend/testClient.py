@@ -5,10 +5,13 @@ Created on Oct 27, 2016
 '''
 from tornado import httpclient
 import urllib, base64
+import unittest
+
 
 # ip = '35.160.111.133'
-ip = 'localhost'
+ip = '35.163.38.167'
 #ip = 'parkhere.cghr1zvgeuqd.us-west-1.rds.amazonaws.com'
+#ip = 'ec2-35-163-38-167.us-west-2.compute.amazonaws.com'
 def buildImgStr(path):
     with open(path, 'rb') as image_file:
         return base64.b64encode(image_file.read())
@@ -26,8 +29,7 @@ def createUser(http_client, email, password, first, last, phone, seeker, owner, 
     req = httpclient.HTTPRequest(url, 'POST', body=body)
     
     res = http_client.fetch(req)
-    print res
-    return res.headers['Set-Cookie']
+    return res.headers['set-cookie'], res.code
     
 def signIn(http_client, email, password):
     url = 'http://{0}:8888/signin'.format(ip)
@@ -35,7 +37,7 @@ def signIn(http_client, email, password):
                              'password' : password})
     req = httpclient.HTTPRequest(url, 'POST', body=body)
     res = http_client.fetch(req)
-    return res.headers['set-cookie']
+    return res.headers['set-cookie'], res.code
 
 def searchSpot(cookie, http_client, address):
     url = 'http://{0}:8888/search/spot'.format(ip)
@@ -76,14 +78,56 @@ def checkUser(cookie, http_client, email):
     print "check user result:"
     print res.body
 
+# if __name__ == '__main__':
+#     http_client = httpclient.HTTPClient()
+#     #img = buildImgStr('/Users/henrylevy/Downloads/default.jpg')
+#     cookie = createUser(http_client, 'rob1@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
+#     cookie = signIn(http_client, 'rob@rob.com', 'Password1$')
+#     checkUser(cookie, http_client, "rob1@rob.com")
+#     checkUser(cookie, http_client, "rob@rob.com")
+#     #postSpot(cookie, http_client, '707 West 28th street, Los Angeles CA, 90007', '0', '0', "0", '10.00', "2016-10-12 12:00:00", "2016-10-12 14:00:00", '0')
+#     searchSpot(cookie, http_client, '700 West 28th street, Los Angeles CA, 90007')
+#     http_client.close()
+
+
+class TestParkHereMethods(unittest.TestCase):
+
+    def test_signup(self):
+        http_client = httpclient.HTTPClient()
+        cookie, code = createUser(http_client, 'rob3@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
+        self.assertEqual(code, 200)
+        cookie, code = createUser(http_client, 'rob@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
+        self.assertEqual(code, 401)
+        http_client.close()
+
+
+    def test_signin(self):
+        http_client = httpclient.HTTPClient()
+        cookie, code = signIn(http_client, 'rob@rob.com', 'Password1$')
+        self.assertEqual(code, 200)
+        cookie, code = signIn(http_client, 'rob@rob.com', 'Password1')
+        self.assertEqual(code, 401)
+        cookie, code = signIn(http_client, 'ob@rob.com', 'Password1')
+        self.assertEqual(code, 401)
+        http_client.close()
+
+
+
+    def test_check_user(self):
+        http_client = httpclient.HTTPClient()
+        cookie, code = signIn(http_client, 'rob@rob.com', 'Password1')
+        res = checkUser(cookie, http_client, "rob@rob.com")
+        self.assertTrue(res)
+        res = checkUser(cookie, http_client, "rob1@rob.com")
+        self.assertTrue(res)
+        es = checkUser(cookie, http_client, "rob45@rob.com")
+        self.assertFalse(res)
+        http_client.close()
+        # self.assertEqual(s.split(), ['hello', 'world'])
+        # # check that s.split fails when the separator is not a string
+        # with self.assertRaises(TypeError):
+        #     s.split(2)
+
 if __name__ == '__main__':
-    http_client = httpclient.HTTPClient()
-    #img = buildImgStr('/Users/henrylevy/Downloads/default.jpg')
-    #cookie = createUser(http_client, 'rob@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
-    cookie = signIn(http_client, 'rob@rob.com', 'Password1$')
-    checkUser(cookie, http_client, "rob1@rob.com")
-    checkUser(cookie, http_client, "rob@rob.com")
-    #postSpot(cookie, http_client, '707 West 28th street, Los Angeles CA, 90007', '0', '0', "0", '10.00', "2016-10-12 12:00:00", "2016-10-12 14:00:00", '0')
-    searchSpot(cookie, http_client, '700 West 28th street, Los Angeles CA, 90007')
-    http_client.close()
+    unittest.main()
     

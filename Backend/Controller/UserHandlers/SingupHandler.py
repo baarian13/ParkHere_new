@@ -41,26 +41,29 @@ class SignUpHandler(AbstractUserHandler):
         '''
         result = SUCCESS
         salt = createSalt()
-        args = {'email'          : self.get_argument("email", ""),
-                'saltedPassword' : saltPassword(self.get_argument("password", ""), salt),
-                'salt'           : salt,
-                'firstName'      : self.get_argument("first", ""),
-                'lastName'       : self.get_argument("last", ""),
-                'phone'          : self.get_argument("phone", ""),
-                'isSeeker'       : self.get_argument("seeker", ""),
-                'isOwner'        : self.get_argument("owner", "")}
-        user = User(**args)
-        self.db.insertIntoTable(user)
-        userId = self.get_argument("email", "")
-        profilePic = self.get_argument("profilePic", "")
-        if not userId: result = FAILURE
-        elif profilePic: # profile picture support not implemented
-            try:
-                self.db.submitPicture(userId, profilePic)
-            except:
-                result = PARTIAL
-        if userId:
-            self.setCurrentUser(userId)
+        try:
+            args = {'email'          : self.get_argument("email", ""),
+                    'saltedPassword' : saltPassword(self.get_argument("password", ""), salt),
+                    'salt'           : salt,
+                    'firstName'      : self.get_argument("first", ""),
+                    'lastName'       : self.get_argument("last", ""),
+                    'phone'          : self.get_argument("phone", ""),
+                    'isSeeker'       : self.get_argument("seeker", ""),
+                    'isOwner'        : self.get_argument("owner", "")}
+            user = User(**args)
+            self.db.insertIntoTable(user)
+            userId = self.get_argument("email", "")
+            profilePic = self.get_argument("profilePic", "")
+            if not userId: result = FAILURE
+            elif profilePic: # profile picture support not implemented
+                try:
+                    self.db.submitPicture(userId, profilePic)
+                except:
+                    result = PARTIAL
+            if userId:
+                self.setCurrentUser(userId)
+        except:
+            result = FAILURE
         self.write(result)
 
     @tornado.gen.coroutine
