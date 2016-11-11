@@ -714,7 +714,7 @@ public class ServerConnector {
         }
         protected Void doInBackground(Void... params) {
             try {
-                String url = formatURL("signup");
+                String url = formatURL("modify/user");
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -731,7 +731,7 @@ public class ServerConnector {
 //                } else {
                 urlParameters = "";
                 if (email != null)
-                    urlParameters += "email=" + email;
+                    urlParameters += "&email=" + email;
                 if(password != null)
                     urlParameters += "&password=" + password;
                 if(first != null)
@@ -741,6 +741,11 @@ public class ServerConnector {
                 if(phone != null)
                     urlParameters += "&phone=" + phone;
                 urlParameters += "&seeker=" + seeker + "&owner=" + owner;
+
+                if (!urlParameters.equals((""))){
+                    urlParameters = urlParameters.substring(1);
+                    System.out.println("~~~~~~~~~~~~~"+urlParameters);
+                }
 //                }
 
                 // Send post request

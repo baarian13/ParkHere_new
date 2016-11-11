@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.braintreepayments.api.BraintreePaymentActivity;
 import com.braintreepayments.api.PaymentRequest;
@@ -33,6 +34,8 @@ public class PaymentActivity extends AppCompatActivity {
             try {
                 SpotDetailsDAO spot = ServerConnector.spotDetails(Integer.parseInt(spotID));
                 costOfSpot = "2.00";
+                TextView priceTextView = (TextView) findViewById(R.id.amount_payment_page);
+                priceTextView.setText(costOfSpot);
                 email = spot.getOwnerEmail();
 
             } catch (Exception e){

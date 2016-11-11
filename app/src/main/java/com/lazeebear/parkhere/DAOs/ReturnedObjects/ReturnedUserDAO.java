@@ -12,12 +12,12 @@ public class ReturnedUserDAO {
     private String last;
     private int isSeeker;
     private int isOwner;
-    private int phoneNumber;
+    private String phoneNumber;
     private String email;
     private int rating;
     List<Integer> spots;
 
-    public ReturnedUserDAO(String first, String last, int isSeeker, int isOwner, int phoneNumber, String email, int rating) {
+    public ReturnedUserDAO(String first, String last, int isSeeker, int isOwner, String phoneNumber, String email, int rating) {
         this.rating = rating;
         this.first = first;
         this.last = last;
@@ -60,11 +60,11 @@ public class ReturnedUserDAO {
         isOwner = owner;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
