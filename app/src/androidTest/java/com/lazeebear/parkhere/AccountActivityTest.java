@@ -37,8 +37,8 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 public class AccountActivityTest {
 
-    private static final String OWNER_USERNAME = "rjason14@gmail.com";
-    private static final String OWNER_PASSWORD = "jerome";
+    private static final String OWNER_USERNAME = "rob@rob.com";
+    private static final String OWNER_PASSWORD = "Password!$";
     private static final String SEEKER_USERNAME = "rjason14@gmail.com";
     private static final String SEEKER_PASSWORD = "jerome";
     private static final String BOTH_USERNAME = "rjason14@gmail.com";

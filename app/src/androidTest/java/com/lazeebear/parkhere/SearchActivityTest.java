@@ -4,6 +4,7 @@ import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.UiDevice;
@@ -71,6 +72,7 @@ public class SearchActivityTest {
     public void testSearchByAddress() {
         Log.i("STATE", "Starting testSearchByAddress()");
         onView(withId(R.id.address)).perform(typeText(SEARCH_ADDRESS));
+        Espresso.closeSoftKeyboard();
         onView(withId(R.id.search_submit_button)).perform(click());
         onView(withId(R.id.reservedSpotId)).check(matches(isDisplayed()));
         Log.i("STATE", "  Success: the search turned up results.");

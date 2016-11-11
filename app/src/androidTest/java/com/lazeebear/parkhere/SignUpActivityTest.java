@@ -93,8 +93,8 @@ public class SignUpActivityTest {
         onView(withId(R.id.isSeeker_checkBox_signup)).perform(click());
         onView(withId(R.id.sign_up_button)).perform(click());
 
-        onView(withId(R.id.ratingBar)).check(matches(isDisplayed()));
-        //onView(withId(R.id.verification_needed_textView)).check(matches(isDisplayed()));
+        //onView(withId(R.id.ratingBar)).check(matches(isDisplayed()));
+        onView(withId(R.id.verification_needed_textView)).check(matches(isDisplayed()));
         Log.i("STATE","  Completed successfully");
     }
 }
