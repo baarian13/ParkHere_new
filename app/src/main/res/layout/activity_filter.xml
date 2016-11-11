@@ -26,6 +26,35 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TableRow>
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="Price Range"
+                    />
+                    <LinearLayout>
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/priceLower_filter"
+                            android:inputType="numberDecimal"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="~"/>
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/priceUpper_filter"
+                            android:inputType="numberDecimal"/>
+                    </LinearLayout>
+                </TableRow>
+                <TableRow>
+                    <TextView android:text="Covered?"/>
+                    <Spinner
+                        android:id="@+id/covered_filter"
+                        android:entries="@array/yes_no"/>
+                </TableRow>
+                <TableRow>
                    <TextView
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
