@@ -60,8 +60,7 @@
     <CheckBox android:id="@+id/create_spot_repeat_weekly_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/repeat_weekly_label"
-        android:onClick="onCheckboxClicked"/>
+        android:text="@string/repeat_weekly_label"/>
     <!--Price field-->
     <EditText
         android:id="@+id/create_spot_price_field"
@@ -87,8 +86,7 @@
     <CheckBox android:id="@+id/create_spot_covered_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/covered_label"
-        android:onClick="onCheckboxClicked"/>
+        android:text="@string/covered_label"/>
     <!--Submit button (sends back to homepg)-->
 
 

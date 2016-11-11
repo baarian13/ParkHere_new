@@ -76,8 +76,8 @@ public class CreateSpotActivity extends AppCompatActivity {
     }
 
     private void createDatePickers(){
-        date_button_lower = (Button) findViewById(R.id.date_button_lower_search);
-        date_button_upper = (Button) findViewById(R.id.date_button_upper_search);
+        date_button_lower = (Button) findViewById(R.id.date_button_lower_create);
+        date_button_upper = (Button) findViewById(R.id.date_button_upper_create);
         //===Search by date: DatePicker===//
 
         //create the listener for the DatePickerDialog
@@ -160,8 +160,8 @@ public class CreateSpotActivity extends AppCompatActivity {
     //time picker
     private void createTimePickers() {
         //===Search by date: DatePicker===//
-        time_button_lower = (Button) findViewById(R.id.time_button_lower_search);
-        time_button_upper = (Button) findViewById(R.id.time_button_upper_search);
+        time_button_lower = (Button) findViewById(R.id.time_button_lower_create);
+        time_button_upper = (Button) findViewById(R.id.time_button_upper_create);
         //create the listener for the DatePickerDialog
         TimePickerDialog.OnTimeSetListener onTimeSetHandlerLower = new TimePickerDialog.OnTimeSetListener(){
             @Override

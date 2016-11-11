@@ -28,8 +28,8 @@ import java.util.List;
 public class Account extends AppCompatActivity {
     private boolean isViewingOwnAccount = true;
     private String uniqueID = "";
-    private boolean isOwner = true;
-    private boolean isSeeker = true;
+    private int isOwner = 1;
+    private int isSeeker = 1;
     private boolean spotHistoryOpen = false;
     private boolean ownedSpotsOpen = false;
     private boolean userTypeEditorsShown = true;
@@ -182,9 +182,16 @@ public class Account extends AppCompatActivity {
 
     private void fillInformation() {
         try {
+            System.out.println("In Account page0: " + uniqueID);
             ReturnedUserDAO userInfo = ServerConnector.userDetails(uniqueID);
-            isOwner = userInfo.isOwner();
-            isSeeker = userInfo.isSeeker();
+            if(userInfo.isOwner())
+                isOwner = 1;
+            else
+                isOwner = 0;
+            if (userInfo.isSeeker())
+                isSeeker = 1;
+            else
+                isSeeker = 0;
             isViewingOwnAccount = ServerConnector.checkUser(uniqueID);
 
             TextView accountName = (TextView) findViewById(R.id.accountName_account);
@@ -192,11 +199,13 @@ public class Account extends AppCompatActivity {
             RatingBar ratingOfUser = (RatingBar) findViewById(R.id.ratingBar);
             ratingOfUser.setRating(userInfo.getRating());
 
+            System.out.println("In Account page1: " + uniqueID);
             TextView phoneNumberTextView = (TextView) findViewById(R.id.phoneNumber);
             phoneNumberTextView.setText(userInfo.getPhoneNumber()+"");
             EditText phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText_account);
             phoneNumberEditText.setText(userInfo.getPhoneNumber()+"");
 
+            System.out.println("In Account page2: " + uniqueID);
             TextView email = (TextView) findViewById(R.id.email);
             email.setText(userInfo.getEmail());
 
@@ -247,9 +256,11 @@ public class Account extends AppCompatActivity {
             clearSpotList();
             LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
             int spotCt = spotList.size();
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!account page on spot: " + spotCt);
             for (int i = 0; i < spotCt; i++) {
                 Button spotButton = createOwnedSpotButton(spotList.get(i));
-                spotButton.setId(R.id.reservedSpotId); //for referencing from tests. doesn't need to be unique.
+                System.out.println("~~~~~~~~~~~~~~~~~~~~~~spotList: "+spotList.get(i));
+                spotButton.setId(spotList.get(i)); //for referencing from tests. doesn't need to be unique.
                 list.addView(spotButton);
             }
 
@@ -370,11 +381,11 @@ public class Account extends AppCompatActivity {
     }
 
     private boolean isSeeker() {
-        return isSeeker;
+        return isSeeker==1;
     }
 
     private boolean isOwner() {
-        return isOwner;
+        return isOwner==1;
     }
 
     private boolean isViewingOwnAccount() {
@@ -505,14 +516,14 @@ public class Account extends AppCompatActivity {
 
     private void setUserType(int index){
         if (index == 0){
-            isOwner = true;
-            isSeeker = true;
+            isOwner = 1;
+            isSeeker = 1;
         } else if (index == 1){
-            isOwner = true;
-            isSeeker = false;
+            isOwner = 1;
+            isSeeker = 0;
         } else{
-            isOwner = false;
-            isSeeker = true;
+            isOwner = 0;
+            isSeeker = 1;
         }
     }
 
