@@ -10,7 +10,7 @@ PARTIAL = '206'
 
 class RateUserHandler(AbstractUserHandler):
 
-    @tornado.web.authenticated # ensures that user has valid token/is signed in
+    #@tornado.web.authenticated # ensures that user has valid token/is signed in
     @tornado.gen.coroutine
     def post(self):
         result = SUCCESS
