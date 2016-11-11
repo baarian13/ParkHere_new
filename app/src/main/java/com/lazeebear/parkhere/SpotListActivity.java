@@ -43,8 +43,11 @@ public class SpotListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         ArrayList<Integer> spotIDs = intent.getIntegerArrayListExtra("ids");
         int loop = spotIDs.size();
-        for (int i=0; i<loop; i++)
+        System.out.println("Received intent for spot list includes " + loop + " spots");
+        for (int i=0; i<loop; i++) {
+            System.out.println("    spot id: " + spotIDs.get(i));
             populateList(spotIDs.get(i));
+        }
         addActionListeners();
     }
 

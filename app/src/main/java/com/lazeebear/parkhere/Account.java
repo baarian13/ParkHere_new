@@ -184,6 +184,7 @@ public class Account extends AppCompatActivity {
         try {
             System.out.println("In Account page0: " + uniqueID);
             ReturnedUserDAO userInfo = ServerConnector.userDetails(uniqueID);
+
             if(userInfo.isOwner())
                 isOwner = 1;
             else

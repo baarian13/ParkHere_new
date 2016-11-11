@@ -204,6 +204,7 @@ public class Search extends AppCompatActivity {
         ArrayList<Integer> spotIDs = new ArrayList<Integer>();
         for (int i=0; i< spots.size(); i++) {
             spotIDs.add(spots.get(i).getId());
+            System.out.println("Adding spot ID " + spots.get(i).getId() + " to the intent from Search to SpotList");
         }
         intent.putExtra("ids",spotIDs);
         startActivity(intent);
