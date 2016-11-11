@@ -44,7 +44,7 @@ public class LoginActivityTest {
 
     private static final String USERNAME_VERIFIED = "rjason14@gmail.com"; //TODO.
     private static final String PASSWORD_VERIFIED = "Password!1";
-    private static final String USERNAME_UNVERIFIED = ""; //TODO verification not yet implemented
+    private static final String USERNAME_UNVERIFIED = "abc@yahoo.com"; //TODO verification not yet implemented
     private static final String PASSWORD_UNVERIFIED = PASSWORD_VERIFIED;
 
     private Instrumentation instr;
@@ -111,11 +111,11 @@ public class LoginActivityTest {
     @Test
     public void testLoginPageUserVerificationPage() {
         Log.i("STATE","Starting testLoginPageUserVerification()");
+        //since server can't check if the user if verified yet, manually set it to check the funcitonality.
+        LoginActivity.setVerified(false);
         onView(withId(R.id.email)).perform(typeText(USERNAME_UNVERIFIED));
         onView(withId(R.id.password)).perform(typeText(PASSWORD_UNVERIFIED));
         onView(withId(R.id.email_sign_in_button)).perform(click());
-        //since server can't check if the user if verified yet, manually set it to check the funcitonality.
-        LoginActivity.setVerified(false);
         // check if user verification page shows up
         onView(withId(R.id.verification_needed_textView)).check(matches(isDisplayed()));
         LoginActivity.setVerified(true); //reset the verified boolean.
