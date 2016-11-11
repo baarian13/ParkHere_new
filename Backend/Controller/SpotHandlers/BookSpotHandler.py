@@ -16,7 +16,7 @@ class BookSpotHandler(AbstractSpotHandler):
     -Requests are posted here when a user is creating an account.
     -All arguments are submitted as strings.
     '''
-    @tornado.web.authenticated
+    #@tornado.web.authenticated
     @tornado.gen.coroutine
     def post(self):
         result = SUCCESS

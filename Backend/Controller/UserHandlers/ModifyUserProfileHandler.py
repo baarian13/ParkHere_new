@@ -19,7 +19,7 @@ class ModifyUserProfileHandler(AbstractUserHandler):
     def get(self):
         pass
 
-    @tornado.web.authenticated # ensures that user has valid token/is signed in
+    #@tornado.web.authenticated # ensures that user has valid token/is signed in
     @tornado.gen.coroutine
     def post(self):
         '''
