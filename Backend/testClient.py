@@ -102,7 +102,20 @@ def rateUser(cookie, http_client, email, rating):
                              'rating'       : rating})
     req = httpclient.HTTPRequest(url, 'POST', body=body, headers=headers)
     
-    http_client.fetch(req)
+    res = http_client.fetch(req)
+    print "body:"
+    print res.body
+
+def modifyUser1(cookie, http_client, phone, isSeeker):
+    headers = {"Cookie": cookie}
+    url = 'http://{0}:8888/modify/user'.format(ip)
+    body = urllib.urlencode({'phone'        : phone,
+                             'isSeeker'     :  isSeeker})
+    req = httpclient.HTTPRequest(url, 'POST', body=body, headers=headers)
+    
+    res = http_client.fetch(req)
+    print "body:"
+    print res.body
 
 # if __name__ == '__main__':
 #     http_client = httpclient.HTTPClient()
@@ -160,7 +173,7 @@ class TestParkHereMethods(unittest.TestCase):
     #     cookie, code = signIn(http_client, 'rob@rob.com', 'Password1$')
 
     #     info = viewUser(cookie, http_client, "rob@rob.com")
-    #     jsondata = json.loads(info)[0]
+    #     jsondata = json.loads(info)
     #     self.assertEqual(jsondata["rating"], 0.0)
     #     self.assertEqual(jsondata["last"], 'last')
     #     self.assertEqual(jsondata["first"], 'first')
@@ -170,20 +183,34 @@ class TestParkHereMethods(unittest.TestCase):
     #     self.assertEqual(jsondata["email"], 'rob@rob.com')
     #     http_client.close()
 
-    def test_rate_user(self):
-        http_client = httpclient.HTTPClient()
-        #cookie, code = createUser(http_client, 'rate@user.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
-        cookie = signIn(http_client, 'rob@rob.com', 'Password1$')
-        info = viewUser(cookie, http_client, "rate@user.com")
-        jsondata = json.loads(info)[0]
-        print jsondata["rating"]
-        self.assertEqual(jsondata["rating"], 0.0)
-        rateUser('rate@user.com', 5)
-        info = viewUser(cookie, http_client, "rate@user.com")
-        jsondata = json.loads(info)[0]
-        print jsondata["rating"]
-        self.assertEqual(jsondata["rating"], 5.0)
-        http_client = httpclient.HTTPClient()
+    # def test_rate_user(self):
+    #     http_client = httpclient.HTTPClient()
+    #     # cookie, code = createUser(http_client, 'rate@user.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
+    #     cookie, code = signIn(http_client, 'rob@rob.com', 'Password1$')
+    #     info = viewUser(cookie, http_client, 'rate@user.com')
+    #     jsondata = json.loads(info)
+    #     print jsondata["rating"]
+    #     self.assertEqual(jsondata["rating"], 0.0)
+    #     rateUser(cookie, http_client,'rate@user.com', 5)
+    #     info = viewUser(cookie, http_client, 'rate@user.com')
+    #     jsondata = json.loads(info)
+    #     print jsondata["rating"]
+    #     self.assertEqual(jsondata["rating"], 5.0)
+    #     http_client = httpclient.HTTPClient()
+
+    # def test_modify_user(self):
+    #     http_client = httpclient.HTTPClient()
+    #     cookie, code = signIn(http_client, 'rob@rob.com', 'Password1$')
+    #     info = viewUser(cookie, http_client, 'rob@rob.com')
+    #     jsondata = json.loads(info)
+    #     self.assertEqual(jsondata["phoneNumber"], '123-456-7890')
+    #     self.assertEqual(jsondata["isSeeker"], 1)
+    #     modifyUser1(cookie, http_client, '123-456-1111', 0)
+    #     info = viewUser(cookie, http_client, 'rob@rob.com')
+    #     jsondata = json.loads(info)
+    #     self.assertEqual(jsondata["phoneNumber"], '123-456-1111')
+    #     self.assertEqual(jsondata["isSeeker"], 0)
+
 
 
 

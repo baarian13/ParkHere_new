@@ -47,43 +47,43 @@ class ModifyUserProfileHandler(AbstractUserHandler):
             salt = createSalt()
             saltedPassword = saltPassword(password,salt)
             try:
-                self.db.changePassword(self.get_current_user(),saltedPassword)
+                self.db.changePassword(self.get_secure_cookie("user"),saltedPassword)
             except:
                 result = PARTIAL
         firstName = self.get_argument("first","")
         if firstName:
             try:
-                self.db.changeFirst(self.get_current_user(),firstName)
+                self.db.changeFirst(self.get_secure_cookie("user"),firstName)
             except:
                 result = PARTIAL
         lastName = self.get_argument("last","")
         if lastName:
             try:
-                self.db.changeLast(self.get_current_user(),lastName)
+                self.db.changeLast(self.get_secure_cookie("user"),lastName)
             except:
                 result = PARTIAL
         phone = self.get_argument("phone","")
         if phone:
             try:
-                self.db.changePhone(self.get_current_user(),phone)
+                self.db.changePhone(self.get_secure_cookie("user"),phone)
             except:
                 result = PARTIAL
         isSeeker = self.get_argument("seeker","")
         if isSeeker:
             try:
-                self.db.changeSeeker(self.get_current_user(), bool(isSeeker))
+                self.db.changeSeeker(self.get_secure_cookie("user"), bool(isSeeker))
             except:
                 result = PARTIAL
         isOwner = self.get_argument("isOwner","")
         if isOwner:
             try:
-                self.db.changeOwner(self.get_current_user(), bool(isOwner))
+                self.db.changeOwner(self.get_secure_cookie("user"), bool(isOwner))
             except:
                 result = PARTIAL
         profilePic = self.get_argument("profilePic", "")
         if profilePic:
             try:
-                self.db.submitPicture(self.get_current_user(), profilePic)
+                self.db.submitPicture(self.get_secure_cookie("user"), profilePic)
             except:
                 result = PARTIAL
         self.write(result)

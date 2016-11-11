@@ -125,7 +125,7 @@ class User(DatabaseObject):
 
     @classmethod
     def getRating(cls, email):
-        return '''SELECT rating, numReviews, FROM {0}
+        return '''SELECT rating, numReviews FROM {0}
                     WHERE email = \'{1}\';'''.format(cls.TABLE_NAME, email)
 
     @classmethod
@@ -138,7 +138,7 @@ class User(DatabaseObject):
 
     @classmethod
     def setRating(cls, email, rating, numReviews):
-            return '''UPDATE {0} SET rating=\'{1}\' AND numReviews = \'{2}\' WHERE email=\'{3}\''''.format(cls.TABLE_NAME, rating, numReviews, email)
+            return '''UPDATE {0} SET rating=\'{1}\' , numReviews = \'{2}\' WHERE email=\'{3}\''''.format(cls.TABLE_NAME, rating, numReviews, email)
 
     def checkPassword(self, password): 
         '''

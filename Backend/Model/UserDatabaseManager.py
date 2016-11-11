@@ -77,6 +77,7 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         self.execute(User.updateLast(email,name))  
 
     def changePhone(self, email, phone):
+        print "gethere"
         self.execute(User.updatePhone(email,phone))    
 
     def changeOwner(self, email, isOwner):
@@ -98,7 +99,17 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         results = self.cursor.fetchall()[0]
         oldrating = results[0]
         numReviews = results[1]
-        rating = oldrating*numReviews + rating
-        numReviews += 1
-        float(rating)/numReviews
+        print "here1"
+        print 'rating ' +rating
+        rating = (int(oldrating)) * (int(numReviews)) + int(rating)
+        print "here.5"
+        numReviews = int(numReviews) + 1
+        print "here2"
+
+        rating = float(rating)/float(numReviews)
+        print "here2"
+        print rating
+        print numReviews
         self.execute(User.setRating(email, rating, numReviews))
+        self.cursor.execute('''SELECT rating FROM USERS WHERE email = \'rate@user.com\';''')
+        print self.cursor.fetchall()[0][0]

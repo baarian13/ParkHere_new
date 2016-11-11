@@ -11,8 +11,6 @@ class ViewUserProfileHandler(AbstractUserHandler):
     @tornado.gen.coroutine
     def get(self):
         email = self.get_argument("email")
-        print "got to the handler"
-        print email
         if email:
             res = self.db.viewUserInfo(email)
             results = {
@@ -23,5 +21,4 @@ class ViewUserProfileHandler(AbstractUserHandler):
                         'phoneNumber'   : str(res[4]),
                         'email'         : res[5],
                         'rating'        : res[6]}
-            print results
             self.write(json.dumps(results))
