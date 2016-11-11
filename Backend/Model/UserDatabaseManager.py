@@ -38,6 +38,9 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         '''
         print password
         saltedPwd = self.hash(password, self.getSalt(email))
+        # if saltedPwd is None:
+        #     print "does it get here"
+        #     return False
         self.cursor.execute(User.getUserInfoQuery(email, saltedPwd))
         return len(self.cursor.fetchall()) > 0
 
@@ -49,7 +52,13 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         :type email: str
         '''
         self.cursor.execute(User.getSaltQuery(email))
-        return self.cursor.fetchall()[0][0]
+        res = self.cursor.fetchall()
+        if len(res)> 0:
+            print "sending hash"
+            return res[0][0]
+        else:
+            print "sending none"
+            return ""
     
     def hash(self, password, salt):
         '''

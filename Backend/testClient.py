@@ -9,7 +9,8 @@ import unittest
 
 
 # ip = '35.160.111.133'
-ip = '35.163.38.167'
+# ip = '35.163.38.167'
+ip = 'localhost'
 #ip = 'parkhere.cghr1zvgeuqd.us-west-1.rds.amazonaws.com'
 #ip = 'ec2-35-163-38-167.us-west-2.compute.amazonaws.com'
 def buildImgStr(path):
@@ -27,9 +28,12 @@ def createUser(http_client, email, password, first, last, phone, seeker, owner, 
                              'owner'      : owner,
                              'profilePic' : img})
     req = httpclient.HTTPRequest(url, 'POST', body=body)
-    
     res = http_client.fetch(req)
-    return res.headers['set-cookie'], res.code
+    try:
+        cookie = res.headers["set-cookie"]
+    except:
+        cookie = None
+    return cookie, res.body
     
 def signIn(http_client, email, password):
     url = 'http://{0}:8888/signin'.format(ip)
@@ -37,7 +41,11 @@ def signIn(http_client, email, password):
                              'password' : password})
     req = httpclient.HTTPRequest(url, 'POST', body=body)
     res = http_client.fetch(req)
-    return res.headers['set-cookie'], res.code
+    try:
+        cookie = res.headers["set-cookie"]
+    except:
+        cookie = None
+    return cookie, res.body
 
 def searchSpot(cookie, http_client, address):
     url = 'http://{0}:8888/search/spot'.format(ip)
@@ -75,8 +83,17 @@ def checkUser(cookie, http_client, email):
     req = httpclient.HTTPRequest(url, 'GET', headers=headers)
     
     res = http_client.fetch(req)
-    print "check user result:"
-    print res.body
+    return res.body
+
+def viewUser(cookie, http_client, email):
+    url = 'http://{0}:8888/view/user'.format(ip)
+    headers = {'Cookie'  : cookie}
+    args = urllib.urlencode({'email' : email})
+    url = url + '?' + args
+    req = httpclient.HTTPRequest(url, 'GET', headers=headers)
+    
+    res = http_client.fetch(req)
+    return res.body
 
 # if __name__ == '__main__':
 #     http_client = httpclient.HTTPClient()
@@ -92,41 +109,50 @@ def checkUser(cookie, http_client, email):
 
 class TestParkHereMethods(unittest.TestCase):
 
-    def test_signup(self):
-        http_client = httpclient.HTTPClient()
-        cookie, code = createUser(http_client, 'rob3@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
-        self.assertEqual(code, 200)
-        cookie, code = createUser(http_client, 'rob@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
-        self.assertEqual(code, 401)
-        http_client.close()
+    # def test_signup(self):
+    #     http_client = httpclient.HTTPClient()
+    #     cookie, code = createUser(http_client, 'rob5@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
+    #     self.assertNotEqual(code, '401')
+    #     cookie, code = createUser(http_client, 'rob@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
+    #     self.assertEqual(code, '401')
+    #     http_client.close()
 
 
-    def test_signin(self):
+    # def test_signin(self):
+    #     http_client = httpclient.HTTPClient()
+    #     cookie, code = signIn(http_client, 'rob@rob.com', 'Password1')
+    #     self.assertEqual(code, '401')
+    #     cookie, code = signIn(http_client, 'ob@rob.com', 'Password1')
+    #     self.assertEqual(code, '401')
+    #     cookie, code = signIn(http_client, 'rob@rob.com', 'Password1$')
+    #     self.assertEqual(code, '200')
+    #     http_client.close()
+
+
+
+
+    # def test_check_user(self):
+    #     http_client = httpclient.HTTPClient()
+    #     cookie, code = signIn(http_client, 'rob@rob.com', 'Password1$')
+    #     res = checkUser(cookie, http_client, "rob@rob.com")
+    #     self.assertEqual(int(res), 1)
+    #     res = checkUser(cookie, http_client, "rob1@rob.com")
+    #     self.assertEqual(int(res), 0)
+    #     res = checkUser(cookie, http_client, "rob45@rob.com")
+    #     self.assertEqual(int(res), 0)
+    #     http_client.close()
+    #     # self.assertEqual(s.split(), ['hello', 'world'])
+    #     # # check that s.split fails when the separator is not a string
+    #     # with self.assertRaises(TypeError):
+    #     #     s.split(2)
+
+    def test_view_user(self):
         http_client = httpclient.HTTPClient()
         cookie, code = signIn(http_client, 'rob@rob.com', 'Password1$')
-        self.assertEqual(code, 200)
-        cookie, code = signIn(http_client, 'rob@rob.com', 'Password1')
-        self.assertEqual(code, 401)
-        cookie, code = signIn(http_client, 'ob@rob.com', 'Password1')
-        self.assertEqual(code, 401)
+
+        info = viewUser(cookie, http_client, "rob@rob.com")
+        print info
         http_client.close()
-
-
-
-    def test_check_user(self):
-        http_client = httpclient.HTTPClient()
-        cookie, code = signIn(http_client, 'rob@rob.com', 'Password1')
-        res = checkUser(cookie, http_client, "rob@rob.com")
-        self.assertTrue(res)
-        res = checkUser(cookie, http_client, "rob1@rob.com")
-        self.assertTrue(res)
-        es = checkUser(cookie, http_client, "rob45@rob.com")
-        self.assertFalse(res)
-        http_client.close()
-        # self.assertEqual(s.split(), ['hello', 'world'])
-        # # check that s.split fails when the separator is not a string
-        # with self.assertRaises(TypeError):
-        #     s.split(2)
 
 if __name__ == '__main__':
     unittest.main()

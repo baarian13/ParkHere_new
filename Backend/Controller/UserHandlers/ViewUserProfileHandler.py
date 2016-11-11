@@ -11,7 +11,9 @@ class ViewUserProfileHandler(AbstractUserHandler):
     @tornado.gen.coroutine
     def get(self):
         email = self.get_argument("email")
+        print email
         if email:
+            res = self.db.viewUserInfo(email)
             results = [{
                         'first'         : res[0],
                         'last'          : res[1],
@@ -19,6 +21,5 @@ class ViewUserProfileHandler(AbstractUserHandler):
                         'isOwner'       : res[3],
                         'phoneNumber'   : str(res[4]),
                         'email'         : res[5],
-                        'rating'        : res[6]}
-                for res in self.db.viewUserInfo(email)]
+                        'rating'        : res[6]}]
             self.write(json.dumps(results))

@@ -12,7 +12,11 @@ class CheckUserHandler(AbstractUserHandler):
     @tornado.gen.coroutine
     def get(self):
         email = self.get_argument("email")
-        if email == self.get_current_user():
+        print email
+        print self.get_secure_cookie("user")
+        if email == self.get_secure_cookie("user"):
             self.write("1")
+            print "true"
         else:
             self.write("0")
+            print "false"

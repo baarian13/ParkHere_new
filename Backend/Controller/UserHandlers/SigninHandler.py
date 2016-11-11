@@ -26,15 +26,20 @@ class SigninHandler(AbstractUserHandler):
             email->str (no checks performed-assumed on client side)
             password->str (no checks performed-assumed on client side)
         '''
-        email = self.get_argument("email", "")
-        password = self.get_argument("password", "")
-        if email and password:
-            if self.db.authenticate(email, password):
-                self.setCurrentUser(email)
-                self.write(SUCCESS)
+        try:
+            email = self.get_argument("email", "")
+            password = self.get_argument("password", "")
+            if email and password:
+                if self.db.authenticate(email, password):
+                    print "authenticated with email/ password"+email+password
+                    self.setCurrentUser(email)
+                    self.write(SUCCESS)
+                else:
+                    print "not authenticated with email/ password"+email+password
+                    self.write(FAILURE)
             else:
                 self.write(FAILURE)
-        else:
+        except:
             self.write(FAILURE)
 
     @tornado.gen.coroutine
