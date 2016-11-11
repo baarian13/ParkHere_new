@@ -67,9 +67,9 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
     def viewSpotInfo(self, spotID):
         self.cursor.execute(Spot.viewSpotInfo(spotID))
         info = self.cursor.fetchall()[0]
-        self.cursor.execute(Spot.getPicturePath(spotID))
-        picturePath = self.cursor.fetchall()
-        info.append(self.objStorageManager.downloadPictureAsString(picturePath))
+        # self.cursor.execute(Spot.getPicturePath(spotID))
+        # picturePath = self.cursor.fetchall()
+        # info.append(self.objStorageManager.downloadPictureAsString(picturePath))
         return info
 
     def bookSpot(self, renterEmail, spotID):

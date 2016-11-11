@@ -51,14 +51,12 @@ def signIn(http_client, email, password):
 def searchSpot(cookie, http_client, address):
     url = 'http://{0}:8888/search/spot'.format(ip)
     headers = {'Cookie'  : cookie}
-    print cookie
     args = urllib.urlencode({'address' : address})
     url = url + '?' + args
-    print url
     req = httpclient.HTTPRequest(url, 'GET', headers=headers)
     
     res = http_client.fetch(req)
-    print res.body
+    return res.body
 
 def postSpot(cookie, http_client, address, spotType, isCovered,
              cancelationPolicy, price, start, end, recurring):
@@ -74,7 +72,8 @@ def postSpot(cookie, http_client, address, spotType, isCovered,
                              'isRecurring'       : recurring})
     req = httpclient.HTTPRequest(url, 'POST', body=body, headers=headers)
     
-    http_client.fetch(req)
+    res = http_client.fetch(req)
+    return res.body
 
 def checkUser(cookie, http_client, email):
     url = 'http://{0}:8888/check/user'.format(ip)
@@ -117,6 +116,15 @@ def modifyUser1(cookie, http_client, phone, isSeeker):
     print "body:"
     print res.body
 
+def viewSpot(cookie, http_client, spotID):
+    url = 'http://{0}:8888/view/spot'.format(ip)
+    headers = {'Cookie'  : cookie}
+    args = urllib.urlencode({'spotID' : spotID})
+    url = url + '?' + args
+    req = httpclient.HTTPRequest(url, 'GET', headers=headers)
+    res = http_client.fetch(req)
+    return res.body
+
 # if __name__ == '__main__':
 #     http_client = httpclient.HTTPClient()
 #     #img = buildImgStr('/Users/henrylevy/Downloads/default.jpg')
@@ -124,7 +132,7 @@ def modifyUser1(cookie, http_client, phone, isSeeker):
 #     cookie = signIn(http_client, 'rob@rob.com', 'Password1$')
 #     checkUser(cookie, http_client, "rob1@rob.com")
 #     checkUser(cookie, http_client, "rob@rob.com")
-#     #postSpot(cookie, http_client, '707 West 28th street, Los Angeles CA, 90007', '0', '0', "0", '10.00', "2016-10-12 12:00:00", "2016-10-12 14:00:00", '0')
+     # postSpot(cookie, http_client, '707 West 28th street, Los Angeles CA, 90007', '0', '0', "0", '10.00', "2016-10-12 12:00:00", "2016-10-12 14:00:00", '0')
 #     searchSpot(cookie, http_client, '700 West 28th street, Los Angeles CA, 90007')
 #     http_client.close()
 
@@ -196,7 +204,8 @@ class TestParkHereMethods(unittest.TestCase):
     #     jsondata = json.loads(info)
     #     print jsondata["rating"]
     #     self.assertEqual(jsondata["rating"], 5.0)
-    #     http_client = httpclient.HTTPClient()
+          # http_client.close()
+
 
     # def test_modify_user(self):
     #     http_client = httpclient.HTTPClient()
@@ -210,7 +219,44 @@ class TestParkHereMethods(unittest.TestCase):
     #     jsondata = json.loads(info)
     #     self.assertEqual(jsondata["phoneNumber"], '123-456-1111')
     #     self.assertEqual(jsondata["isSeeker"], 0)
+    #     http_client.close()
 
+    # def test_post_spot(self):
+    #     http_client = httpclient.HTTPClient()
+    #     cookie, code = signIn(http_client, 'rob@rob.com', 'Password1$')
+    #     res = postSpot(cookie, http_client, '2801 Menlo Ave, Los Angeles CA, 90007', '0', '0', "0", '10.00', "2016-11-12 12:00:00", "2016-11-12 14:00:00", '0')
+    #     self.assertEqual(res, '200')
+    #     http_client.close()
+
+    def test_search_spot(self):
+        http_client = httpclient.HTTPClient()
+        cookie, code = signIn(http_client, 'rob@rob.com', 'Password1$')
+        res = searchSpot(cookie, http_client,"2801 Menlo Ave, Los Angeles, CA")
+        jsondata = json.loads(res)
+        self.assertEqual(jsondata[0]["address"], '2801 Menlo Ave, Los Angeles CA, 90007')
+        self.assertEqual(jsondata[0]["start"], "2016-11-12 12:00:00")
+        self.assertEqual(jsondata[0]["end"], "2016-11-12 14:00:00")
+        http_client.close()
+
+
+    def test_view_spot(self):
+        http_client = httpclient.HTTPClient()
+        cookie, code = signIn(http_client, 'rob@rob.com', 'Password1$')
+        # res = postSpot(cookie, http_client, '706 West 28th street, Los Angeles CA, 90007', '0', '0', '0', '10.00', "2016-10-12 12:00:00", "2016-10-12 14:00:00", '0')
+        res = searchSpot(cookie, http_client, '706 West 28th street, Los Angeles CA, 90007')
+        jsondata = json.loads(res)
+        spotID = jsondata[0]['id']
+        res = viewSpot(cookie, http_client,spotID)
+        jsondata = json.loads(res)
+        self.assertEqual(jsondata["address"], '706 West 28th street, Los Angeles CA, 90007')
+        self.assertEqual(jsondata["spotType"], 0)
+        self.assertEqual(jsondata["isCovered"], 0)
+        self.assertEqual(jsondata["cancelationPolicy"], 0)
+        self.assertEqual(jsondata["price"], 10.00)
+        self.assertEqual(jsondata["start"], u'2016-10-12 12:00:00')
+        self.assertEqual(jsondata["end"], u'2016-10-12 14:00:00')
+        self.assertEqual(jsondata["isRecurring"],0)
+        http_client.close()
 
 
 

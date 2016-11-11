@@ -12,8 +12,8 @@ class ViewSpotHandler(AbstractSpotHandler):
         if spotID:
             res = self.db.viewSpotInfo(spotID)
             results = { 'address'           : res[0],
-                        'start'             : res[1],
-                        'end'               : res[2],
+                        'start'             : str(res[1].strftime('%Y-%m-%d %H:%M:%S')),
+                        'end'               : str(res[2].strftime('%Y-%m-%d %H:%M:%S')),
                         'spotType'          : res[3],
                         'ownerEmail'        : res[4],
                         'renterEmail'       : res[5],
@@ -21,5 +21,5 @@ class ViewSpotHandler(AbstractSpotHandler):
                         'isCovered'         : res[7],
                         'cancelationPolicy' : res[8],
                         'description'       : res[9],
-                        'price'             : res[10]}
+                        'price'             : float(res[10])}
             self.write(json.dumps(results))

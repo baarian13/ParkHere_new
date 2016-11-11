@@ -37,18 +37,17 @@ class PostSpotHandler(AbstractSpotHandler):
             isRecurring-> str 1 for true, 0 for false
             description-> str
         '''
-
         args = {'ownerEmail'        : self.get_secure_cookie("user"),
                 'address'           : self.get_argument("address", ""),
                 'spotType'          : int(self.get_argument("spotType", "")),
                 'isBooked'          : False,
-                'isCovered'         : bool(self.get_argument("isCovered", "")),
+                'isCovered'         : bool(int(self.get_argument("isCovered", ""))),
                 'cancelationPolicy' : int(self.get_argument("cancelationPolicy", "")),
                 'price'             : float(self.get_argument("price", "")),
                 'start'             : self.get_argument("start", ""),
                 'end'               : self.get_argument("end", ""),
                 'description'       : self.get_argument("description", ""),
-                'isRecurring'       : bool(self.get_argument("isRecurring", ""))}
+                'isRecurring'       : bool(int(self.get_argument("isRecurring", "")))}
         spot = Spot(**args)
         try:
             self.db.insertIntoTable(spot)
