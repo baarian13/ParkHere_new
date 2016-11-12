@@ -8,138 +8,155 @@
     android:fitsSystemWindows="true"
     tools:context="com.lazeebear.parkhere.SignUpActivity"
     android:weightSum="1">
-
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|end"-->
-        <!--android:layout_margin="@dimen/fab_margin"-->
-        <!--app:srcCompat="@android:drawable/ic_dialog_email" />-->
-
-    <android.support.design.widget.AppBarLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        android:layout_height="wrap_content">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    </android.support.design.widget.AppBarLayout>
+            <!--<android.support.design.widget.FloatingActionButton-->
+                <!--android:id="@+id/fab"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="bottom|end"-->
+                <!--android:layout_margin="@dimen/fab_margin"-->
+                <!--app:srcCompat="@android:drawable/ic_dialog_email" />-->
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:hint="Email Address"
-        android:id="@+id/EmailEditText"
-        android:layout_gravity="center_horizontal" />
+            <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AppBarOverlay">
 
-    <EditText
-        android:layout_width="373dp"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:hint="Password"
-        android:ems="10"
-        android:id="@+id/password_sign_up" />
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"
+                    />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:hint="Password Confirm"
-        android:ems="10"
-        android:id="@+id/passwordConfirm_sign_up" />
+            </android.support.design.widget.AppBarLayout>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="First Name"
-        android:id="@+id/FirstNameEditText" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="Email Address"
+                android:id="@+id/EmailEditText"
+                android:layout_gravity="center_horizontal" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Last Name"
-        android:id="@+id/LastNameEditText" />
+            <EditText
+                android:layout_width="373dp"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="Password"
+                android:ems="10"
+                android:id="@+id/password_sign_up" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:hint="Phone Number"
-        android:ems="10"
-        android:id="@+id/phoneNum_sign_up"
-        android:layout_gravity="center_horizontal" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="Password Confirm"
+                android:ems="10"
+                android:id="@+id/passwordConfirm_sign_up" />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:weightSum="1">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="First Name"
+                android:id="@+id/FirstNameEditText" />
 
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:text="User Type"
-            android:textAlignment="viewStart"
-            android:textSize="20dp"
-            android:id="@+id/userType"
-            android:layout_weight="0.2" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Last Name"
+                android:id="@+id/LastNameEditText" />
 
-        <CheckBox
-            android:text="Seeker"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/isSeeker_checkBox_signup"
-            android:layout_weight="0.4" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:hint="Phone Number"
+                android:ems="10"
+                android:id="@+id/phoneNum_sign_up"
+                android:layout_gravity="center_horizontal" />
 
-        <CheckBox
-            android:text="Owner"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/isOwner_checkBox_signup"
-            android:layout_weight="0.4" />
-    </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:weightSum="1">
 
-    <!--
-    <Button
-        android:id="@+id/sign_up_profile_picture_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/choose_profile_picture"/>
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:text="User Type"
+                    android:textAlignment="viewStart"
+                    android:textSize="20dp"
+                    android:id="@+id/userType"
+                    android:layout_weight="0.2" />
 
-    <Button
-        android:id="@+id/upload_verification_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/take_verification_photo"/>
--->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:weightSum="1">
+                <CheckBox
+                    android:text="Seeker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/isSeeker_checkBox_signup"
+                    android:layout_weight="0.4" />
 
-        <Button
-            android:layout_width="185dp"
-            android:layout_height="match_parent"
-            android:text="Sign up"
-            android:id="@+id/sign_up_button"
-            android:layout_weight="0.5" />
+                <CheckBox
+                    android:text="Owner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/isOwner_checkBox_signup"
+                    android:layout_weight="0.4" />
+            </LinearLayout>
 
-        <Button
-            android:layout_width="185dp"
-            android:layout_height="match_parent"
-            android:text="Cancel"
-            android:id="@+id/cancel_button_sign_up"
-            android:layout_weight="0.5" />
-    </LinearLayout>
+            <Button
+                android:id="@+id/sign_up_profile_picture_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/choose_profile_picture"/>
+            <ImageView
+                android:id="@+id/sign_up_profile_picture_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside" />
 
+            <Button
+                android:id="@+id/upload_verification_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/take_verification_photo"/>
+            <ImageView
+                android:id="@+id/sign_up_verification_photo_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:weightSum="1">
+
+                <Button
+                    android:layout_width="185dp"
+                    android:layout_height="match_parent"
+                    android:text="Sign up"
+                    android:id="@+id/sign_up_button"
+                    android:layout_weight="0.5" />
+
+                <Button
+                    android:layout_width="185dp"
+                    android:layout_height="match_parent"
+                    android:text="Cancel"
+                    android:id="@+id/cancel_button_sign_up"
+                    android:layout_weight="0.5" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
@@ -33,11 +34,14 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText sEmailView, sFirstName, sLastName, sPassword, sPasswordRe, sPhoneNum;
     private CheckBox seekerBox, ownerBox;
     private int isSeeker = 1, isOwner = 0;
+
+    //pictures
     private Button sTakeVerificationPhotoButton;
+    private ImageView verificationPhotoView, profilePicView;
     private static final int SELECT_PICTURE = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private String selectedImagePath, mCurrentPhotoPath;
-    private Bitmap imageBitmap;
+    private Bitmap verificationPhotoBitmap, profilePicBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +59,11 @@ public class SignUpActivity extends AppCompatActivity {
         seekerBox = (CheckBox) findViewById(R.id.isSeeker_checkBox_signup);
         ownerBox = (CheckBox) findViewById(R.id.isOwner_checkBox_signup);
 
-        /*Button sSelectPictureButton = (Button) findViewById(R.id.sign_up_profile_picture_button);
+        verificationPhotoView = (ImageView) findViewById(R.id.sign_up_verification_photo_preview);
+        profilePicView = (ImageView) findViewById(R.id.sign_up_profile_picture_preview);
+        hidePicViews();
+
+        Button sSelectPictureButton = (Button) findViewById(R.id.sign_up_profile_picture_button);
         sSelectPictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,7 +80,7 @@ public class SignUpActivity extends AppCompatActivity {
                     sendTakePictureIntent();
                 }
             }
-        });*/
+        });
 
         Button sSignInButton = (Button) findViewById(R.id.sign_up_button);
         sSignInButton.setOnClickListener(new View.OnClickListener() {
@@ -93,14 +101,18 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    /*
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
                 Uri selectedImageUri = data.getData();
                 selectedImagePath = getPath(selectedImageUri);
+                profilePicBitmap = BitmapFactory.decodeFile(selectedImagePath);
+                profilePicView.setImageBitmap(profilePicBitmap);
+                profilePicView.setVisibility(View.VISIBLE);
             } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
-                imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+                verificationPhotoBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+                verificationPhotoView.setImageBitmap(verificationPhotoBitmap);
+                verificationPhotoView.setVisibility(View.VISIBLE);
 
                // Bundle extras = data.getExtras();
 
@@ -115,12 +127,12 @@ public class SignUpActivity extends AppCompatActivity {
                         Log.i("TAG", "Ioexception while storing the thumbnail of the retrieved photo");
                     }
                 }
-                * /
+                */
                 // to set the image { mImageView.setImageBitmap(imageBitmap); }
             }
         }
     }
-    */
+
     private boolean validationBoxes() {
         // reset errors
         sEmailView.setError(null);
@@ -213,14 +225,12 @@ public class SignUpActivity extends AppCompatActivity {
             cancel = true;
         }
 
-        /*
         // User Verification Photo Upload
-        if (imageBitmap == null) {
+        if (verificationPhotoBitmap == null) {
             sTakeVerificationPhotoButton.setError("This field is required");
             focusView = sTakeVerificationPhotoButton;
             cancel = true;
-        }*/
-
+        }
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -232,9 +242,18 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void attemptSignUp() {
 
-        ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
-                sFirstName.getText().toString(), sLastName.getText().toString(),
-                sPhoneNum.getText().toString(), isSeeker, isOwner); //, null);//, convertBitmapToByteArray(imageBitmap));
+        if (profilePicBitmap != null) {
+            ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
+                    sFirstName.getText().toString(), sLastName.getText().toString(),
+                    sPhoneNum.getText().toString(), isSeeker, isOwner,
+                    convertBitmapToString(profilePicBitmap),
+                    convertBitmapToString(verificationPhotoBitmap));
+        } else {
+            ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
+                    sFirstName.getText().toString(), sLastName.getText().toString(),
+                    sPhoneNum.getText().toString(), isSeeker, isOwner, null,
+                    convertBitmapToString(verificationPhotoBitmap));
+        }
 
         //save locally
         boolean verified = true; //TODO
@@ -267,6 +286,12 @@ public class SignUpActivity extends AppCompatActivity {
     private void backToRegister() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    //for hiding the picture views until there's a picture
+    private void hidePicViews() {
+        profilePicView.setVisibility(View.GONE);
+        verificationPhotoView.setVisibility(View.GONE);
     }
 
     // for uploading or selecting a profile picture
@@ -326,10 +351,10 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    private byte[] convertBitmapToByteArray(Bitmap bitmap){
+    private String convertBitmapToString(Bitmap bitmap){
         ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOS);
-        byte[] encoded = Base64.encode(byteArrayOS.toByteArray(), Base64.DEFAULT);
+        String encoded = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
         return encoded;
     }
 }

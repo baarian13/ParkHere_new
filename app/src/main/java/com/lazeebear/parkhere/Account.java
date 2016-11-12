@@ -1,10 +1,13 @@
 package com.lazeebear.parkhere;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -667,5 +670,22 @@ public class Account extends AppCompatActivity {
         }
 
         return userTypeArray[index].toString();
+    }
+
+    // convert the returned Base64-String-encoded image to a Bitmap to display.
+    private Bitmap convertBase64StringToBitmap(String encodedImage) {
+        /*
+         * if decodedByteArray returns null
+         * or if Base64.decode throws bad-base64 exception
+         * strip the string "data:image/jpg;base64" off it
+         */
+        //final String encodedString = "data:image/jpg;base64, ....";
+        //final String pureBase64Encoded = encodedString.substring(encodedString.indexOf(",")  + 1);
+        //byte[] decodedBytes = Base64.decode(pureBase64Encoded, Base64.DEFAULT);
+
+        //use Base64.URL_SAFE instead of Base64.DEFAULT if it's a String from a JSON object.
+        byte[] decodedString = Base64.decode(encodedImage, Base64.URL_SAFE);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        return decodedByte;
     }
 }

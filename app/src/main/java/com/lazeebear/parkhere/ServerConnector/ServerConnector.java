@@ -572,11 +572,12 @@ public class ServerConnector {
         String phone;
         int seeker;
         int owner;
-        Base64 profilePic = null;
+        String profilePic = null;
+        String verificationPhoto = null;
         boolean done = false;
         boolean success = false;
 
-        public SignUpTask(String email, String password, String first, String last, String phone, int seeker, int owner/*, Base64 profilePic*/){
+        public SignUpTask(String email, String password, String first, String last, String phone, int seeker, int owner, String profilePic, String verificationPhoto){
             this.email = email;
             this.password = password;
             this.first = first;
@@ -584,7 +585,8 @@ public class ServerConnector {
             this.phone = phone;
             this.seeker = seeker;
             this.owner = owner;
-            //this.profilePic = profilePic;
+            this.profilePic = profilePic;
+            this.verificationPhoto = verificationPhoto;
         }
 
         protected void onPreExecute() {
@@ -606,10 +608,11 @@ public class ServerConnector {
                 if (profilePic != null) {
                     urlParameters = "email=" + email + "&password=" + password + "&first=" + first +
                             "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner + "&profilePic="
-                            + profilePic.toString();
+                            + profilePic + "&verificationPhoto=" + verificationPhoto;
                 } else {
                     urlParameters = "email=" + email + "&password=" + password + "&first=" + first +
-                            "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner;
+                            "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner +
+                            "&verificationPhoto=" + verificationPhoto;
                 }
 
                 // Send post request
@@ -674,8 +677,8 @@ public class ServerConnector {
         return entity.getStatusCode().value();
     }
     */
-    public static int signup(String email, String password, String first, String last, String phone, int seeker, int owner/*, Base64 profilePic*/) {
-        SignUpTask s = new SignUpTask(email, password, first, last, phone, seeker, owner);
+    public static int signup(String email, String password, String first, String last, String phone, int seeker, int owner, String profilePic, String verificationPhoto) {
+        SignUpTask s = new SignUpTask(email, password, first, last, phone, seeker, owner, profilePic, verificationPhoto);
         s.execute();
         while(!s.done)
             ;
