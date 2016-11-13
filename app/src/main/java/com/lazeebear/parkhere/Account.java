@@ -42,6 +42,7 @@ public class Account extends AppCompatActivity {
     private boolean userTypeEditorsShown = true;
     private boolean phoneNumberEditorsShown = true;
     private List<Integer>  spotList = null;
+    private List<Integer> spotHistoryList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -347,6 +348,131 @@ public class Account extends AppCompatActivity {
                         return null;
                     }
                 };
+
+            spotHistoryList = ServerConnector.viewRentals(uniqueID);
+            if (spotHistoryList == null){
+                spotHistoryList = new List<Integer>() {
+                    @Override
+                    public int size() {
+                        return 0;
+                    }
+
+                    @Override
+                    public boolean isEmpty() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean contains(Object o) {
+                        return false;
+                    }
+
+                    @NonNull
+                    @Override
+                    public Iterator<Integer> iterator() {
+                        return null;
+                    }
+
+                    @NonNull
+                    @Override
+                    public Object[] toArray() {
+                        return new Object[0];
+                    }
+
+                    @NonNull
+                    @Override
+                    public <T> T[] toArray(T[] a) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean add(Integer integer) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean remove(Object o) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean containsAll(Collection<?> c) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean addAll(Collection<? extends Integer> c) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean addAll(int index, Collection<? extends Integer> c) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean removeAll(Collection<?> c) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean retainAll(Collection<?> c) {
+                        return false;
+                    }
+
+                    @Override
+                    public void clear() {
+
+                    }
+
+                    @Override
+                    public Integer get(int index) {
+                        return null;
+                    }
+
+                    @Override
+                    public Integer set(int index, Integer element) {
+                        return null;
+                    }
+
+                    @Override
+                    public void add(int index, Integer element) {
+
+                    }
+
+                    @Override
+                    public Integer remove(int index) {
+                        return null;
+                    }
+
+                    @Override
+                    public int indexOf(Object o) {
+                        return 0;
+                    }
+
+                    @Override
+                    public int lastIndexOf(Object o) {
+                        return 0;
+                    }
+
+                    @Override
+                    public ListIterator<Integer> listIterator() {
+                        return null;
+                    }
+
+                    @NonNull
+                    @Override
+                    public ListIterator<Integer> listIterator(int index) {
+                        return null;
+                    }
+
+                    @NonNull
+                    @Override
+                    public List<Integer> subList(int fromIndex, int toIndex) {
+                        return null;
+                    }
+                };
+            }
         } catch (Exception e){
             Log.i("ERROR", "Exception while getting user details opening account");
         }
@@ -403,9 +529,9 @@ public class Account extends AppCompatActivity {
         if (!spotHistoryOpen) {
             clearSpotList();
             LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
-            for (int i = 0; i < 5; i++) {
-                Button spotButton = createSpotHistoryButton("Owned Address " + i);
-                spotButton.setId(R.id.reservedSpotId); //for referencing from tests. doesn't need to be unique.
+            int spotCt = spotHistoryList.size();
+            for (int i = 0; i < spotCt; i++) {
+                Button spotButton = createSpotHistoryButton(spotHistoryList.get(i));
                 list.addView(spotButton);
             }
             spotHistoryOpen = true;
@@ -425,25 +551,32 @@ public class Account extends AppCompatActivity {
         button.setText(address);
         button.setOnClickListener( new View.OnClickListener(){
             public void onClick(View view){
-                addIntentOwnedSpotButton(id);
+                addIntentDetailedSpotButton(id);
             }
         });
 
         return button;
     }
 
-    private void addIntentOwnedSpotButton(int id){
+    private void addIntentDetailedSpotButton(int id){
         Intent intent = new Intent(this, SpotDetailActivity.class);
         intent.putExtra("id", id+"");
         startActivity(intent);
     }
 
-    private Button createSpotHistoryButton(String address) {
+    private Button createSpotHistoryButton(final int id) {
+        String address = "";
+        try {
+            SpotDetailsDAO spot = ServerConnector.spotDetails(id);
+            address = spot.getAddress();
+        } catch (Exception e){
+            Log.i("ERROR", "Exception while getting spot info on account page");
+        }
         Button button = new Button(this);
         button.setText(address);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-
+        button.setOnClickListener( new View.OnClickListener(){
+            public void onClick(View view){
+                addIntentDetailedSpotButton(id);
             }
         });
 
