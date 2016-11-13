@@ -34,6 +34,8 @@ public class SpotDetailActivity extends AppCompatActivity {
     //for resetting the description when the user closes (not confirms) editor
     private int defaultCancellationPolicyIndex = 0;
 
+    private String isReservedBy = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,22 @@ public class SpotDetailActivity extends AppCompatActivity {
             deleteSpotButton.setVisibility(View.GONE);
             Button editPriceButton = (Button) findViewById(R.id.editPriceButton_spotDetail);
             editPriceButton.setVisibility(View.GONE);
+
+            //if already reserved
+            if (isReservedBy.equals("")){
+                Button reserveSpotButton = (Button) findViewById(R.id.reserveButton_spotDetail);
+                reserveSpotButton.setVisibility(View.GONE);
+            }
+        }
+        //if the user reserved the spot
+        //only he should be able to cancel the reservation
+        try {
+            if (!ServerConnector.checkUser(isReservedBy)) {
+                Button cancelReservationButton = (Button) findViewById(R.id.cancelReservationButton_spotDetail);
+                cancelReservationButton.setVisibility(View.GONE);
+            }
+        } catch (Exception e){
+            Log.i("ERROR", "Exception while checking user identity: spotDetail");
         }
 
         hideEditPrice();
@@ -81,6 +99,7 @@ public class SpotDetailActivity extends AppCompatActivity {
             int cancellationIndex = spot.getCancelationPolicy();
 
             isSpotOwner = ServerConnector.checkUser(userUniqueID);
+            isReservedBy = spot.getRenterEmail();
 
             TextView addressField = (TextView) findViewById(R.id.address_spotDetail);
             addressField.setText(spot.getAddress());
@@ -135,6 +154,15 @@ public class SpotDetailActivity extends AppCompatActivity {
         //then redirect to account page
         Intent intent = new Intent(this, Account.class);
         intent.putExtra("id",userUniqueID);
+        startActivity(intent);
+    }
+
+    private void cancelReservation() {
+        //ServerConnector.
+        ServerConnector.cancelReservation(spotID);
+        //refresh view
+        Intent intent = new Intent(this, SpotDetailActivity.class);
+        intent.putExtra("id",spotID+"");
         startActivity(intent);
     }
 
@@ -223,7 +251,6 @@ public class SpotDetailActivity extends AppCompatActivity {
 
         SpotDetailsDAO updatedSpot = new SpotDetailsDAO();
         //ServerConnector.modifySpot(updateSpot);
-
         refreshView();
     }
 
@@ -289,6 +316,14 @@ public class SpotDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 confirmCancellationPolicy();
+            }
+        });
+
+        Button cancelReservationButton = (Button) findViewById(R.id.cancelReservationButton_spotDetail);
+        cancelReservationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancelReservation();
             }
         });
 

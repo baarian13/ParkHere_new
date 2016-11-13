@@ -37,6 +37,10 @@ public class CreateSpotActivity extends AppCompatActivity {
     private int year, month, day, hour, minute;
     public static final int GET_FROM_GALLERY = 3; //request code for opening the gallery
 
+    //not needed for creating the spot
+    //but to redirect the user back to the account page
+    private String uniqueID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,7 @@ public class CreateSpotActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         if (intent != null) {
+            uniqueID = intent.getStringExtra("id");
             setActionListeners();
         }
     }
@@ -285,6 +290,10 @@ public class CreateSpotActivity extends AppCompatActivity {
         //send data
         SentSpotDAO newSpot = new SentSpotDAO(addressString, startString, endString, description, price, spot_type, isCovered, cancellation, false);
         ServerConnector.createSpot(newSpot);
+
+        Intent intent = new Intent(this, Account.class);
+        intent.putExtra("id",uniqueID);
+        startActivity(intent);
     }
 
     private void setSubmitButtonListener(){

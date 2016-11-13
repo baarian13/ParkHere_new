@@ -21,6 +21,7 @@ from Controller.UserHandlers.RateUserHandler import RateUserHandler
 from Controller.UserHandlers.ViewUserProfileHandler import ViewUserProfileHandler
 from Controller.SpotHandlers.GetClientTokenHandler import GetClientTokenHandler
 from Controller.UserHandlers.CheckUserHandler import CheckUserHandler
+from Controller.SpotHandlers.CancelReservationHandler import CancelReservationHandler
 settings = {
     "cookie_secret": "ADSFGHARY3457fgSDFHSDFjusdfASDFGH2345h=sdg",
     "login_url": "/signin",
@@ -42,7 +43,8 @@ application = tornado.web.Application([
     ("/rate/user", RateUserHandler),
     ("/post/spot", PostSpotHandler),
     ("/get/token", GetClientTokenHandler),
-    ("/check/user", CheckUserHandler)
+    ("/check/user", CheckUserHandler),
+    ("cancel/reservation", CancelReservationHandler)
 ], ssl_options={
     "certfile": os.path.join(data_dir, "server.crt"),
     "keyfile": os.path.join(data_dir, "server.key"),

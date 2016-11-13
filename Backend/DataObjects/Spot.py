@@ -134,6 +134,11 @@ class Spot(DatabaseObject):
     def searchByRenterEmailQuery(cls, renterEmail):
         return '''SELECT ID, address, start, end FROM SPOTS WHERE renterEmail = {0};'''.format(renterEmail)
 
+    @classmethod
+    def cancelReservation(cls, spotID):
+        return '''UPDATE {0} SET
+        renterEmail=\'{1}\' WHERE ID=\'{2}\''''.format(cls.TABLE_NAME, "", spotID)
+
     def isValidSpot(self): 
         return self.start < date.today() < self.end
 
