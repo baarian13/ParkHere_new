@@ -44,7 +44,7 @@ class SQLDatabaseManager(object):
     @property
     def objStorageManager(self):
         if not self._objStorageManager:
-            self._objStorageManager = ObjectStorageManager('parkhereapp')
+            self._objStorageManager = ObjectStorageManager('parkhere11b')
         return self._objStorageManager
     
     def __del__(self):
