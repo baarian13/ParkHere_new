@@ -16,8 +16,9 @@ public class ReturnedUserDAO {
     private String email;
     private int rating;
     List<Integer> spots;
+    private String picture;
 
-    public ReturnedUserDAO(String first, String last, int isSeeker, int isOwner, String phoneNumber, String email, int rating) {
+    public ReturnedUserDAO(String first, String last, int isSeeker, int isOwner, String phoneNumber, String email, int rating, String picture) {
         this.rating = rating;
         this.first = first;
         this.last = last;
@@ -25,6 +26,7 @@ public class ReturnedUserDAO {
         this.isOwner = isOwner;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.picture = picture;
     }
 
 
@@ -91,4 +93,13 @@ public class ReturnedUserDAO {
     public void setSpots(List<Integer> spots) {
         this.spots = spots;
     }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
 }
+
