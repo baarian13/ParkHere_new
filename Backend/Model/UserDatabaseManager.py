@@ -88,10 +88,14 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
     def viewUserInfo(self, email):
         self.cursor.execute(User.viewUserInfoQuery(email))
         info = self.cursor.fetchall()[0]
-        self.cursor.execute(User.getPicturePath(email))
-        picturePath = self.cursor.fetchall()
-        info.append(self.objStorageManager.downloadPictureAsString(picturePath))
-        return info
+        
+        try:
+            self.cursor.execute(User.getPicturePath(email))
+            picturePath = self.cursor.fetchall()
+            info.append(self.objStorageManager.downloadPictureAsString(picturePath))
+        except:
+            return info, False
+        return info, True
 
     def rateUser(self, email, rating):
         self.cursor.execute(User.getRating(email))
