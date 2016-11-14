@@ -76,6 +76,10 @@ public class PaymentActivity extends AppCompatActivity {
                     );
                     String nonce = paymentMethodNonce.getNonce();
                     int result = ServerConnector.bookSpot(costOfSpot, nonce, email, spotID);
+                    if(result == 200){
+                        Intent intent = new Intent(this, CompleteTransactionActivity.class);
+                        startActivity(intent);
+                    }
                     break;
                 case BraintreePaymentActivity.BRAINTREE_RESULT_DEVELOPER_ERROR:
                 case BraintreePaymentActivity.BRAINTREE_RESULT_SERVER_ERROR:

@@ -67,9 +67,10 @@
             android:label="Forgot Password"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".CreateSpotActivity" />
-        <activity android:name=".UserVerificationActivity"
+        <activity
+            android:name=".UserVerificationActivity"
             android:label="User Verification"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <!-- braintree requirement to allow the application to switch to Paypal, detailed here: https://developers.braintreepayments.com/guides/client-sdk/setup/android/v2#browser-switch-setup -->
         <activity
             android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
@@ -86,7 +87,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddSpotRatingActivity" />
-        <activity android:name=".Filter"></activity>
+        <activity android:name=".Filter" />
         <!-- Configure the fileprovider for Android API 24+ when taking photos -->
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -95,8 +96,10 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
+
+        <activity android:name=".CompleteTransactionActivity"></activity>
     </application>
 
 </manifest>
