@@ -77,3 +77,6 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
 
     def deleteSpot(self, ownerEmail, spotID):
         self.execute(Spot.deleteSpot(ownerEmail, spotID))
+
+    def cancelReservation(self, spotID):
+        self.execute(Spot.cancelReservation(spotID))

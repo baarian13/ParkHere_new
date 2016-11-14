@@ -99,23 +99,23 @@ class User(DatabaseObject):
         :type path: str
         :rtype: str
         '''
-        return '''UPDATE {0} SET profilePicturePath=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, path, email)
+        return '''UPDATE {0} SET profilePicturePath=\'{1}\' WHERE email=\'{2}\';'''.format(cls.TABLE_NAME, path, email)
 
     @classmethod
     def updatePassword(cls, email, saltedPassword):
-        return '''UPDATE {0} SET saltedPassword=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, saltedPassword, email)
+        return '''UPDATE {0} SET saltedPassword=\'{1}\' WHERE email=\'{2}\';'''.format(cls.TABLE_NAME, saltedPassword, email)
 
     @classmethod
     def updateFirst(cls, email, name):
-        return '''UPDATE {0} SET firstName=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, name, email)
+        return '''UPDATE {0} SET firstName=\'{1}\' WHERE email=\'{2}\';'''.format(cls.TABLE_NAME, name, email)
 
     @classmethod
     def updateLast(cls, email, name):
-        return '''UPDATE {0} SET lastName=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, name, email)
+        return '''UPDATE {0} SET lastName=\'{1}\' WHERE email=\'{2}\';'''.format(cls.TABLE_NAME, name, email)
 
     @classmethod
     def updatePhone(cls, email, phone):
-        return '''UPDATE {0} SET phone=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, phone, email)
+        return '''UPDATE {0} SET phone=\'{1}\' WHERE email=\'{2}\';'''.format(cls.TABLE_NAME, phone, email)
 
     @classmethod
     def viewUserInfoQuery(cls, email):
@@ -130,15 +130,15 @@ class User(DatabaseObject):
 
     @classmethod
     def updateSeeker(cls, email, isSeekr):
-        return '''UPDATE {0} SET isSeeker=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, isSeekr, email)
+        return '''UPDATE {0} SET isSeeker=\'{1}\' WHERE email=\'{2}\';'''.format(cls.TABLE_NAME, isSeekr, email)
 
     @classmethod
     def updateOwner(cls, email, isOwner):
-        return '''UPDATE {0} SET isOwner=\'{1}\' WHERE email=\'{2}\''''.format(cls.TABLE_NAME, isOwner, email)
+        return '''UPDATE {0} SET isOwner=\'{1}\' WHERE email=\'{2}\';'''.format(cls.TABLE_NAME, isOwner, email)
 
     @classmethod
     def setRating(cls, email, rating, numReviews):
-            return '''UPDATE {0} SET rating=\'{1}\' , numReviews = \'{2}\' WHERE email=\'{3}\''''.format(cls.TABLE_NAME, rating, numReviews, email)
+            return '''UPDATE {0} SET rating=\'{1}\' , numReviews = \'{2}\' WHERE email=\'{3}\';'''.format(cls.TABLE_NAME, rating, numReviews, email)
 
     def checkPassword(self, password): 
         '''

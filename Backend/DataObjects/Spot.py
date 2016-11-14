@@ -102,16 +102,16 @@ class Spot(DatabaseObject):
 
     @classmethod
     def searchIDByRenterEmailQuery(cls, ownerEmail):
-        return '''SELECT ID FROM {0} WHERE ownerEmail=\'{1}\''''.format(cls.TABLE_NAME, ownerEmail)
+        return '''SELECT ID FROM {0} WHERE ownerEmail=\'{1}\';'''.format(cls.TABLE_NAME, ownerEmail)
 
     @classmethod
     def bookSpot(cls, renterEmail, spotID, isRecurring):
         return '''UPDATE {0} SET 
-        isRecurring=\'{1}\', renterEmail=\'{2}\' WHERE ID=\'{3}\''''.format(cls.TABLE_NAME, isRecurring, renterEmail, spotID)
+        isRecurring=\'{1}\', renterEmail=\'{2}\' WHERE ID=\'{3}\';'''.format(cls.TABLE_NAME, isRecurring, renterEmail, spotID)
 
     @classmethod
     def searchIDByOwnerEmailQuery(cls, ownerEmail):
-        return '''SELECT ID FROM {0} WHERE ownerEmail=\'{1}\''''.format(cls.TABLE_NAME, ownerEmail)
+        return '''SELECT ID FROM {0} WHERE ownerEmail=\'{1}\';'''.format(cls.TABLE_NAME, ownerEmail)
 
     @classmethod
     def getPicturePath(cls, spotID):
@@ -128,7 +128,7 @@ class Spot(DatabaseObject):
 
     @classmethod
     def deleteSpot(cls, ownerEmail, spotID):
-        return '''DELETE FROM SPOTS where ID = {0} and ownerEmail = \'{1}\''''.format(spotID, ownerEmail)
+        return '''DELETE FROM SPOTS where ID = {0} and ownerEmail = \'{1}\';'''.format(spotID, ownerEmail)
 
     @classmethod
     def searchByRenterEmailQuery(cls, renterEmail):
@@ -136,8 +136,7 @@ class Spot(DatabaseObject):
 
     @classmethod
     def cancelReservation(cls, spotID):
-        return '''UPDATE {0} SET
-        renterEmail=\'{1}\' WHERE ID=\'{2}\''''.format(cls.TABLE_NAME, "", spotID)
+        return '''UPDATE {0} SET renterEmail=\'{1}\' WHERE ID=\'{2}\';'''.format(cls.TABLE_NAME, "", spotID)
 
     def isValidSpot(self): 
         return self.start < date.today() < self.end
