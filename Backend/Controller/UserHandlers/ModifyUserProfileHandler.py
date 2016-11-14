@@ -68,16 +68,16 @@ class ModifyUserProfileHandler(AbstractUserHandler):
                 self.db.changePhone(self.get_secure_cookie("user"),phone)
             except:
                 result = PARTIAL
-        isSeeker = self.get_argument("seeker","")
+        isSeeker = self.get_argument("isSeeker","")
         if isSeeker:
             try:
-                self.db.changeSeeker(self.get_secure_cookie("user"), bool(isSeeker))
+                self.db.changeSeeker(self.get_secure_cookie("user"), isSeeker)
             except:
                 result = PARTIAL
         isOwner = self.get_argument("isOwner","")
         if isOwner:
             try:
-                self.db.changeOwner(self.get_secure_cookie("user"), bool(isOwner))
+                self.db.changeOwner(self.get_secure_cookie("user"), isOwner)
             except:
                 result = PARTIAL
         profilePic = self.get_argument("profilePic", "")

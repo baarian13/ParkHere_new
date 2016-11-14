@@ -77,7 +77,6 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         self.execute(User.updateLast(email,name))  
 
     def changePhone(self, email, phone):
-        print "gethere"
         self.execute(User.updatePhone(email,phone))    
 
     def changeOwner(self, email, isOwner):
@@ -89,9 +88,9 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
     def viewUserInfo(self, email):
         self.cursor.execute(User.viewUserInfoQuery(email))
         info = self.cursor.fetchall()[0]
-        #self.cursor.execute(User.getPicturePath(email))
-        #picturePath = self.cursor.fetchall()
-        #info.append(self.objStorageManager.downloadPictureAsString(picturePath))
+        self.cursor.execute(User.getPicturePath(email))
+        picturePath = self.cursor.fetchall()
+        info.append(self.objStorageManager.downloadPictureAsString(picturePath))
         return info
 
     def rateUser(self, email, rating):

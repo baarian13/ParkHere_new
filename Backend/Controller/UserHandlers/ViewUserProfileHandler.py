@@ -20,5 +20,6 @@ class ViewUserProfileHandler(AbstractUserHandler):
                         'isOwner'       : res[3],
                         'phoneNumber'   : str(res[4]),
                         'email'         : res[5],
-                        'rating'        : res[6]}
+                        'rating'        : res[6],
+                        'picture'       : res[7]}
             self.write(json.dumps(results))
