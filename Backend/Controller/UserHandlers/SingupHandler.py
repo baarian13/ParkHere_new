@@ -54,10 +54,16 @@ class SignUpHandler(AbstractUserHandler):
             self.db.insertIntoTable(user)
             userId = self.get_argument("email", "")
             profilePic = self.get_argument("profilePic", "")
+            verificationPic = self.get_argument("verificationPhoto","")
             if not userId: result = FAILURE
             elif profilePic: # profile picture support not implemented
                 try:
                     self.db.submitPicture(userId, profilePic)
+                except:
+                    result = PARTIAL
+            if verificationPic:
+                try:
+                    self.db.submitVerification(userId, verificationPic)
                 except:
                     result = PARTIAL
             if userId:

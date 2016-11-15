@@ -17,8 +17,10 @@ public class ReturnedUserDAO {
     private int rating;
     List<Integer> spots;
     private String picture;
+    private int isVerified;
 
-    public ReturnedUserDAO(String first, String last, int isSeeker, int isOwner, String phoneNumber, String email, int rating, String picture) {
+
+    public ReturnedUserDAO(String first, String last, int isSeeker, int isOwner, String phoneNumber, String email, int rating, int isVerified, String picture) {
         this.rating = rating;
         this.first = first;
         this.last = last;
@@ -26,6 +28,8 @@ public class ReturnedUserDAO {
         this.isOwner = isOwner;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.isVerified = isVerified;
+
         this.picture = picture;
     }
 
@@ -100,6 +104,14 @@ public class ReturnedUserDAO {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public int getIsVerified() {
+        return isVerified;
+    }
+
+    public void setIsVerified(int isVerified) {
+        this.isVerified = isVerified;
     }
 }
 

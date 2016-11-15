@@ -20,13 +20,15 @@ class User(DatabaseObject):
                         numReviews INT NOT NULL,
                         rating FLOAT NOT NULL,
                         profilePicturePath VARCHAR(200),
+                        isVerified BOOL NOT NULL,
+                        verificationPicturePath VARCHAR(200),
                         PRIMARY KEY (email));'''.format(TABLE_NAME)
 
     
     def __init__(self, firstName, lastName, isSeeker,
                  isOwner, saltedPassword, salt, email,
                  phone, profilePicturePath=None, 
-                 numReviews=0, rating=0):
+                 numReviews=0, rating=0, isVerified= False, verificationPicturePath=None):
         '''
         :type firstName: str
         :type lastName: str
@@ -51,6 +53,8 @@ class User(DatabaseObject):
         self.profilePicturePath = str(profilePicturePath or '')
         self.numReviews         = numReviews
         self.rating             = rating
+        self.isVerified         = isVerified
+        self.verificationPicturePath = str(verificationPicturePath or '')
     
     def __iter__(self):
         return iter([('firstName'         , self.firstName),
@@ -63,7 +67,9 @@ class User(DatabaseObject):
                      ('email'             , self.email),
                      ('profilePicturePath', self.profilePicturePath),
                      ('numReviews'        , self.numReviews),
-                     ('rating'            , self.rating)])
+                     ('rating'            , self.rating),
+                     ('isVerified'        , self.isVerified),
+                     ('verificationPicturePath', self.verificationPicturePath)])
     
     @classmethod
     def getSaltQuery(cls, email):
@@ -120,7 +126,7 @@ class User(DatabaseObject):
     @classmethod
     def viewUserInfoQuery(cls, email):
         return '''SELECT firstName, lastName, isSeeker, isOwner,
-                    phone, email, rating FROM {0}
+                    phone, email, rating, isVerified FROM {0}
                     WHERE email = \'{1}\';'''.format(cls.TABLE_NAME, email)
 
     @classmethod
@@ -139,6 +145,14 @@ class User(DatabaseObject):
     @classmethod
     def setRating(cls, email, rating, numReviews):
             return '''UPDATE {0} SET rating=\'{1}\' , numReviews = \'{2}\' WHERE email=\'{3}\';'''.format(cls.TABLE_NAME, rating, numReviews, email)
+
+    # @classmethod
+    # def viewVerificationPath(cls, email):
+    #     return '''SELECT verificationPicturePath FROM {0} WHERE email = \'{1}\';'''.format(cls.TABLE_NAME, email)
+
+    # @classmethod
+    # def verifyUser(cls, email):
+    #     return '''UPDATE {0} SET isVerified=\'{1}\' WHERE email=\'{2}\';'''.format(cls.TABLE_NAME, 1, email)
 
     def checkPassword(self, password): 
         '''
