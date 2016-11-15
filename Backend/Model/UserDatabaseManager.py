@@ -31,6 +31,11 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         self.objStorageManager.uploadMedia(path, pictureString)
         self.execute(User.updateProfilePictureQuery(email, path))
 
+    def submitVerification(self, email, pictureString):
+        path = 'verificationPictures/{0}'.format(email)
+        self.objStorageManager.uploadMedia(path, pictureString)
+        self.execute(User.updateVerificationPictureQuery(email, path))
+
     def authenticate(self, email, password):
         '''
         :type email: str

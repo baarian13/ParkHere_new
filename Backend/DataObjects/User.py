@@ -108,6 +108,15 @@ class User(DatabaseObject):
         return '''UPDATE {0} SET profilePicturePath=\'{1}\' WHERE email=\'{2}\';'''.format(cls.TABLE_NAME, path, email)
 
     @classmethod
+    def updateVerificationPictureQuery(cls, email, path):
+        '''
+        :type email: str
+        :type path: str
+        :rtype: str
+        '''
+        return '''UPDATE {0} SET verificationPicturePath=\'{1}\' WHERE email=\'{2}\';'''.format(cls.TABLE_NAME, path, email)
+
+    @classmethod
     def updatePassword(cls, email, saltedPassword):
         return '''UPDATE {0} SET saltedPassword=\'{1}\' WHERE email=\'{2}\';'''.format(cls.TABLE_NAME, saltedPassword, email)
 
