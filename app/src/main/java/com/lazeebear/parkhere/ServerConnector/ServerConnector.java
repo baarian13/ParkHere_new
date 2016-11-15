@@ -1085,9 +1085,73 @@ public class ServerConnector {
             return 401;
     }
 
+    static class ViewSpotHistoryTask extends AsyncTask<Void,Void,Void>
+    {
+        List<Integer> spotIDs;
+        String email;
+        boolean done = false;
+        boolean success = false;
+
+        public ViewSpotHistoryTask(String email){
+            this.email = email;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL("view/history?email="+email);
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                setConnCookies(con);
+                con.connect();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'GET' request to URL : " + url);
+                System.out.println("Response Code : " + responseCode);
 
 
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
 
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                Gson gson = new Gson();
+                Type typeOfT = new TypeToken<List<SpotDAO>>(){}.getType();
+                spotIDs = gson.fromJson(response.toString(), typeOfT);
+                //print result
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+        protected void onPostExecute(Void result) {
+
+            // dismiss progress dialog and update ui
+        }
+    }
+
+    public static List<Integer> viewSpotHistory(String email) throws Exception {
+        ViewSpotHistoryTask s = new ViewSpotHistoryTask(email);
+        s.execute();
+        while(!s.done)
+            ;
+        if(s.success)
+            return s.spotIDs;
+        return null;
+    }
 
     static class ViewRentalsTask extends AsyncTask<Void,Void,Void>
     {

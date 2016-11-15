@@ -4,6 +4,7 @@ Created on Oct 17, 2016
 @author: henrylevy
 '''
 from datetime import date, datetime
+from time import time
 from DataObjects.DatabaseObject import DatabaseObject
 from decimal import Decimal, ROUND_DOWN
 from FunctionalUtils import getLatitudeLongitude
@@ -101,8 +102,11 @@ class Spot(DatabaseObject):
     FROM SPOTS HAVING distance < {3} ORDER BY distance LIMIT 0 , {4};'''.format(cls.MILES_MAGIC, latitude, longitude, maxDistance, maxResults)
 
     @classmethod
-    def searchIDByRenterEmailQuery(cls, ownerEmail):
-        return '''SELECT ID FROM {0} WHERE ownerEmail=\'{1}\';'''.format(cls.TABLE_NAME, ownerEmail)
+    def searchIDByRenterEmailQuery(cls, renterEmail):
+        return '''SELECT ID FROM {0} WHERE renterEmail=\'{1}\' AND end >= {2};'''.format(cls.TABLE_NAME, renterEmail, time.strftime("%Y-%m-%d %H:%M:%S"))
+
+    def searchHistoryIDByRenterEmailQuery(cls, renterEmail):
+        return '''SELECT ID FROM {0} WHERE renterEmail=\'{1}\' AND end < {2};'''.format(cls.TABLE_NAME, renterEmail, time.strftime("%Y-%m-%d %H:%M:%S"))
 
     @classmethod
     def bookSpot(cls, renterEmail, spotID, isRecurring):
@@ -132,7 +136,11 @@ class Spot(DatabaseObject):
 
     @classmethod
     def searchByRenterEmailQuery(cls, renterEmail):
-        return '''SELECT ID, address, start, end FROM SPOTS WHERE renterEmail = {0};'''.format(renterEmail)
+        return '''SELECT ID, address, start, end FROM SPOTS WHERE renterEmail = {0} AND end >= {1};'''.format(renterEmail, time.strftime("%Y-%m-%d %H:%M:%S"))
+
+    @classmethod
+    def searchHistoryByRenterEmailQuery(cls, renterEmail):
+        return '''SELECT ID, address, start, end FROM SPOTS WHERE renterEmail = {0} AND end < {1};'''.format(renterEmail, time.strftime("%Y-%m-%d %H:%M:%S"))
 
     @classmethod
     def cancelReservation(cls, spotID):
