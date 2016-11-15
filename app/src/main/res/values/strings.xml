@@ -87,5 +87,6 @@
     <!--account-->
     <string name="toggle_public_profile_button">View Public Profile</string>
     <string name="toggle_private_profile_button">View Private Profile</string>
+    <string name="change_profile_pic_button">Change Profile Picture</string>
 
 </resources>

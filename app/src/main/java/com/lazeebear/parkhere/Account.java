@@ -1,6 +1,7 @@
 package com.lazeebear.parkhere;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.Spinner;
@@ -33,6 +35,8 @@ import java.util.ListIterator;
  */
 
 public class Account extends AppCompatActivity {
+    private static final int CHOOSE_PROFILE_PIC_FROM_GALLERY = 1;
+    private static final int REQUEST_EXTERNAL_STORAGE = 3; //ValidationFunctions.getRequestExternalStorage();
     private boolean isViewingOwnAccount = true;
     private String uniqueID = "";
     private boolean isOwner = true;
@@ -205,6 +209,8 @@ public class Account extends AppCompatActivity {
 
             TextView accountName = (TextView) findViewById(R.id.accountName_account);
             accountName.setText(getDisplayName(userInfo.getFirst(), userInfo.getLast()));
+            ImageView profilePic = (ImageView) findViewById(R.id.account_profile_picture);
+            profilePic.setImageBitmap(convertBase64StringToBitmap(userInfo.getPicture()));
             RatingBar ratingOfUser = (RatingBar) findViewById(R.id.ratingBar);
             ratingOfUser.setRating(userInfo.getRating());
 
@@ -489,6 +495,7 @@ public class Account extends AppCompatActivity {
         addEditPhoneNumberListener();
         addConfirmUserTypeListener();
         addConfirmPhoneNumberListener();
+        addChangeProfilePicListener();
     }
 
     private void addOwnedSpotsButtonActionListener() {
@@ -803,6 +810,61 @@ public class Account extends AppCompatActivity {
         }
 
         return userTypeArray[index].toString();
+    }
+
+    /* Profile picture stuff */
+
+    // upload different profile picture
+    private void addChangeProfilePicListener() {
+        Button changeProfilePicButton = (Button) findViewById(R.id.account_change_profile_pic_button);
+        changeProfilePicButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadNewProfilePicFromGallery();
+            }
+        });
+    }
+
+    private void uploadNewProfilePicFromGallery() {
+        //if validation returns false, it means it's already been granted
+        if (!ValidationFunctions.needToGrantGalleryPermissions(this)){
+            openGallery();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[],
+                                           int[] grantResults) {
+        switch(requestCode) {
+            case REQUEST_EXTERNAL_STORAGE: {
+                Log.i("STATE", "Account: onRequestPermissionsResult: checking Permissions");
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openGallery();
+                } else { Log.i("STATE", "  permission denied."); }
+                return;
+            }
+            //put other cases here
+        }
+    }
+
+    private void openGallery() {
+        Log.i("STATE","Open gallery.");
+        //permission granted. Open gallery.
+        Intent i = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, CHOOSE_PROFILE_PIC_FROM_GALLERY);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == CHOOSE_PROFILE_PIC_FROM_GALLERY) {
+                Bitmap profilePicBitmap = BitmapFactory.decodeFile(
+                        ValidationFunctions.decodeURIDataToImagePath(this, data));
+                ImageView profilePicView = (ImageView) findViewById(R.id.account_profile_picture);
+                profilePicView.setImageBitmap(profilePicBitmap);
+                profilePicView.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     // convert the returned Base64-String-encoded image to a Bitmap to display.

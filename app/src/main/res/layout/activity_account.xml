@@ -1,172 +1,199 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:weightSum="1"
     tools:context="com.lazeebear.parkhere.Account">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
         <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="33dp"
-        android:layout_weight="0.08">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/account_name"
-            android:id="@+id/accountName_account"
-            android:layout_weight="1"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="33dp"
+                android:layout_weight="0.08"
+                android:orientation="horizontal">
 
-        <Button
-            android:text="Log out"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/logoutButton_acount" />
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/accountName_account"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/account_name"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <RatingBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ratingBar"
-        android:layout_gravity="center_horizontal"
-        android:isIndicator="true"/>
+                <Button
+                    android:id="@+id/logoutButton_acount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Log out" />
+            </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/phoneNumber"
-            android:text="phoneNumber"/>
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/phoneNumberEditText_account"
-            android:hint="New phone number"
-            android:inputType="phone"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Confirm"
-            android:id="@+id/confirmPhoneNumberButton_account"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/editPhoneNumberButton_account"
-            android:text="Edit"/>
-    </LinearLayout>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/email"
-        android:text="email"/>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="User Type : "/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/userType_account"
-            android:text="type"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="edit"
-            android:id="@+id/editUserTypeButton_account"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <Spinner
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/user_types"
-                android:id="@+id/editUserTypeSpinner_account"/>
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/account_profile_picture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <Button
+                    android:id="@+id/account_change_profile_pic_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/change_profile_pic_button"/>
+            </LinearLayout>
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:isIndicator="true" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/phoneNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="phoneNumber" />
+
+                <EditText
+                    android:id="@+id/phoneNumberEditText_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="New phone number"
+                    android:inputType="phone" />
+
+                <Button
+                    android:id="@+id/confirmPhoneNumberButton_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Confirm" />
+
+                <Button
+                    android:id="@+id/editPhoneNumberButton_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Edit" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="email" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="User Type : " />
+
+                <TextView
+                    android:id="@+id/userType_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="type" />
+
+                <Button
+                    android:id="@+id/editUserTypeButton_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="edit" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Spinner
+                    android:id="@+id/editUserTypeSpinner_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/user_types" />
+
+                <Button
+                    android:id="@+id/confirmUserTypeButton_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Confirm" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.10"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/searchSpotButton_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="01"
+                    android:text="Search A Spot" />
+
+                <Button
+                    android:id="@+id/createSpotButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Create A Spot" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.10"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/spotHistoryButton_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Spots History" />
+
+                <Button
+                    android:id="@+id/ownedSpotsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Spots Owned" />
+            </LinearLayout>
+
             <Button
+                android:id="@+id/toggleButton_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/confirmUserTypeButton_account"
-                android:text="Confirm"/>
+                android:text="@string/toggle_public_profile_button" />
+
+            <LinearLayout
+                android:id="@+id/spotList_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+
         </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.10"
-        >
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Search A Spot"
-            android:id="@+id/searchSpotButton_account"
-            android:layout_weight="01" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Create A Spot"
-            android:id="@+id/createSpotButton"
-            android:layout_weight="1" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.10">
-
-        <Button
-            android:text="Spots History"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/spotHistoryButton_account"
-            android:layout_weight="1" />
-
-        <Button
-            android:text="Spots Owned"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ownedSpotsButton"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/toggle_public_profile_button"
-        android:id="@+id/toggleButton_account"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/spotList_account"/>
-
-
-    </LinearLayout>
     </ScrollView>
 
 </LinearLayout>
