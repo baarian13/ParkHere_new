@@ -39,10 +39,12 @@ public class Account extends AppCompatActivity {
     private boolean isSeeker = true;
     private boolean spotHistoryOpen = false;
     private boolean ownedSpotsOpen = false;
+    private boolean currentReservationsOpen = false;
     private boolean userTypeEditorsShown = true;
     private boolean phoneNumberEditorsShown = true;
-    private List<Integer>  spotList = null;
+    private List<Integer>  ownedSpotList = null;
     private List<Integer> spotHistoryList = null;
+    private List<Integer> currentReservationsList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,9 @@ public class Account extends AppCompatActivity {
         hideUserTypeEditors();
         hidePhoneNumberEditors();
         spotList.removeAllViews();
+        spotHistoryOpen = false;
+        ownedSpotsOpen = false;
+        currentReservationsOpen = false;
     }
 
     //the only component that sticks on the screen
@@ -158,16 +163,20 @@ public class Account extends AppCompatActivity {
         LinearLayout spotList = (LinearLayout) findViewById(R.id.spotList_account);
         Button spotHistoryButton = (Button) findViewById(R.id.spotHistoryButton_account);
         if (!isViewingOwnAccount()) {
-            spotList.setVisibility(View.GONE);
             spotHistoryButton.setVisibility(View.GONE);
         } else if (!isSeeker()) {
-            spotList.setVisibility(View.GONE);
             spotHistoryButton.setVisibility(View.GONE);
+        }
+
+        Button currentReservationsButton = (Button) findViewById(R.id.currentReservationsButton);
+        if (!isViewingOwnAccount()) {
+            currentReservationsButton.setVisibility(View.GONE);
+        } else if (!isSeeker()) {
+            currentReservationsButton.setVisibility(View.GONE);
         }
 
         Button ownedSpotsButton = (Button) findViewById(R.id.ownedSpotsButton);
         if (!isOwner()) {
-            spotList.setVisibility(View.GONE);
             ownedSpotsButton.setVisibility(View.GONE);
         }
 
@@ -225,9 +234,9 @@ public class Account extends AppCompatActivity {
             Spinner editSpinner = (Spinner) findViewById(R.id.editUserTypeSpinner_account);
             editSpinner.setSelection(getUserType());
 
-            spotList = userInfo.getSpots();
-            if (spotList == null)
-                spotList = new List<Integer>() {
+            currentReservationsList = ServerConnector.viewRentals(uniqueID);
+            if (currentReservationsList == null)
+                currentReservationsList = new List<Integer>(){
                     @Override
                     public int size() {
                         return 0;
@@ -349,7 +358,131 @@ public class Account extends AppCompatActivity {
                     }
                 };
 
-            spotHistoryList = ServerConnector.viewRentals(uniqueID);
+            ownedSpotList = userInfo.getSpots();
+            if (ownedSpotList == null)
+                ownedSpotList = new List<Integer>() {
+                    @Override
+                    public int size() {
+                        return 0;
+                    }
+
+                    @Override
+                    public boolean isEmpty() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean contains(Object o) {
+                        return false;
+                    }
+
+                    @NonNull
+                    @Override
+                    public Iterator<Integer> iterator() {
+                        return null;
+                    }
+
+                    @NonNull
+                    @Override
+                    public Object[] toArray() {
+                        return new Object[0];
+                    }
+
+                    @NonNull
+                    @Override
+                    public <T> T[] toArray(T[] ts) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean add(Integer integer) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean remove(Object o) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean containsAll(Collection<?> collection) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean addAll(Collection<? extends Integer> collection) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean addAll(int i, Collection<? extends Integer> collection) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean removeAll(Collection<?> collection) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean retainAll(Collection<?> collection) {
+                        return false;
+                    }
+
+                    @Override
+                    public void clear() {
+
+                    }
+
+                    @Override
+                    public Integer get(int i) {
+                        return null;
+                    }
+
+                    @Override
+                    public Integer set(int i, Integer integer) {
+                        return null;
+                    }
+
+                    @Override
+                    public void add(int i, Integer integer) {
+
+                    }
+
+                    @Override
+                    public Integer remove(int i) {
+                        return null;
+                    }
+
+                    @Override
+                    public int indexOf(Object o) {
+                        return 0;
+                    }
+
+                    @Override
+                    public int lastIndexOf(Object o) {
+                        return 0;
+                    }
+
+                    @Override
+                    public ListIterator<Integer> listIterator() {
+                        return null;
+                    }
+
+                    @NonNull
+                    @Override
+                    public ListIterator<Integer> listIterator(int i) {
+                        return null;
+                    }
+
+                    @NonNull
+                    @Override
+                    public List<Integer> subList(int i, int i1) {
+                        return null;
+                    }
+                };
+
+            spotHistoryList = ServerConnector.viewSpotHistory(uniqueID);
             if (spotHistoryList == null){
                 spotHistoryList = new List<Integer>() {
                     @Override
@@ -481,6 +614,7 @@ public class Account extends AppCompatActivity {
     private void addActionListeners() {
         addOwnedSpotsButtonActionListener();
         addSpotHistoryButtonActionListener();
+        addCurrentReservationsButtonActionListener();
         addSearchSpotButtonActionListener();
         addCreateSpotButtonActionListener();
         addLogoutButtonActionListener();
@@ -500,6 +634,15 @@ public class Account extends AppCompatActivity {
         });
     }
 
+    private void addCurrentReservationsButtonActionListener(){
+        Button currentReservationsButton = (Button) findViewById(R.id.currentReservationsButton);
+        currentReservationsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                populateCurrentReservations();
+            }
+        });
+    }
+
     private void clearSpotList(){
         LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
         list.removeAllViews();
@@ -511,17 +654,18 @@ public class Account extends AppCompatActivity {
         if (!ownedSpotsOpen) {
             clearSpotList();
             LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
-            int spotCt = spotList.size();
+            int spotCt = ownedSpotList.size();
 //            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!account page on spot: " + spotCt);
             for (int i = 0; i < spotCt; i++) {
-                Button spotButton = createOwnedSpotButton(spotList.get(i));
+                Button spotButton = createSpotButton(ownedSpotList.get(i));
 //                System.out.println("~~~~~~~~~~~~~~~~~~~~~~spotList: "+spotList.get(i));
-                spotButton.setId(spotList.get(i)); //for referencing from tests. doesn't need to be unique.
+                spotButton.setId(ownedSpotList.get(i)); //for referencing from tests. doesn't need to be unique.
                 list.addView(spotButton);
             }
 
             ownedSpotsOpen = true;
             spotHistoryOpen = false;
+            currentReservationsOpen = false;
         }
     }
 
@@ -531,15 +675,31 @@ public class Account extends AppCompatActivity {
             LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
             int spotCt = spotHistoryList.size();
             for (int i = 0; i < spotCt; i++) {
-                Button spotButton = createSpotHistoryButton(spotHistoryList.get(i));
+                Button spotButton = createSpotButton(spotHistoryList.get(i));
                 list.addView(spotButton);
             }
             spotHistoryOpen = true;
             ownedSpotsOpen = false;
+            currentReservationsOpen = false;
         }
     }
 
-    private Button createOwnedSpotButton(final int id) {
+    private void populateCurrentReservations() {
+        if (!currentReservationsOpen) {
+            clearSpotList();
+            LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
+            int spotCt = currentReservationsList.size();
+            for (int i = 0; i < spotCt; i++) {
+                Button spotButton = createSpotButton(spotHistoryList.get(i));
+                list.addView(spotButton);
+            }
+            currentReservationsOpen = true;
+            spotHistoryOpen = false;
+            ownedSpotsOpen = false;
+        }
+    }
+
+    private Button createSpotButton(final int id) {
         String address = "";
         try {
             SpotDetailsDAO spot = ServerConnector.spotDetails(id);
@@ -562,25 +722,6 @@ public class Account extends AppCompatActivity {
         Intent intent = new Intent(this, SpotDetailActivity.class);
         intent.putExtra("id", id+"");
         startActivity(intent);
-    }
-
-    private Button createSpotHistoryButton(final int id) {
-        String address = "";
-        try {
-            SpotDetailsDAO spot = ServerConnector.spotDetails(id);
-            address = spot.getAddress();
-        } catch (Exception e){
-            Log.i("ERROR", "Exception while getting spot info on account page");
-        }
-        Button button = new Button(this);
-        button.setText(address);
-        button.setOnClickListener( new View.OnClickListener(){
-            public void onClick(View view){
-                addIntentDetailedSpotButton(id);
-            }
-        });
-
-        return button;
     }
 
     private void addSpotHistoryButtonActionListener() {

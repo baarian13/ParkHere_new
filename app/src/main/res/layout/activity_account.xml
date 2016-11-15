@@ -153,11 +153,20 @@
             android:layout_weight="1" />
     </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/toggle_public_profile_button"
-        android:id="@+id/toggleButton_account"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/toggle_public_profile_button"
+            android:id="@+id/toggleButton_account"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current Reservations"
+            android:id="@+id/currentReservationsButton"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
