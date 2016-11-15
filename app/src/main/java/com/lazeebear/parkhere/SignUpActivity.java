@@ -1,5 +1,6 @@
 package com.lazeebear.parkhere;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -8,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -36,10 +38,14 @@ public class SignUpActivity extends AppCompatActivity {
     private int isSeeker = 1, isOwner = 0;
 
     //pictures
-    private Button sTakeVerificationPhotoButton;
+    private Button sTakeVerificationPhotoButton, sChooseVerificationPhotoButton;
     private ImageView verificationPhotoView, profilePicView;
-    private static final int SELECT_PICTURE = 1;
-    private static final int REQUEST_IMAGE_CAPTURE = 2;
+    //profile picture
+    private static final int SELECT_PROFILE_PICTURE = 1;
+    private static final int REQUEST_EXTERNAL_STORAGE_PERMISSIONS = 3; //ValidationFunctions.getRequestExternalStorage();
+    //verification photo
+    private static final int REQUEST_IMAGE_CAPTURE = 4;                  //take a photo
+    private static final int SELECT_VERIFICATION_PHOTO = 5;
     private String selectedImagePath, mCurrentPhotoPath;
     private Bitmap verificationPhotoBitmap, profilePicBitmap;
 
@@ -67,7 +73,7 @@ public class SignUpActivity extends AppCompatActivity {
         sSelectPictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectAFile();
+                checkPermissionsAndOpenGallery(SELECT_PROFILE_PICTURE);
             }
         });
 
@@ -79,6 +85,14 @@ public class SignUpActivity extends AppCompatActivity {
                 if(getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
                     sendTakePictureIntent();
                 }
+            }
+        });
+
+        sChooseVerificationPhotoButton = (Button) findViewById(R.id.choose_verification_button);
+        sChooseVerificationPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                checkPermissionsAndOpenGallery(SELECT_VERIFICATION_PHOTO);
             }
         });
 
@@ -103,33 +117,40 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-                Uri selectedImageUri = data.getData();
-                selectedImagePath = getPath(selectedImageUri);
-                profilePicBitmap = BitmapFactory.decodeFile(selectedImagePath);
+            if (requestCode == SELECT_PROFILE_PICTURE) {
+                profilePicBitmap = BitmapFactory.decodeFile(
+                        ValidationFunctions.decodeURIDataToImagePath(this, data));
                 profilePicView.setImageBitmap(profilePicBitmap);
                 profilePicView.setVisibility(View.VISIBLE);
-            } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            } else if (requestCode == SELECT_VERIFICATION_PHOTO) {
+                verificationPhotoBitmap = BitmapFactory.decodeFile(
+                        ValidationFunctions.decodeURIDataToImagePath(this, data));
+                verificationPhotoView.setImageBitmap(profilePicBitmap);
+                verificationPhotoView.setVisibility(View.VISIBLE);
+            }
+            else if (requestCode == REQUEST_IMAGE_CAPTURE) {
                 verificationPhotoBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
                 verificationPhotoView.setImageBitmap(verificationPhotoBitmap);
                 verificationPhotoView.setVisibility(View.VISIBLE);
-
-               // Bundle extras = data.getExtras();
-
-                //get the photo
-                //try {
-                //imageBitmap = (Bitmap) extras.get("data");
-                /* } catch (FileNotFoundException e) {
-                    try {
-                        imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
-                        //or imageBitmap = Uri.parse(mCurrentPhotoPath)); ??
-                    } catch (IOException ioe) {
-                        Log.i("TAG", "Ioexception while storing the thumbnail of the retrieved photo");
-                    }
-                }
-                */
-                // to set the image { mImageView.setImageBitmap(imageBitmap); }
             }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[],
+                                           int[] grantResults) {
+        switch(requestCode) {
+            case REQUEST_EXTERNAL_STORAGE_PERMISSIONS: {
+                Log.i("STATE", "Sign up: onRequestPermissionsResult: checking Permissions");
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i("STATE", "  permission granted.");
+                    //do nothing, let the user re-pick which photo to choose.
+                } else {
+                    Log.i("STATE", "  permission denied.");
+                }
+                return;
+            }
+            //put other cases here
         }
     }
 
@@ -227,8 +248,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         // User Verification Photo Upload
         if (verificationPhotoBitmap == null) {
-            sTakeVerificationPhotoButton.setError("This field is required");
-            focusView = sTakeVerificationPhotoButton;
+            sChooseVerificationPhotoButton.setError("This field is required");
+            focusView = sChooseVerificationPhotoButton;
             cancel = true;
         }
         if (cancel) {
@@ -247,12 +268,12 @@ public class SignUpActivity extends AppCompatActivity {
                     sFirstName.getText().toString(), sLastName.getText().toString(),
                     sPhoneNum.getText().toString(), isSeeker, isOwner,
                     convertBitmapToString(profilePicBitmap),
-                    convertBitmapToString(verificationPhotoBitmap));
+                    null); //convertBitmapToString(verificationPhotoBitmap));
         } else {
             ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
                     sFirstName.getText().toString(), sLastName.getText().toString(),
                     sPhoneNum.getText().toString(), isSeeker, isOwner, null,
-                    convertBitmapToString(verificationPhotoBitmap));
+                    null); //convertBitmapToString(verificationPhotoBitmap));
         }
 
         //save locally
@@ -295,14 +316,20 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     // for uploading or selecting a profile picture
-    private void selectAFile() {
-        // in onCreate or any event where your want the user to
-        // select a file
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,
-                "Select Picture"), SELECT_PICTURE);
+    private void checkPermissionsAndOpenGallery(int which_photo) {
+        //if validation returns false, it means it's already been granted
+        if (!ValidationFunctions.needToGrantGalleryPermissions(this)){
+            openGallery(which_photo);
+        }
+        //else go to onRequestPermissionsResult for the intent to select a file.
+    }
+
+    private void openGallery(int request) {
+        Log.i("STATE","Open gallery.");
+        //permission granted. Open gallery.
+        Intent i = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, request);
     }
 
     /**

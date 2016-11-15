@@ -25,6 +25,7 @@
     <string name="title_activity_sign_up">Sign Up</string>
     <string name="choose_profile_picture">Choose Profile Picture</string>
     <string name="take_verification_photo">Take Photo of ID</string>
+    <string name="choose_verification_photo">Open Gallery</string>
 
     <!-- Strings related to User Verification page -->
     <string name="verification_needed">Sorry, your user account has not been verified yet. You will not be able to use ParkHere until you have been verified.</string>
