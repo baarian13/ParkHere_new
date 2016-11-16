@@ -105,6 +105,7 @@ class Spot(DatabaseObject):
     def searchIDByRenterEmailQuery(cls, renterEmail):
         return '''SELECT ID FROM {0} WHERE renterEmail=\'{1}\' AND end >= {2};'''.format(cls.TABLE_NAME, renterEmail, time.strftime("%Y-%m-%d %H:%M:%S"))
 
+    @classmethod
     def searchHistoryIDByRenterEmailQuery(cls, renterEmail):
         return '''SELECT ID FROM {0} WHERE renterEmail=\'{1}\' AND end < {2};'''.format(cls.TABLE_NAME, renterEmail, time.strftime("%Y-%m-%d %H:%M:%S"))
 
