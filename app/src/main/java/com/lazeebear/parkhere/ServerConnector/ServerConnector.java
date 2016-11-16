@@ -697,10 +697,11 @@ public class ServerConnector {
         String phone;
         int seeker;
         int owner;
+        String profilePic;
         boolean done = false;
         boolean success = false;
 
-        public ModifyUserTask(String email, String password, String first, String last, String phone, boolean seeker, boolean owner/*, Base64 profilePic*/){
+        public ModifyUserTask(String email, String password, String first, String last, String phone, boolean seeker, boolean owner, String profilePic){
             this.email = email;
             this.password = password;
             this.first = first;
@@ -708,7 +709,7 @@ public class ServerConnector {
             this.phone = phone;
             this.seeker = seeker ? 1 : 0;
             this.owner = owner ? 1 : 0;
-            //this.profilePic = profilePic;
+            this.profilePic = profilePic;
         }
 
         protected void onPreExecute() {
@@ -743,6 +744,8 @@ public class ServerConnector {
                     urlParameters += "&last=" + last;
                 if(phone != null)
                     urlParameters += "&phone=" + phone;
+                if(profilePic != null)
+                    urlParameters += "&profilePic=" + profilePic;
                 urlParameters += "&seeker=" + seeker + "&owner=" + owner;
 
                 if (!urlParameters.equals((""))){
@@ -814,7 +817,7 @@ public class ServerConnector {
     }
     */
     public static int modifyUser(SentUserDAO user) {
-        ModifyUserTask s = new ModifyUserTask(user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.isSeaker(), user.isOwner());
+        ModifyUserTask s = new ModifyUserTask(user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.isSeaker(), user.isOwner(), user.getProfilePic());
         s.execute();
         while(!s.done)
             ;
