@@ -45,7 +45,7 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
         self.cursor.execute(Spot.searchHistoryIDByRenterEmailQuery(userEmail))
         return self.cursor.fetchall()
 
-    def getHistorySpotIDsRentedBy(self, userEmail):
+    def getSpotHistoryIDsRentedBy(self, userEmail):
         '''
         :type userEmail: str
         :rtype: list
