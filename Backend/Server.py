@@ -40,7 +40,7 @@ application = tornado.web.Application([
     ("/view/rentals", ViewRentalsHandler),
     ("/view/spot", ViewSpotHandler),
     ("/view/user", ViewUserProfileHandler),
-    ("view/history",ViewSpotHistoryHandler),
+    ("/view/history",ViewSpotHistoryHandler),
     ("/modify/user", ModifyUserProfileHandler),
     ("/rate/user", RateUserHandler),
     ("/post/spot", PostSpotHandler),
