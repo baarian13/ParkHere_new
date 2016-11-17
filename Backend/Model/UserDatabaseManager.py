@@ -28,8 +28,11 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         :type pictureString: str
         '''
         path = 'profilePictures/{0}'.format(email)
+        print path
         self.objStorageManager.uploadMedia(path, pictureString)
+        print 'succesful media upload'
         self.execute(User.updateProfilePictureQuery(email, path))
+        print 'succesful updating profile'
 
     def submitVerification(self, email, pictureString):
         path = 'verificationPictures/{0}'.format(email)
