@@ -39,12 +39,12 @@ class SQLDatabaseManager(object):
                                    db     = self.database)
         self._cursor = self.db.cursor()
         print os.getenv('AWS_ACCESS_KEY_ID', '')
-        self._objStorageManager = ObjectStorageManager('parkhere11b', 'parkhere11b@gmail.com', 'parkhere1')
+        self._objStorageManager = ObjectStorageManager('parkhere11b')#, 'parkhere11b@gmail.com', 'parkhere1')
         # TODO implement our own storage
     @property
     def objStorageManager(self):
         if not self._objStorageManager:
-            self._objStorageManager = ObjectStorageManager('parkhere11b', 'parkhere11b@gmail.com', 'parkhere1')
+            self._objStorageManager = ObjectStorageManager('parkhere11b')#, 'parkhere11b@gmail.com', 'parkhere1')
         return self._objStorageManager
     
     def __del__(self):
