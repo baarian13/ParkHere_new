@@ -845,7 +845,7 @@ public class Account extends AppCompatActivity {
         int choiceIndex = spinner.getSelectedItemPosition();
         setUserType(choiceIndex);
         //send
-        SentUserDAO updatedUser = new SentUserDAO(null, null, null, null, null, isSeeker(), isOwner());
+        SentUserDAO updatedUser = new SentUserDAO(null, null, null, null, null, null, isSeeker(), isOwner());
         ServerConnector.modifyUser(updatedUser);
         //update view
         resetViewVisibility();
@@ -869,7 +869,7 @@ public class Account extends AppCompatActivity {
         String phoneNumberString = phoneNumberEditText.getText().toString();
 
         if (ValidationFunctions.isPhoneNum(phoneNumberString)){
-            SentUserDAO updatedUser = new SentUserDAO(null, null, null, null, phoneNumberString, isSeeker(), isOwner());
+            SentUserDAO updatedUser = new SentUserDAO(null, null, null, null, phoneNumberString, null, isSeeker(), isOwner());
             ServerConnector.modifyUser(updatedUser);
         }
 
@@ -999,9 +999,15 @@ public class Account extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == CHOOSE_PROFILE_PIC_FROM_GALLERY) {
-                Bitmap profilePicBitmap = BitmapFactory.decodeFile(
-                        ValidationFunctions.decodeURIDataToImagePath(this, data));
+                String profilePicBase64 = ValidationFunctions.decodeURIDataToImagePath(this, data);
+                Bitmap profilePicBitmap = BitmapFactory.decodeFile(profilePicBase64);
                 ImageView profilePicView = (ImageView) findViewById(R.id.account_profile_picture);
+
+                // send the new profile picture back to the server.
+                SentUserDAO updatedUser = new SentUserDAO(null, null, null, null, null, profilePicBase64, isSeeker(), isOwner());
+                ServerConnector.modifyUser(updatedUser);
+
+                // refresh view
                 profilePicView.setImageBitmap(profilePicBitmap);
                 profilePicView.setVisibility(View.VISIBLE);
             }
