@@ -52,24 +52,31 @@ class SignUpHandler(AbstractUserHandler):
                     'isOwner'        : self.get_argument("owner", "")}
             user = User(**args)
             self.db.insertIntoTable(user)
+            print 'inserted'
             userId = self.get_argument("email", "")
             profilePic = self.get_argument("profilePic", "")
             verificationPic = self.get_argument("verificationPhoto","")
             if not userId: result = FAILURE
             elif profilePic: # profile picture support not implemented
                 try:
+                    print 'submitting profile picture'
                     self.db.submitPicture(userId, profilePic)
                 except:
+                    print 'profile exception'
                     result = PARTIAL
             if verificationPic:
                 try:
+                    print 'print submitting verification'
                     self.db.submitVerification(userId, verificationPic)
                 except:
+                    print 'verification exception'
                     result = PARTIAL
             if userId:
                 self.setCurrentUser(userId)
         except:
+            print 'exception'
             result = FAILURE
+        print 'writing result'
         self.write(result)
 
     @tornado.gen.coroutine
