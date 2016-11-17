@@ -27,6 +27,7 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         :type email: str
         :type pictureString: str
         '''
+        print 'submit picture'
         path = 'profilePictures/{0}'.format(email)
         print path
         self.objStorageManager.uploadMedia(path, pictureString)
