@@ -268,16 +268,16 @@ public class SignUpActivity extends AppCompatActivity {
                     sFirstName.getText().toString(), sLastName.getText().toString(),
                     sPhoneNum.getText().toString(), isSeeker, isOwner,
                     convertBitmapToString(profilePicBitmap),
-                    null); //convertBitmapToString(verificationPhotoBitmap));
+                    convertBitmapToString(verificationPhotoBitmap));
         } else {
             ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
                     sFirstName.getText().toString(), sLastName.getText().toString(),
                     sPhoneNum.getText().toString(), isSeeker, isOwner, null,
-                    null); //convertBitmapToString(verificationPhotoBitmap));
+                    convertBitmapToString(verificationPhotoBitmap));
         }
 
         //save locally
-        boolean verified = true; //TODO
+        boolean verified = false; //because all new accounts will be unverified at first. ServerConnector.userDetails(sEmailView.getText().toString())
         if (verified) {
             Intent intent = new Intent(this, Account.class);
             intent.putExtra("id",sEmailView.getText().toString());
