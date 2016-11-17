@@ -60,7 +60,6 @@ class SignUpHandler(AbstractUserHandler):
             elif profilePic: # profile picture support not implemented
                 try:
                     print 'submitting profile picture'
-                    print profilePic
                     self.db.submitPicture(userId, profilePic)
                 except:
                     print 'profile exception'
