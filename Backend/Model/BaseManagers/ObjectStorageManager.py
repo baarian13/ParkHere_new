@@ -26,7 +26,7 @@ class ObjectStorageManager(object):
     @property
     def bucket(self):
         if not self._bucket:
-            self._bucket = boto.s3.lookup(self.bucketName)
+            self._bucket = self.connection.lookup(self.bucketName)
         return self._bucket
     
     @property
@@ -41,7 +41,7 @@ class ObjectStorageManager(object):
         '''
         
         self._connection = boto.connect_s3('AKIAIMALNLZEYG773ZZA','1mUPxttA0l1fhVez9S2SIfXTwVKo+1/d1zcjODPw')
-        self._bucket = boto.s3.lookup(bucketName or self.bucketName)
+        self._bucket = self.connection.lookup(bucketName or self.bucketName)
 
     def uploadMedia(self, path, contentAsString):
         '''
