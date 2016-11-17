@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private static boolean verified = true; //by default
+    private static int verified = 0; // 0 for true, 1 for false. static so tests can toggle it with a static method.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,16 +232,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // perform the user login attempt.
 //            showProgress(true);
             if(ServerConnector.signin(email, password)){
-                //get verification status
-                //verified = true; //TODO
-                if (verified) {
-                    Intent intent = new Intent(this, Account.class);
-                    //setUserInformation();
-                    intent.putExtra("id", mEmailView.getText().toString());
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(this, UserVerificationActivity.class);
-                    startActivity(intent);
+                try {
+                    ReturnedUserDAO userInfo = ServerConnector.userDetails(email);
+                    verified = userInfo.getIsVerified(); // TODO: Make userDAO Parcelable to not double-query the server
+                    if (verified == 0) {
+                        //if verified
+                        Intent intent = new Intent(this, Account.class);
+                        //setUserInformation();
+                        intent.putExtra("id", mEmailView.getText().toString());
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(this, UserVerificationActivity.class);
+                        startActivity(intent);
+                    }
+                } catch (Exception e) {
+                    Log.i("STATE", "Error while logging in: exception when getting user details from server.");
                 }
             }
         }
@@ -250,7 +255,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     //this is only temporary
     public static void setVerified(boolean value) {
         //toggle the verified boolean
-        verified = value;
+        verified = (value) ? 0 : 1; // TODO: assuming 0 is true, 1 is false.
     }
 
     //this is only temporary
