@@ -5,8 +5,9 @@ Created on Dec 21, 2015
 '''
 
 import base64
-from boto.s3.connection import S3Connection
-from boto.s3.key import Key
+# from boto.s3.connection import S3Connection
+# from boto.s3.key import Key
+import boto
 
 class ObjectStorageManager(object):
     
@@ -25,13 +26,13 @@ class ObjectStorageManager(object):
     @property
     def bucket(self):
         if not self._bucket:
-            self._bucket = self.connection.get_bucket(self.bucketName)
+            self._bucket = s3.lookup(self.bucketName)
         return self._bucket
     
     @property
     def connection(self):
         if not self._connection:
-            self._connection = S3Connection(self.userName, self.password)
+            self._connection = boto.connect_s3('AKIAIMALNLZEYG773ZZA','1mUPxttA0l1fhVez9S2SIfXTwVKo+1/d1zcjODPw')
         return self._connection
 
     def connect(self, bucketName=None):
@@ -39,8 +40,8 @@ class ObjectStorageManager(object):
         :type bucketName: str
         '''
         
-        self._connection = S3Connection(self.userName, self.password)
-        self._bucket = self.connection.get_bucket(bucketName or self.bucketName)
+        self._connection = boto.connect_s3('AKIAIMALNLZEYG773ZZA','1mUPxttA0l1fhVez9S2SIfXTwVKo+1/d1zcjODPw')
+        self._bucket = s3.lookup(bucketName or self.bucketName)
 
     def uploadMedia(self, path, contentAsString):
         '''
@@ -48,8 +49,9 @@ class ObjectStorageManager(object):
         :type contentAsString: str
         '''
         
-        k = Key(self.bucket)
-        k.key = path
+        # k = Key(self.bucket)
+        # k.key = path
+        k = self.bucket.new_key(path)
         k.set_contents_from_string(base64.b64decode(contentAsString))
         k.set_metadata('Content-Type', 'image/jpeg')
         
