@@ -27,7 +27,10 @@ import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import static com.lazeebear.parkhere.R.layout.activity_sign_up;
 
@@ -46,7 +49,7 @@ public class SignUpActivity extends AppCompatActivity {
     //verification photo
     private static final int REQUEST_IMAGE_CAPTURE = 4;                  //take a photo
     private static final int SELECT_VERIFICATION_PHOTO = 5;
-    private String selectedImagePath, mCurrentPhotoPath;
+    private String selectedImagePathp, selectedImagePathv, mCurrentPhotoPath;
     private Bitmap verificationPhotoBitmap, profilePicBitmap;
 
     @Override
@@ -118,14 +121,14 @@ public class SignUpActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PROFILE_PICTURE) {
-                profilePicBitmap = BitmapFactory.decodeFile(
-                        ValidationFunctions.decodeURIDataToImagePath(this, data));
+                selectedImagePathp =  ValidationFunctions.decodeURIDataToImagePath(this, data);
+                profilePicBitmap = BitmapFactory.decodeFile(selectedImagePathp);
                 profilePicView.setImageBitmap(profilePicBitmap);
                 profilePicView.setVisibility(View.VISIBLE);
             } else if (requestCode == SELECT_VERIFICATION_PHOTO) {
-                verificationPhotoBitmap = BitmapFactory.decodeFile(
-                        ValidationFunctions.decodeURIDataToImagePath(this, data));
-                verificationPhotoView.setImageBitmap(profilePicBitmap);
+                selectedImagePathv =  ValidationFunctions.decodeURIDataToImagePath(this, data);
+                verificationPhotoBitmap = BitmapFactory.decodeFile(selectedImagePathv);
+                verificationPhotoView.setImageBitmap(verificationPhotoBitmap);
                 verificationPhotoView.setVisibility(View.VISIBLE);
             }
             else if (requestCode == REQUEST_IMAGE_CAPTURE) {
@@ -262,31 +265,30 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void attemptSignUp() {
-
+        Log.i("STATE", "Sending sign up info to server.");
         if (profilePicBitmap != null) {
+            writeImageDebugMessagesToLog();
             ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
                     sFirstName.getText().toString(), sLastName.getText().toString(),
                     sPhoneNum.getText().toString(), isSeeker, isOwner,
                     convertBitmapToString(profilePicBitmap),
                     convertBitmapToString(verificationPhotoBitmap));
+            Log.i("STATE", "Received response from server. 1");
         } else {
             ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
                     sFirstName.getText().toString(), sLastName.getText().toString(),
                     sPhoneNum.getText().toString(), isSeeker, isOwner, null,
                     convertBitmapToString(verificationPhotoBitmap));
+            Log.i("STATE", "Received response from server. 1");
         }
+        Log.i("STATE", "Received response from server. 2");
+        startVerificationActivityIntent();
+    }
 
-        //save locally
-        boolean verified = false; //because all new accounts will be unverified at first. ServerConnector.userDetails(sEmailView.getText().toString())
-        if (verified) {
-            Intent intent = new Intent(this, Account.class);
-            intent.putExtra("id",sEmailView.getText().toString());
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent(this, UserVerificationActivity.class);
-            intent.putExtra("id",sEmailView.getText().toString());
-            startActivity(intent);
-        }
+    private void startVerificationActivityIntent() {
+        Log.i("STATE", "Sending intent to start User Verification Activity");
+        Intent intent = new Intent(this, UserVerificationActivity.class);
+        startActivity(intent);
     }
 
     //this was for a temporary class to store data locally
@@ -378,10 +380,49 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    //attempt 2
+    private String encodeImageFromFile(String file) {
+        if (file == null) return "";
+        try{
+            InputStream inputStream = new FileInputStream(file);//You can get an inputStream using any IO API
+            byte[] bytes;
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            try {
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    output.write(buffer, 0, bytesRead);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            bytes = output.toByteArray();
+            //String encodedString = Base64.encodeToString(bytes, Base64.DEFAULT | Base64.URL_SAFE);
+            String encodedString = Base64.encodeToString(bytes, Base64.NO_WRAP);
+            return encodedString;
+        } catch (FileNotFoundException fe) {
+            Log.i("STATE", "Could not find file " + file);
+        }
+        return "";
+    }
+
+    // encode bitmap into string. Worked fine for camera photos.
     private String convertBitmapToString(Bitmap bitmap){
         ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOS);
-        String encoded = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
+        //String encoded = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT | Base64.URL_SAFE);
+        String encoded = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.NO_WRAP);
         return encoded;
+    }
+
+    private void writeImageDebugMessagesToLog() {
+        Log.i("STATE", "profile photo ver 2: " + encodeImageFromFile(selectedImagePathp));
+        Log.i("STATE", "verif photo ver 2: " + encodeImageFromFile(selectedImagePathv));
+
+        Log.i("STATE", "verif photo ver 1: " + convertBitmapToString(verificationPhotoBitmap));
+
+        Log.i("STATE", "profile photo path from gallery:" + selectedImagePathp);
+        Log.i("STATE", "verif photo path from gallery: " + selectedImagePathv);
+        Log.i("STATE", "verif photo path from camera: " + mCurrentPhotoPath);
     }
 }
