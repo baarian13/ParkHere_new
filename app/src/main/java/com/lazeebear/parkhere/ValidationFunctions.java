@@ -193,17 +193,23 @@ public class ValidationFunctions {
 
     // convert the returned Base64-String-encoded image to a Bitmap to display.
     public static Bitmap convertBase64StringToBitmap(String encodedImage) {
+        if (encodedImage == "") {
+            Log.i("STATE","error while converting String to Bitmap image, String is null");
+            return null;
+        }
+        Log.i("STATE","converting String to Bitmap image");
         /*
          * if decodedByteArray returns null
          * or if Base64.decode throws bad-base64 exception
          * strip the string "data:image/jpg;base64" off it
          */
-        //final String encodedString = "data:image/jpg;base64, ....";
-        //final String pureBase64Encoded = encodedString.substring(encodedString.indexOf(",")  + 1);
+        final String encodedString = "data:image/jpg;base64, ....";
+        final String pureBase64Encoded = encodedString.substring(encodedString.indexOf(",")  + 1);
         //byte[] decodedBytes = Base64.decode(pureBase64Encoded, Base64.DEFAULT);
+        byte[] decodedString = Base64.decode(pureBase64Encoded, Base64.URL_SAFE);
 
         //use Base64.URL_SAFE instead of Base64.DEFAULT if it's a String from a JSON object.
-        byte[] decodedString = Base64.decode(encodedImage, Base64.URL_SAFE);
+        //byte[] decodedString = Base64.decode(encodedImage, Base64.URL_SAFE);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 }
