@@ -205,7 +205,7 @@ public class Account extends AppCompatActivity {
         try {
             System.out.println("In Account page0: " + uniqueID);
             ReturnedUserDAO userInfo = ServerConnector.userDetails(uniqueID);
-            System.out.println("In Account page0.0: " + uniqueID);
+            System.out.println("successfully grabbed user info from server");
             if(userInfo.isOwner()==1)
                 isOwner = true;
             else
@@ -216,10 +216,12 @@ public class Account extends AppCompatActivity {
                 isSeeker = false;
             isViewingOwnAccount = true;//ServerConnector.checkUser(uniqueID);
 
+
+
             TextView accountName = (TextView) findViewById(R.id.accountName_account);
             accountName.setText(getDisplayName(userInfo.getFirst(), userInfo.getLast()));
             ImageView profilePic = (ImageView) findViewById(R.id.account_profile_picture);
-            profilePic.setImageBitmap(convertBase64StringToBitmap(userInfo.getPicture()));
+            //profilePic.setImageBitmap(convertBase64StringToBitmap(userInfo.getPicture()));
             RatingBar ratingOfUser = (RatingBar) findViewById(R.id.ratingBar);
             ratingOfUser.setRating(userInfo.getRating());
 
