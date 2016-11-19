@@ -951,7 +951,7 @@ public class ServerConnector {
                 String urlParameters = null;
 
                 urlParameters = "address=" + spot.getAddress() + "&spotType=" + spot.getSpotType()+ "&isCovered=" + spot.isCovered() +
-                        "&cancellationPolicy=" + spot.getCancellationPolicy() + "&price=" + spot.getPrice() + "&start=" + spot.getStartTime()
+                        "&cancelationPolicy=" + spot.getCancelationPolicy() + "&price=" + spot.getPrice() + "&start=" + spot.getStartTime()
                         + "&end=" + spot.getEndTime() + "&description=" + spot.getDescription() + "&isRecurring=" + spot.isRecurring()
                         + "&picture=" + spot.getPicture();
 
