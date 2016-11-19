@@ -284,18 +284,18 @@ public class CreateSpotActivity extends AppCompatActivity {
         String price = price_field.getText().toString();
         String description = description_field.getText().toString();
         int cancellation = ((Spinner) findViewById(R.id.cancellation_policy_selection)).getSelectedItemPosition();
-        boolean isCovered = true;
+        int isCovered = 1; //0 false 1 true
         if (covered_checkbox.isChecked())
-            isCovered = true;
+            isCovered = 1;
         else
-            isCovered = false;
+            isCovered = 0;
         int spot_type = ((Spinner) findViewById(R.id.spot_type)).getSelectedItemPosition();
 
         String startString = formatDateTime(date_button_lower.getText().toString(), time_button_lower.getText().toString());
         String endString = formatDateTime(date_button_upper.getText().toString(), time_button_upper.getText().toString());
 
         //send data
-        SentSpotDAO newSpot = new SentSpotDAO(addressString, startString, endString, base64photo, description, price, spot_type, isCovered, cancellation, false);
+        SentSpotDAO newSpot = new SentSpotDAO(addressString, startString, endString, base64photo, description, price, spot_type, isCovered, cancellation, 0);
         ServerConnector.createSpot(newSpot);
 
         Intent intent = new Intent(this, Account.class);
