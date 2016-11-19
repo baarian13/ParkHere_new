@@ -55,7 +55,7 @@ class PostSpotHandler(AbstractSpotHandler):
             picture = self.get_argument("picture","")
             if picture:
                 try:
-                    self.db.submitPicture(picture, ownerEmail, address)
+                    self.db.submitPicture(picture, self.get_argument("email",""), address)
                 except Exception as e:
                     print e
                     print 'picture exception'
