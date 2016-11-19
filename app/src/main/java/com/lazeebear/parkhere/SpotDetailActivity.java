@@ -109,6 +109,10 @@ public class SpotDetailActivity extends AppCompatActivity {
             priceTextView.setText("$" + price);
             EditText priceEditText = (EditText) findViewById(R.id.priceEditText_spotDetail);
             priceEditText.setText(price + "");
+            TextView dateLowerTextView = (TextView) findViewById(R.id.dateLower_account);
+            dateLowerTextView.setText(spot.getStart());
+            TextView dateUpperTextView = (TextView) findViewById(R.id.dateUpper_account);
+            dateUpperTextView.setText(spot.getEnd());
             TextView owner = (TextView) findViewById(R.id.owner_spotDetail);
             owner.setText(firstName);
 
