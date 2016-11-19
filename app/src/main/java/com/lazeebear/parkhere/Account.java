@@ -214,7 +214,7 @@ public class Account extends AppCompatActivity {
                 isSeeker = true;
             else
                 isSeeker = false;
-            isViewingOwnAccount = false;//ServerConnector.checkUser(uniqueID);
+            isViewingOwnAccount = true;//ServerConnector.checkUser(uniqueID);
 
             TextView accountName = (TextView) findViewById(R.id.accountName_account);
             accountName.setText(getDisplayName(userInfo.getFirst(), userInfo.getLast()));
