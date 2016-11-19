@@ -41,7 +41,7 @@ public class CreateSpotActivity extends AppCompatActivity {
     private String base64photo;
     public static final int GET_FROM_GALLERY = 3; //request code for opening the gallery
 
-    //not needed for creating the spot
+    //is needed for creating the spot
     //but to redirect the user back to the account page
     private String uniqueID;
 
@@ -297,6 +297,7 @@ public class CreateSpotActivity extends AppCompatActivity {
     private void createSpot(){
         String addressString = address.getText().toString();
 
+        String email = uniqueID;
 
         String price = price_field.getText().toString();
         String description = description_field.getText().toString();
@@ -312,7 +313,7 @@ public class CreateSpotActivity extends AppCompatActivity {
         String endString = formatDateTime(date_button_upper.getText().toString(), time_button_upper.getText().toString());
 
         //send data
-        SentSpotDAO newSpot = new SentSpotDAO(addressString, startString, endString, base64photo, description, price, spot_type, isCovered, cancellation, 0);
+        SentSpotDAO newSpot = new SentSpotDAO(addressString, startString, endString, base64photo, description, price, email, spot_type, isCovered, cancellation, 0);
         ServerConnector.createSpot(newSpot);
 
         Intent intent = new Intent(this, Account.class);
