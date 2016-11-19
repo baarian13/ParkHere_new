@@ -239,7 +239,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         //if verified
                         Intent intent = new Intent(this, Account.class);
                         //setUserInformation();
-                        intent.putExtra("id", mEmailView.getText().toString());
+                        intent.putExtra("id", email);
                         startActivity(intent);
                     } else {
                         Intent intent = new Intent(this, UserVerificationActivity.class);
