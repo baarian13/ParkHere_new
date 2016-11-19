@@ -221,17 +221,15 @@ public class Account extends AppCompatActivity {
             TextView accountName = (TextView) findViewById(R.id.accountName_account);
             accountName.setText(getDisplayName(userInfo.getFirst(), userInfo.getLast()));
             ImageView profilePic = (ImageView) findViewById(R.id.account_profile_picture);
+            System.out.println("Getting Image...");
             //profilePic.setImageBitmap(convertBase64StringToBitmap(userInfo.getPicture()));
+            System.out.println("Successfully got image");
             RatingBar ratingOfUser = (RatingBar) findViewById(R.id.ratingBar);
             ratingOfUser.setRating(userInfo.getRating());
-
-            System.out.println("In Account page1: " + uniqueID);
             TextView phoneNumberTextView = (TextView) findViewById(R.id.phoneNumber);
             phoneNumberTextView.setText(userInfo.getPhoneNumber()+"");
             EditText phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText_account);
             phoneNumberEditText.setText(userInfo.getPhoneNumber()+"");
-
-            System.out.println("In Account page2: " + uniqueID);
             TextView email = (TextView) findViewById(R.id.email);
             email.setText(userInfo.getEmail());
 
@@ -767,6 +765,7 @@ public class Account extends AppCompatActivity {
 
     private void goToCreateSpot() {
         Intent intent = new Intent(this, CreateSpotActivity.class);
+        intent.putExtra("id",uniqueID);
         startActivity(intent);
     }
 
