@@ -958,7 +958,7 @@ public class ServerConnector {
                 con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
                 String urlParameters = null;
 
-                urlParameters = "address=" + spot.getAddress() + "&spotType=" + spot.getSpotType()+ "&isCovered=" + spot.isCovered() +
+                urlParameters = "email=" + spot.getEmail() + "&address=" + spot.getAddress() + "&spotType=" + spot.getSpotType()+ "&isCovered=" + spot.isCovered() +
                         "&cancelationPolicy=" + spot.getCancelationPolicy() + "&price=" + spot.getPrice() + "&start=" + spot.getStartTime()
                         + "&end=" + spot.getEndTime() + "&description=" + spot.getDescription() + "&isRecurring=" + spot.isRecurring()
                         + "&picture=" + spot.getPicture();

@@ -38,7 +38,7 @@ class PostSpotHandler(AbstractSpotHandler):
             description-> str
         '''
         print self.get_secure_cookie("user")
-        args = {'ownerEmail'        : self.get_secure_cookie("user"),
+        args = {'ownerEmail'        : self.get_argument("email",""),
                 'address'           : self.get_argument("address", ""),
                 'spotType'          : int(self.get_argument("spotType", "")),
                 'isBooked'          : False,
