@@ -11,11 +11,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -31,10 +33,12 @@ public class CreateSpotActivity extends AppCompatActivity {
     private TextView address, price_field, description_field;
     private CheckBox repeat_weekly_checkbox, covered_checkbox;
     private Button upload_photo_button, date_button_lower, date_button_upper, time_button_lower, time_button_upper, submit_button;
+    private ImageView upload_photo_image_view;
     private Calendar c;
     private DatePickerDialog datePicker_lower, datePicker_upper;
     private TimePickerDialog timePicker_lower, timePicker_upper;
     private int year, month, day, hour, minute;
+    private String base64photo;
     public static final int GET_FROM_GALLERY = 3; //request code for opening the gallery
 
     //not needed for creating the spot
@@ -59,6 +63,8 @@ public class CreateSpotActivity extends AppCompatActivity {
         upload_photo_button = (Button) findViewById(R.id.upload_photo_button);
         submit_button = (Button) findViewById(R.id.create_spot_submit_button);
 
+        upload_photo_image_view = (ImageView) findViewById(R.id.upload_photo_image_view);
+        upload_photo_image_view.setVisibility(View.GONE);
 
         Intent intent = getIntent();
 
@@ -243,7 +249,7 @@ public class CreateSpotActivity extends AppCompatActivity {
         upload_photo_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
+                checkPermissionsAndOpenGallery();
             }
 
         });
@@ -257,14 +263,15 @@ public class CreateSpotActivity extends AppCompatActivity {
         //Detects request codes
         if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
-            Bitmap bitmap = null;
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                upload_photo_image_view.setImageBitmap(bitmap);
+                upload_photo_image_view.setVisibility(View.VISIBLE);
+
+                String photoPath = ValidationFunctions.decodeURIDataToImagePath(this, data);
+                base64photo = ValidationFunctions.encodeImageFromFile(photoPath);
+                //send this to server in createSpot()
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -288,7 +295,7 @@ public class CreateSpotActivity extends AppCompatActivity {
         String endString = formatDateTime(date_button_upper.getText().toString(), time_button_upper.getText().toString());
 
         //send data
-        SentSpotDAO newSpot = new SentSpotDAO(addressString, startString, endString, description, price, spot_type, isCovered, cancellation, false);
+        SentSpotDAO newSpot = new SentSpotDAO(addressString, startString, endString, base64photo, description, price, spot_type, isCovered, cancellation, false);
         ServerConnector.createSpot(newSpot);
 
         Intent intent = new Intent(this, Account.class);
@@ -307,5 +314,21 @@ public class CreateSpotActivity extends AppCompatActivity {
 
     private String formatDateTime(String date , String time){
         return date + " " + time + ":00";
+    }
+
+    private void checkPermissionsAndOpenGallery() {
+        //if validation returns false, it means it's already been granted
+        if (!ValidationFunctions.needToGrantGalleryPermissions(this)){
+            openGallery();
+        }
+        //else go to onRequestPermissionsResult for the intent to select a file.
+    }
+
+    private void openGallery() {
+        Log.i("STATE","Open gallery.");
+        //permission granted. Open gallery.
+        Intent i = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, GET_FROM_GALLERY);
     }
 }

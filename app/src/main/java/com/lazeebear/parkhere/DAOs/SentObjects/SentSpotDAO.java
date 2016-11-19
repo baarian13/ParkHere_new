@@ -9,7 +9,7 @@ import android.util.Base64;
 public class SentSpotDAO {
 
     private String address;
-//    private Base64 picture;
+    private String picture;
     private String startTime;
     private String endTime;
     private String description;
@@ -19,10 +19,11 @@ public class SentSpotDAO {
     private int cancellationPolicy;
     private boolean isRecurring;
 
-    public SentSpotDAO(String address, String startTime, String endTime, String description, String price, int spotType, boolean isCovered, int cancellationPolicy, boolean isRecurring) {
+    public SentSpotDAO(String address, String startTime, String endTime, String picture, String description, String price, int spotType, boolean isCovered, int cancellationPolicy, boolean isRecurring) {
         this.address = address;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.picture = picture;
         this.description = description;
         this.price = price;
         this.spotType = spotType;
@@ -80,13 +81,13 @@ public class SentSpotDAO {
         this.address = address;
     }
 
-//    public Base64 getPicture() {
-//        return picture;
-//    }
-//
-//    public void setPicture(Base64 picture) {
-//        this.picture = picture;
-//    }
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
 
 
     public String getStartTime() {

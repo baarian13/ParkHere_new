@@ -1027,7 +1027,6 @@ public class Account extends AppCompatActivity {
 
         //use Base64.URL_SAFE instead of Base64.DEFAULT if it's a String from a JSON object.
         byte[] decodedString = Base64.decode(encodedImage, Base64.URL_SAFE);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        return decodedByte;
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 }
