@@ -37,7 +37,7 @@ class PostSpotHandler(AbstractSpotHandler):
             isRecurring-> str 1 for true, 0 for false
             description-> str
         '''
-        print self.get_argument("price", "")
+        print self.get_secure_cookie("user")
         args = {'ownerEmail'        : self.get_secure_cookie("user"),
                 'address'           : self.get_argument("address", ""),
                 'spotType'          : int(self.get_argument("spotType", "")),
