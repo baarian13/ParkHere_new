@@ -86,6 +86,7 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
         info = list(self.cursor.fetchall()[0])
         try:
             self.cursor.execute(Spot.getPicturePath(spotID))
+            print picturePath
             picturePath = self.cursor.fetchall()
             info.append(self.objStorageManager.downloadPictureAsString(picturePath))
         except Exception as e:
@@ -107,7 +108,7 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
         :type pictureString: str
         '''
         print 'submit picture'
-        path = 'spotPictures/{0}'.format(ownerEmail+address)
+        path = 'spotPictures/{0}'.format((ownerEmail+address).replace(" ", ""))
         print path
         self.objStorageManager.uploadMedia(path, pictureString)
         print 'succesful media upload'
