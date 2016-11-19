@@ -3,6 +3,7 @@ package com.lazeebear.parkhere.ServerConnector;
 
 import android.os.AsyncTask;
 import android.util.Base64;
+import android.util.Log;
 
 
 import com.google.gson.Gson;
@@ -644,13 +645,16 @@ public class ServerConnector {
 
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
+                    Log.i("STATE","inputLine: " + inputLine);
                 }
                 in.close();
                 success = true;
+                Log.i("STATE","success = true");
             } catch (Exception e) {
                 e.printStackTrace();
             }
             done = true;
+            Log.i("STATE", "done = true");
             return null;
         }
 
@@ -680,8 +684,10 @@ public class ServerConnector {
     public static int signup(String email, String password, String first, String last, String phone, int seeker, int owner, String profilePic, String verificationPhoto) {
         SignUpTask s = new SignUpTask(email, password, first, last, phone, seeker, owner, profilePic, verificationPhoto);
         s.execute();
+        Log.i("STATE","start waiting for sign up task");
         while(!s.done)
-            ;
+            Log.i("SPAM","1");
+        Log.i("STATE","signup: done");
         if(s.success)
             return 200;
         else

@@ -398,7 +398,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
             bytes = output.toByteArray();
             //String encodedString = Base64.encodeToString(bytes, Base64.DEFAULT | Base64.URL_SAFE);
-            String encodedString = Base64.encodeToString(bytes, Base64.NO_WRAP);
+            String encodedString = Base64.encodeToString(bytes, Base64.NO_WRAP | Base64.URL_SAFE);
             return encodedString;
         } catch (FileNotFoundException fe) {
             Log.i("STATE", "Could not find file " + file);
@@ -411,7 +411,7 @@ public class SignUpActivity extends AppCompatActivity {
         ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOS);
         //String encoded = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT | Base64.URL_SAFE);
-        String encoded = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.NO_WRAP);
+        String encoded = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.NO_WRAP | Base64.URL_SAFE);
         return encoded;
     }
 
