@@ -107,7 +107,7 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
         :type pictureString: str
         '''
         print 'submit picture'
-        path = 'spotPictures/{0}'.format(ownerEmail+address)
+        path = 'spotPictures/{0}'.format((ownerEmail+address).replace(" ", ""))
         print path
         self.objStorageManager.uploadMedia(path, pictureString)
         print 'succesful media upload'
