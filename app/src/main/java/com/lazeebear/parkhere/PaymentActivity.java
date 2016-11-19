@@ -78,6 +78,7 @@ public class PaymentActivity extends AppCompatActivity {
                     int result = ServerConnector.bookSpot(costOfSpot, nonce, email, spotID);
                     if(result == 200){
                         Intent intent = new Intent(this, CompleteTransactionActivity.class);
+                        intent.putExtra("id",email);
                         startActivity(intent);
                     }
                     break;
