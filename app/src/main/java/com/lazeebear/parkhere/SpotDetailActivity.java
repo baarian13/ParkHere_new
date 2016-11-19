@@ -68,7 +68,7 @@ public class SpotDetailActivity extends AppCompatActivity {
             editPriceButton.setVisibility(View.GONE);
 
             //if already reserved
-            if (isReservedBy.equals("")){
+            if (!isReservedBy.equals("")){
                 Button reserveSpotButton = (Button) findViewById(R.id.reserveButton_spotDetail);
                 reserveSpotButton.setVisibility(View.GONE);
             }
