@@ -68,7 +68,8 @@ class SignUpHandler(AbstractUserHandler):
                 try:
                     print 'print submitting verification'
                     self.db.submitVerification(userId, verificationPic)
-                except:
+                except Exception as e:
+                    print e
                     print 'verification exception'
                     result = PARTIAL
             if userId:
