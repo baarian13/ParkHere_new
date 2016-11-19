@@ -123,7 +123,16 @@ public class Search extends AppCompatActivity {
     }
 
     private String formatDate(int year, int month, int day){
-        return year + "-" + month + "-" + day;
+        String monthStr = month + "";
+        String dayStr = day + "";
+        if (month < 10){
+            monthStr = "0" + monthStr;
+        }
+
+        if (day < 10){
+            dayStr = "0" + dayStr;
+        }
+        return year + "-" + monthStr + "-" + dayStr;
     }
 
     //Date Picker
@@ -172,7 +181,15 @@ public class Search extends AppCompatActivity {
     }
 
     private String formatTime(int hour, int minute){
-        return hour + ":" + minute;
+        String hourStr = hour + "";
+        String minuteStr = minute + "";
+        if (hour < 10){
+            hourStr = "0" + hourStr;
+        }
+        if (minute < 10){
+            minuteStr = "0" + minuteStr;
+        }
+        return hourStr + ":" + minuteStr;
     }
 
     //Time Picker
