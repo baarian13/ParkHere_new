@@ -80,13 +80,16 @@
                 android:layout_height="wrap_content"
                 android:text="@string/repeat_weekly_label" />
             <!--Price field-->
-            <EditText
-                android:id="@+id/create_spot_price_field"
-                android:layout_width="0px"
-                android:layout_height="wrap_content"
-                android:hint="@string/price_label"
-                android:inputType="textNoSuggestions|numberDecimal"
-                android:text="@string/price_label" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/create_spot_price_field"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/price_label"
+                    android:inputType="textNoSuggestions|numberDecimal" />
+            </LinearLayout>
             <!--Photos-->
             <Button
                 android:id="@+id/upload_photo_button"
