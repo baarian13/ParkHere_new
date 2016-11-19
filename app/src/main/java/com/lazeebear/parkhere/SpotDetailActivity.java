@@ -111,6 +111,7 @@ public class SpotDetailActivity extends AppCompatActivity {
             RatingBar spotRating = (RatingBar) findViewById(R.id.rating_spot_spotDetail);
             spotRating.setRating(rating);
             TextView priceTextView = (TextView) findViewById(R.id.price_spotDetail);
+            price = addFee(price);
             priceTextView.setText("$" + price);
             EditText priceEditText = (EditText) findViewById(R.id.priceEditText_spotDetail);
             priceEditText.setText(price + "");
@@ -135,6 +136,14 @@ public class SpotDetailActivity extends AppCompatActivity {
         } catch (Exception e){
             Log.i("ERROR", "Exception while getting spot details creating spotDetail view");
         }
+    }
+
+    private double addFee(double price){
+        if (!isSpotOwner()){
+            price *= 1.1;
+        }
+
+        return price;
     }
 
 
