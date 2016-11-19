@@ -52,10 +52,11 @@ class ObjectStorageManager(object):
         # k = Key(self.bucket)
         # k.key = path
         k = self.bucket.new_key(path)
+        
+        contentAsString = base64.urlsafe_b64decode(contentAsString.encode("ascii"))
         while len(contentAsString) % 4 != 0:
-            contentAsString += b"="
-        print contentAsString
-        k.set_contents_from_string(base64.urlsafe_b64decode(contentAsString.encode("ascii")))
+            contentAsString += "="
+        k.set_contents_from_string(contentAsString)
         k.set_metadata('Content-Type', 'image/jpeg')
         
         # may need to make private read
