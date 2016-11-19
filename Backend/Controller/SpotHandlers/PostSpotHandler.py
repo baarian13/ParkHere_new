@@ -18,7 +18,7 @@ class PostSpotHandler(AbstractSpotHandler):
     -Requests are posted here when a user is creating an account.
     -All arguments are submitted as strings.
     '''
-    #@tornado.web.authenticated
+    @tornado.web.authenticated
     @tornado.gen.coroutine
     def post(self):
         '''
@@ -37,8 +37,8 @@ class PostSpotHandler(AbstractSpotHandler):
             isRecurring-> str 1 for true, 0 for false
             description-> str
         '''
-        print self.get_argument("price", "")
-        args = {'ownerEmail'        : self.get_secure_cookie("user"),
+        print self.get_secure_cookie("user")
+        args = {'ownerEmail'        : self.get_argument("email",""),
                 'address'           : self.get_argument("address", ""),
                 'spotType'          : int(self.get_argument("spotType", "")),
                 'isBooked'          : False,

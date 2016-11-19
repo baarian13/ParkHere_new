@@ -315,10 +315,12 @@ public class ServerConnector {
                 user = gson.fromJson(response.toString(), typeOfT);
                 //print result
                 success = true;
+                Log.i("STATE","user details success = true");
             } catch (Exception e) {
                 e.printStackTrace();
             }
             done = true;
+            Log.i("STATE","user details done = true");
             return null;
         }
 
@@ -391,8 +393,10 @@ public class ServerConnector {
         UserDetailsTask s = new UserDetailsTask(email);
         ReturnedUserDAO user;
         s.execute();
+        Log.i("STATE","Waiting for user details");
         while(!s.done)
-            ;
+            Log.i("SPAM","3");
+        Log.i("STATE","Finished waiting for user details");
         if(s.success) {
             user = s.user;
 //            SpotsOwnedTask o = new SpotsOwnedTask(email);
@@ -542,10 +546,12 @@ public class ServerConnector {
 
                 //print result
                 success = true;
+                Log.i("STATE","success = true");
             } catch (Exception e) {
                 e.printStackTrace();
             }
             done = true;
+            Log.i("STATE", "done = true");
             return null;
         }
 
@@ -559,8 +565,10 @@ public class ServerConnector {
     public static boolean signin(String email, String password) {
         SignInTask s = new SignInTask(email, password);
         s.execute();
+        Log.i("STATE","Waiting for signin");
         while(!s.done)
-            ;
+            Log.i("SPAM","2");
+        Log.i("STATE","Finished signin");
         return s.success;
     }
 
@@ -950,7 +958,7 @@ public class ServerConnector {
                 con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
                 String urlParameters = null;
 
-                urlParameters = "address=" + spot.getAddress() + "&spotType=" + spot.getSpotType()+ "&isCovered=" + spot.isCovered() +
+                urlParameters = "email=" + spot.getEmail() + "&address=" + spot.getAddress() + "&spotType=" + spot.getSpotType()+ "&isCovered=" + spot.isCovered() +
                         "&cancelationPolicy=" + spot.getCancelationPolicy() + "&price=" + spot.getPrice() + "&start=" + spot.getStartTime()
                         + "&end=" + spot.getEndTime() + "&description=" + spot.getDescription() + "&isRecurring=" + spot.isRecurring()
                         + "&picture=" + spot.getPicture();

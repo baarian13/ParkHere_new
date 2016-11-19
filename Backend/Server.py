@@ -26,7 +26,7 @@ from Controller.SpotHandlers.CancelReservationHandler import CancelReservationHa
 settings = {
     "cookie_secret": "ADSFGHARY3457fgSDFHSDFjusdfASDFGH2345h=sdg",
     "login_url": "/signin",
-    "xsrf_cookies": False,
+    "xsrf_cookies": False
 }
 data_dir = '/Users/henrylevy/ParkHere/Backend/'
 application = tornado.web.Application([
