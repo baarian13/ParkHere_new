@@ -33,7 +33,9 @@ public class PaymentActivity extends AppCompatActivity {
             //get data
             try {
                 SpotDetailsDAO spot = ServerConnector.spotDetails(Integer.parseInt(spotID));
-                costOfSpot = "2.00";
+                double price = 10.00;
+                price = addFee(price);
+                costOfSpot = price + "";
                 TextView priceTextView = (TextView) findViewById(R.id.amount_payment_page);
                 priceTextView.setText(costOfSpot);
                 email = spot.getOwnerEmail();
@@ -43,6 +45,10 @@ public class PaymentActivity extends AppCompatActivity {
             }
             addActionListeners();
         }
+    }
+
+    private double addFee(double price){
+        return price * 1.1;
     }
 
     private void addActionListeners(){
