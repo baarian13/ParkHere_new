@@ -52,7 +52,8 @@ class ObjectStorageManager(object):
         # k = Key(self.bucket)
         # k.key = path
         k = self.bucket.new_key(path)
-        contentAsString = contentAsString.replace('.', '=')
+        while len(contentAsString) % 4 != 0:
+            contentAsString += "="
         k.set_contents_from_string(base64.b64decode(contentAsString))
         k.set_metadata('Content-Type', 'image/jpeg')
         
