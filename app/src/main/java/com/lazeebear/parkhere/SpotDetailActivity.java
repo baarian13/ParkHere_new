@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -103,6 +104,10 @@ public class SpotDetailActivity extends AppCompatActivity {
 
             TextView addressField = (TextView) findViewById(R.id.address_spotDetail);
             addressField.setText(spot.getAddress());
+            ImageView spotPicture = (ImageView) findViewById(R.id.address_imageView);
+            if (spot.getPicture() != null && spot.getPicture() != "") {
+                spotPicture.setImageBitmap(ValidationFunctions.convertBase64StringToBitmap(spot.getPicture()));
+            }
             RatingBar spotRating = (RatingBar) findViewById(R.id.rating_spot_spotDetail);
             spotRating.setRating(rating);
             TextView priceTextView = (TextView) findViewById(R.id.price_spotDetail);

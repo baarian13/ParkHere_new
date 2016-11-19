@@ -17,6 +17,7 @@ public class SpotDetailsDAO {
     private int cancelationPolicy;
     private String description;
     private double price;
+    private String picture;
 
     public double getPrice() {
         return price;
@@ -105,4 +106,8 @@ public class SpotDetailsDAO {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getPicture() { return picture; }
+
+    public void setPicture(String picture) { this.picture = picture; }
 }
