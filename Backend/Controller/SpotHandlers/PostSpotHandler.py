@@ -51,6 +51,14 @@ class PostSpotHandler(AbstractSpotHandler):
         spot = Spot(**args)
         try:
             self.db.insertIntoTable(spot)
+            picture = self.get_argument("picture","")
+            if picture:
+                try:
+                    self.db.submitPicture(picture, ownerEmail, address)
+                except Exception as e:
+                    print e
+                    print 'picture exception'
+                    result = PARTIAL
             self.write('200')
         except:
             self.write('401')

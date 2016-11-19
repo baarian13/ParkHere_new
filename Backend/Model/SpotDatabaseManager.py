@@ -4,6 +4,7 @@ Created on Oct 19, 2016
 @author: henrylevy
 '''
 from Model.BaseManagers.DatabaseManagerBase import SQLDatabaseManager
+from Model.BaseManagers.ObjectStorageManager import ObjectStorageManager
 from DataObjects.Spot import Spot
 from FunctionalUtils import getLatitudeLongitude
 
@@ -96,3 +97,15 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
 
     def cancelReservation(self, spotID):
         self.execute(Spot.cancelReservation(spotID))
+
+    def submitPicture(self, pictureString, ownerEmail, address):
+        '''
+        :type email: str
+        :type pictureString: str
+        '''
+        print 'submit picture'
+        path = 'spotPictures/{0}'.format(ownerEmail+address)
+        print path
+        self.objStorageManager.uploadMedia(path, pictureString)
+        print 'succesful media upload'
+        self.execute(Spot.addPicture(path, ownerEmail, address))

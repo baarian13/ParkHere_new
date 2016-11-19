@@ -146,7 +146,15 @@ class Spot(DatabaseObject):
     @classmethod
     def cancelReservation(cls, spotID):
         return '''UPDATE {0} SET renterEmail=\'{1}\' WHERE ID=\'{2}\';'''.format(cls.TABLE_NAME, "", spotID)
-
+    
+    @classmethod
+    def addPicture(cls, path, ownerEmail, address):
+        '''
+        :type email: str
+        :type path: str
+        :rtype: str
+        '''
+        return '''UPDATE {0} SET picturePath=\'{1}\' WHERE ownerEmail=\'{2}\' AND address=\'{3}\';'''.format(cls.TABLE_NAME, path, ownerEmail, address)
     def isValidSpot(self): 
         return self.start < date.today() < self.end
 
