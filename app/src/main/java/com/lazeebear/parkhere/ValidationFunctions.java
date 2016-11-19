@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -188,5 +189,21 @@ public class ValidationFunctions {
         //String encoded = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT | Base64.URL_SAFE);
         String encoded = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.NO_WRAP | Base64.URL_SAFE);
         return encoded;
+    }
+
+    // convert the returned Base64-String-encoded image to a Bitmap to display.
+    public static Bitmap convertBase64StringToBitmap(String encodedImage) {
+        /*
+         * if decodedByteArray returns null
+         * or if Base64.decode throws bad-base64 exception
+         * strip the string "data:image/jpg;base64" off it
+         */
+        //final String encodedString = "data:image/jpg;base64, ....";
+        //final String pureBase64Encoded = encodedString.substring(encodedString.indexOf(",")  + 1);
+        //byte[] decodedBytes = Base64.decode(pureBase64Encoded, Base64.DEFAULT);
+
+        //use Base64.URL_SAFE instead of Base64.DEFAULT if it's a String from a JSON object.
+        byte[] decodedString = Base64.decode(encodedImage, Base64.URL_SAFE);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 }

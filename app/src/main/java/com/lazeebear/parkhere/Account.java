@@ -222,7 +222,7 @@ public class Account extends AppCompatActivity {
             accountName.setText(getDisplayName(userInfo.getFirst(), userInfo.getLast()));
             ImageView profilePic = (ImageView) findViewById(R.id.account_profile_picture);
             System.out.println("Getting Image...");
-            //profilePic.setImageBitmap(convertBase64StringToBitmap(userInfo.getPicture()));
+            //profilePic.setImageBitmap(ValidationFunctions.convertBase64StringToBitmap(userInfo.getPicture()));
             System.out.println("Successfully got image");
             RatingBar ratingOfUser = (RatingBar) findViewById(R.id.ratingBar);
             ratingOfUser.setRating(userInfo.getRating());
@@ -1013,21 +1013,5 @@ public class Account extends AppCompatActivity {
                 profilePicView.setVisibility(View.VISIBLE);
             }
         }
-    }
-
-    // convert the returned Base64-String-encoded image to a Bitmap to display.
-    private Bitmap convertBase64StringToBitmap(String encodedImage) {
-        /*
-         * if decodedByteArray returns null
-         * or if Base64.decode throws bad-base64 exception
-         * strip the string "data:image/jpg;base64" off it
-         */
-        //final String encodedString = "data:image/jpg;base64, ....";
-        //final String pureBase64Encoded = encodedString.substring(encodedString.indexOf(",")  + 1);
-        //byte[] decodedBytes = Base64.decode(pureBase64Encoded, Base64.DEFAULT);
-
-        //use Base64.URL_SAFE instead of Base64.DEFAULT if it's a String from a JSON object.
-        byte[] decodedString = Base64.decode(encodedImage, Base64.URL_SAFE);
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 }
