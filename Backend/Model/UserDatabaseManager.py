@@ -100,7 +100,7 @@ class SQLUserDatabaseManager(SQLDatabaseManager):
         
         try:
             self.cursor.execute(User.getPicturePath(email))
-            picturePath = self.cursor.fetchall()
+            picturePath = self.cursor.fetchall()[0][0]
             info.append(self.objStorageManager.downloadPictureAsString(picturePath))
         except:
             return info, False
