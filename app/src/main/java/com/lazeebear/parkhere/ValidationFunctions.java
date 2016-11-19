@@ -10,14 +10,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.util.Base64;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
@@ -148,4 +154,39 @@ public class ValidationFunctions {
     }
 
     public static int getRequestExternalStorage() { return REQUEST_EXTERNAL_STORAGE; }
+
+    //attempt 2. for images from the gallery.
+    public static String encodeImageFromFile(String file) {
+        if (file == null) return "";
+        try{
+            InputStream inputStream = new FileInputStream(file);//You can get an inputStream using any IO API
+            byte[] bytes;
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            try {
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    output.write(buffer, 0, bytesRead);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            bytes = output.toByteArray();
+            //String encodedString = Base64.encodeToString(bytes, Base64.DEFAULT | Base64.URL_SAFE);
+            String encodedString = Base64.encodeToString(bytes, Base64.NO_WRAP | Base64.URL_SAFE);
+            return encodedString;
+        } catch (FileNotFoundException fe) {
+            Log.i("STATE", "Could not find file " + file);
+        }
+        return "";
+    }
+
+    // encode bitmap into string. Worked fine for camera photos.
+    public static String convertBitmapToString(Bitmap bitmap){
+        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOS);
+        //String encoded = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT | Base64.URL_SAFE);
+        String encoded = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.NO_WRAP | Base64.URL_SAFE);
+        return encoded;
+    }
 }

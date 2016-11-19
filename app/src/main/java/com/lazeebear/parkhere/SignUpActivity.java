@@ -271,14 +271,14 @@ public class SignUpActivity extends AppCompatActivity {
             ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
                     sFirstName.getText().toString(), sLastName.getText().toString(),
                     sPhoneNum.getText().toString(), isSeeker, isOwner,
-                    convertBitmapToString(profilePicBitmap),
-                    convertBitmapToString(verificationPhotoBitmap));
+                    ValidationFunctions.convertBitmapToString(profilePicBitmap),
+                    ValidationFunctions.convertBitmapToString(verificationPhotoBitmap));
             Log.i("STATE", "Received response from server. 1");
         } else {
             ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
                     sFirstName.getText().toString(), sLastName.getText().toString(),
                     sPhoneNum.getText().toString(), isSeeker, isOwner, null,
-                    convertBitmapToString(verificationPhotoBitmap));
+                    ValidationFunctions.convertBitmapToString(verificationPhotoBitmap));
             Log.i("STATE", "Received response from server. 1");
         }
         Log.i("STATE", "Received response from server. 2");
@@ -380,46 +380,11 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    //attempt 2
-    private String encodeImageFromFile(String file) {
-        if (file == null) return "";
-        try{
-            InputStream inputStream = new FileInputStream(file);//You can get an inputStream using any IO API
-            byte[] bytes;
-            byte[] buffer = new byte[8192];
-            int bytesRead;
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            try {
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    output.write(buffer, 0, bytesRead);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            bytes = output.toByteArray();
-            //String encodedString = Base64.encodeToString(bytes, Base64.DEFAULT | Base64.URL_SAFE);
-            String encodedString = Base64.encodeToString(bytes, Base64.NO_WRAP | Base64.URL_SAFE);
-            return encodedString;
-        } catch (FileNotFoundException fe) {
-            Log.i("STATE", "Could not find file " + file);
-        }
-        return "";
-    }
-
-    // encode bitmap into string. Worked fine for camera photos.
-    private String convertBitmapToString(Bitmap bitmap){
-        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOS);
-        //String encoded = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT | Base64.URL_SAFE);
-        String encoded = Base64.encodeToString(byteArrayOS.toByteArray(), Base64.NO_WRAP | Base64.URL_SAFE);
-        return encoded;
-    }
-
     private void writeImageDebugMessagesToLog() {
-        Log.i("STATE", "profile photo ver 2: " + encodeImageFromFile(selectedImagePathp));
-        Log.i("STATE", "verif photo ver 2: " + encodeImageFromFile(selectedImagePathv));
+        Log.i("STATE", "profile photo ver 2: " + ValidationFunctions.encodeImageFromFile(selectedImagePathp));
+        Log.i("STATE", "verif photo ver 2: " + ValidationFunctions.encodeImageFromFile(selectedImagePathv));
 
-        Log.i("STATE", "verif photo ver 1: " + convertBitmapToString(verificationPhotoBitmap));
+        Log.i("STATE", "verif photo ver 1: " + ValidationFunctions.convertBitmapToString(verificationPhotoBitmap));
 
         Log.i("STATE", "profile photo path from gallery:" + selectedImagePathp);
         Log.i("STATE", "verif photo path from gallery: " + selectedImagePathv);
