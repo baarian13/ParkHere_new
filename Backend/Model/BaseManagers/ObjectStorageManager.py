@@ -53,7 +53,7 @@ class ObjectStorageManager(object):
         # k.key = path
         k = self.bucket.new_key(path)
         while len(contentAsString) % 4 != 0:
-            contentAsString += "="
+            contentAsString += b"="
         print contentAsString
         k.set_contents_from_string(base64.urlsafe_b64decode(contentAsString.encode("ascii")))
         k.set_metadata('Content-Type', 'image/jpeg')
