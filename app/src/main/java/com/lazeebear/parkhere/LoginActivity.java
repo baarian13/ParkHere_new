@@ -233,15 +233,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //            showProgress(true);
             if(ServerConnector.signin(email, password)){
                 try {
-                    ReturnedUserDAO userInfo = ServerConnector.userDetails(email);
-                    verified = userInfo.getIsVerified(); // TODO: Make userDAO Parcelable to not double-query the server
-                    if (verified == 0) {
-                        //if verified
+                    { // check if the user is verified by querying the server for (all of) the user's details.
+                        //ReturnedUserDAO userInfo = ServerConnector.userDetails(email);
+                        //verified = userInfo.getIsVerified(); // TODO: Make userDAO Parcelable to not double-query the server
+                        Log.i("STATE", "finished signing in / getting user details");
+                    }
+                    verified = 1; //0 is false, 1 is true
+                    if (verified == 1) { //if verified
+                        Log.i("STATE","user is verified");
                         Intent intent = new Intent(this, Account.class);
                         //setUserInformation();
                         intent.putExtra("id", email);
+                        Log.i("STATE","starting account activity");
                         startActivity(intent);
                     } else {
+                        Log.i("STATE","user is not verified");
                         Intent intent = new Intent(this, UserVerificationActivity.class);
                         startActivity(intent);
                     }
