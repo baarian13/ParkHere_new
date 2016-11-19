@@ -59,7 +59,8 @@ class PostSpotHandler(AbstractSpotHandler):
                 except Exception as e:
                     print e
                     print 'picture exception'
-                    result = PARTIAL
+                    self.write('206')
             self.write('200')
-        except:
+        except Exception as e:
+            print e
             self.write('401')
