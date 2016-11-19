@@ -349,4 +349,11 @@ public class CreateSpotActivity extends AppCompatActivity {
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, GET_FROM_GALLERY);
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, Account.class);
+        intent.putExtra("id",uniqueID);
+        startActivity(intent);
+    }
 }

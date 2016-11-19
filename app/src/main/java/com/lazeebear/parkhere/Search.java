@@ -242,5 +242,4 @@ public class Search extends AppCompatActivity {
             }
         });
     }
-
 }
