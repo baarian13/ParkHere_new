@@ -84,4 +84,4 @@ class ObjectStorageManager(object):
         '''
         :type paths: str
         '''
-        return base64.b64encode(self.download_picture_as_string(path))
+        return base64.urlsafe_b64encode(self.download_picture_as_string(path))
