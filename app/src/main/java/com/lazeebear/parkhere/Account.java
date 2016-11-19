@@ -224,11 +224,13 @@ public class Account extends AppCompatActivity {
             accountName.setText(getDisplayName(userInfo.getFirst(), userInfo.getLast()));
 
             ImageView profilePic = (ImageView) findViewById(R.id.account_profile_picture);
-            profilePic.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            //profilePic.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             Log.i("STATE","Getting Image...");
             profilePic.setImageBitmap(ValidationFunctions.convertBase64StringToBitmap(userInfo.getPicture()));
             Log.i("STATE","Successfully got image");
+            profilePic.setVisibility(View.VISIBLE);
 
+            Log.i("STATE","getting other user info");
             RatingBar ratingOfUser = (RatingBar) findViewById(R.id.ratingBar);
             ratingOfUser.setRating(userInfo.getRating());
             TextView phoneNumberTextView = (TextView) findViewById(R.id.phoneNumber);
@@ -245,6 +247,7 @@ public class Account extends AppCompatActivity {
             Spinner editSpinner = (Spinner) findViewById(R.id.editUserTypeSpinner_account);
             editSpinner.setSelection(getUserType());
 
+            Log.i("STATE","Getting current reservations");
             currentReservationsList = ServerConnector.viewRentals(uniqueID);
             if (currentReservationsList == null)
                 currentReservationsList = new List<Integer>(){
