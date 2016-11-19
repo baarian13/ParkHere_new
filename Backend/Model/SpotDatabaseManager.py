@@ -86,6 +86,7 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
         info = list(self.cursor.fetchall()[0])
         try:
             self.cursor.execute(Spot.getPicturePath(spotID))
+            print picturePath
             picturePath = self.cursor.fetchall()
             info.append(self.objStorageManager.downloadPictureAsString(picturePath))
         except Exception as e:
