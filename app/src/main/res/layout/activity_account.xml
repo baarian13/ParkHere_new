@@ -30,6 +30,11 @@
                     android:text="@string/account_name"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
+                <ImageView
+                    android:id="@+id/account_profile_picture"
+                    android:layout_width="33dp"
+                    android:layout_height="match_parent" />
+
                 <Button
                     android:id="@+id/logoutButton_acount"
                     android:layout_width="wrap_content"
@@ -41,11 +46,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/account_profile_picture"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
                 <Button
                     android:id="@+id/account_change_profile_pic_button"
                     android:layout_width="wrap_content"

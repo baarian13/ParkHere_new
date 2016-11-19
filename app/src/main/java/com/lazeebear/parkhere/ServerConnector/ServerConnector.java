@@ -395,7 +395,7 @@ public class ServerConnector {
         s.execute();
         Log.i("STATE","Waiting for user details");
         while(!s.done)
-            Log.i("SPAM","3");
+            Log.i("SPAM","user details");
         Log.i("STATE","Finished waiting for user details");
         if(s.success) {
             user = s.user;
@@ -460,10 +460,12 @@ public class ServerConnector {
                     ret = false;
                 //print result
                 success = true;
+                Log.i("STATE","Check user - success = true");
             } catch (Exception e) {
                 e.printStackTrace();
             }
             done = true;
+            Log.i("STATE","Check user - done = true");
             return null;
         }
 
@@ -479,8 +481,10 @@ public class ServerConnector {
         CheckUserTask s = new CheckUserTask(email);
         boolean same;
         s.execute();
+        Log.i("STATE","waiting for check user to finish");
         while(!s.done)
-            ;
+            Log.i("SPAM","check user");
+        Log.i("STATE","finished checking user");
         if(s.success) {
             return s.ret;
         }
@@ -567,7 +571,7 @@ public class ServerConnector {
         s.execute();
         Log.i("STATE","Waiting for signin");
         while(!s.done)
-            Log.i("SPAM","2");
+            Log.i("SPAM","sign in");
         Log.i("STATE","Finished signin");
         return s.success;
     }
@@ -694,7 +698,7 @@ public class ServerConnector {
         s.execute();
         Log.i("STATE","start waiting for sign up task");
         while(!s.done)
-            Log.i("SPAM","1");
+            Log.i("SPAM","sign up");
         Log.i("STATE","signup: done");
         if(s.success)
             return 200;
@@ -800,10 +804,12 @@ public class ServerConnector {
                 }
                 in.close();
                 success = true;
+                Log.i("STATE","modify user - success = true");
             } catch (Exception e) {
                 e.printStackTrace();
             }
             done = true;
+            Log.i("STATE","modify user - done = true");
             return null;
         }
 
@@ -833,8 +839,10 @@ public class ServerConnector {
     public static int modifyUser(SentUserDAO user) {
         ModifyUserTask s = new ModifyUserTask(user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.isSeaker(), user.isOwner(), user.getProfilePic());
         s.execute();
+        Log.i("STATE","waiting for modify user");
         while(!s.done)
-            ;
+            Log.i("SPAM","modify user");
+        Log.i("STATE","finished waiting for modify user");
         if(s.success)
             return 200;
         else

@@ -222,10 +222,13 @@ public class Account extends AppCompatActivity {
 
             TextView accountName = (TextView) findViewById(R.id.accountName_account);
             accountName.setText(getDisplayName(userInfo.getFirst(), userInfo.getLast()));
+
             ImageView profilePic = (ImageView) findViewById(R.id.account_profile_picture);
-            System.out.println("Getting Image...");
-            //profilePic.setImageBitmap(ValidationFunctions.convertBase64StringToBitmap(userInfo.getPicture()));
-            System.out.println("Successfully got image");
+            profilePic.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            Log.i("STATE","Getting Image...");
+            profilePic.setImageBitmap(ValidationFunctions.convertBase64StringToBitmap(userInfo.getPicture()));
+            Log.i("STATE","Successfully got image");
+
             RatingBar ratingOfUser = (RatingBar) findViewById(R.id.ratingBar);
             ratingOfUser.setRating(userInfo.getRating());
             TextView phoneNumberTextView = (TextView) findViewById(R.id.phoneNumber);
