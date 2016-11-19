@@ -21,5 +21,6 @@ class ViewSpotHandler(AbstractSpotHandler):
                         'isCovered'         : res[7],
                         'cancelationPolicy' : res[8],
                         'description'       : res[9],
-                        'price'             : float(res[10])}
+                        'price'             : float(res[10]),
+                        'picture'           : res[11]}
             self.write(json.dumps(results))
