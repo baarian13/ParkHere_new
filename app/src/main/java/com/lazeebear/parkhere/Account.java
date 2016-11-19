@@ -214,8 +214,10 @@ public class Account extends AppCompatActivity {
                 isSeeker = true;
             else
                 isSeeker = false;
-            isViewingOwnAccount = true;//ServerConnector.checkUser(uniqueID);
 
+            System.out.println("Checking if user is same as account page...");
+            isViewingOwnAccount = ServerConnector.checkUser(uniqueID);
+            System.out.println("User / account check complete!");
 
 
             TextView accountName = (TextView) findViewById(R.id.accountName_account);
