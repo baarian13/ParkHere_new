@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private void setButtonsToVisible() {
         (findViewById(R.id.mainpage_sign_in_button)).setVisibility(View.VISIBLE);
         (findViewById(R.id.mainpage_search_button)).setVisibility(View.VISIBLE);
-        (findViewById(R.id.mainpage_account_button)).setVisibility(View.VISIBLE);
+        //(findViewById(R.id.mainpage_account_button)).setVisibility(View.VISIBLE);
         (findViewById(R.id.mainpage_payment_button)).setVisibility(View.VISIBLE);
         (findViewById(R.id.mainpage_forgot_pasword_button)).setVisibility(View.VISIBLE);
     }
