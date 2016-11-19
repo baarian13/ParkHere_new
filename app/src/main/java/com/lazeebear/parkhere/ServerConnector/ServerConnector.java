@@ -1155,10 +1155,12 @@ public class ServerConnector {
                 spotIDs = gson.fromJson(response.toString(), typeOfT);
                 //print result
                 success = true;
+                Log.i("STATE","view spot history - success = true");
             } catch (Exception e) {
                 e.printStackTrace();
             }
             done = true;
+            Log.i("STATE","view spot history - done = true");
             return null;
         }
 
@@ -1172,8 +1174,10 @@ public class ServerConnector {
     public static List<Integer> viewSpotHistory(String email) throws Exception {
         ViewSpotHistoryTask s = new ViewSpotHistoryTask(email);
         s.execute();
+        Log.i("STATE","waiting for view spot history task");
         while(!s.done)
-            ;
+            Log.i("SPAM","view spot history");
+        Log.i("STATE","finished waiting for view spot history");
         if(s.success)
             return s.spotIDs;
         return null;
@@ -1223,10 +1227,12 @@ public class ServerConnector {
                 spotIDs = gson.fromJson(response.toString(), typeOfT);
                 //print result
                 success = true;
+                Log.i("STATE","view rentals - success = true");
             } catch (Exception e) {
                 e.printStackTrace();
             }
             done = true;
+            Log.i("STATE","view rentals - done = true");
             return null;
         }
 
@@ -1240,8 +1246,10 @@ public class ServerConnector {
     public static List<Integer> viewRentals(String email) throws Exception {
         ViewRentalsTask s = new ViewRentalsTask(email);
         s.execute();
+        Log.i("STATE","Waiting for view rentals task");
         while(!s.done)
-            ;
+            Log.i("SPAM","view rentals");
+        Log.i("STATE","finished waiting for view rentals");
         if(s.success)
             return s.spotIDs;
         return null;

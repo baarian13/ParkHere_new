@@ -33,7 +33,9 @@
                 <ImageView
                     android:id="@+id/account_profile_picture"
                     android:layout_width="33dp"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    android:scaleType="centerCrop"/>
 
                 <Button
                     android:id="@+id/logoutButton_acount"
