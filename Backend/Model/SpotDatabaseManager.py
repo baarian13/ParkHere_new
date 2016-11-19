@@ -83,7 +83,7 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
     
     def viewSpotInfo(self, spotID):
         self.cursor.execute(Spot.viewSpotInfo(spotID))
-        info = self.cursor.fetchall()[0]
+        info = list(self.cursor.fetchall()[0])
         try:
             self.cursor.execute(Spot.getPicturePath(spotID))
             picturePath = self.cursor.fetchall()
