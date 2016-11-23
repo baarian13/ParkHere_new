@@ -110,9 +110,9 @@ class Spot(DatabaseObject):
         return '''SELECT ID FROM {0} WHERE renterEmail=\'{1}\' AND end < \'{2}\';'''.format(cls.TABLE_NAME, renterEmail, time.strftime("%Y-%m-%d %H:%M:%S"))
 
     @classmethod
-    def bookSpot(cls, renterEmail, spotID, isRecurring):
+    def bookSpot(cls, renterEmail, spotID, isBooked):
         return '''UPDATE {0} SET 
-        isRecurring=\'{1}\', renterEmail=\'{2}\' WHERE ID=\'{3}\';'''.format(cls.TABLE_NAME, isRecurring, renterEmail, spotID)
+        isBooked=\'{1}\', renterEmail=\'{2}\' WHERE ID=\'{3}\';'''.format(cls.TABLE_NAME, isBooked, renterEmail, spotID)
 
     @classmethod
     def searchIDByOwnerEmailQuery(cls, ownerEmail):

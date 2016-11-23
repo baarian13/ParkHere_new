@@ -144,6 +144,15 @@ def viewPostings(cookie, http_client, email):
     print res.body
     return res.body
 
+def cancelReservation(cookie, http_client, spotID):
+    headers = {"Cookie": cookie}
+    url = 'http://{0}:8888/cancel/reservation'.format(ip)
+    body = urllib.urlencode({'spotID': spotID})
+    req = httpclient.HTTPRequest(url, 'POST', body=body, headers=headers)
+    
+    res = http_client.fetch(req)
+    return res.body
+
 # if __name__ == '__main__':
 #     http_client = httpclient.HTTPClient()
 #     #img = buildImgStr('/Users/henrylevy/Downloads/default.jpg')
@@ -158,17 +167,17 @@ def viewPostings(cookie, http_client, email):
 
 class TestParkHereMethods(unittest.TestCase):
 
-    def test_signup(self):
-        http_client = httpclient.HTTPClient()
-        cookie, code = createUser(http_client, '', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
-        # cookie, code = createUser(http_client, 'rob6@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
-        # self.assertNotEqual(code, '401')
-        # info = viewUser(cookie, http_client, 'rob6@rob.com')
-        # jsondata = json.loads(info)
-        # self.assertEqual(jsondata["isSeeker"], 1)
-        # cookie, code = createUser(http_client, 'rob@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
-        # self.assertEqual(code, '401')
-        http_client.close()
+    # def test_signup(self):
+    #     http_client = httpclient.HTTPClient()
+    #     cookie, code = createUser(http_client, '', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
+    #     # cookie, code = createUser(http_client, 'rob6@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
+    #     # self.assertNotEqual(code, '401')
+    #     # info = viewUser(cookie, http_client, 'rob6@rob.com')
+    #     # jsondata = json.loads(info)
+    #     # self.assertEqual(jsondata["isSeeker"], 1)
+    #     # cookie, code = createUser(http_client, 'rob@rob.com', 'Password1$', 'first', 'last', '123-456-7890', 1, 1)
+    #     # self.assertEqual(code, '401')
+    #     http_client.close()
 
 
     # def test_signin(self):
@@ -301,6 +310,14 @@ class TestParkHereMethods(unittest.TestCase):
     #     self.assertEqual(jsondata[1][0],7)
 
     #     http_client.close()
+
+    def test_cancel_spot(self):
+        http_client = httpclient.HTTPClient()
+        cookie, code = signIn(http_client, 'qwerty@a.com', 'Password!1')
+        spotID = 10
+        res = cancelReservation(cookie, http_client, spotID)
+        self.assertEqual(res, '200')
+        http_client.close()
 
 
 

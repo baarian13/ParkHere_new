@@ -1151,7 +1151,7 @@ public class ServerConnector {
                 in.close();
 
                 Gson gson = new Gson();
-                Type typeOfT = new TypeToken<List<SpotDAO>>(){}.getType();
+                Type typeOfT = new TypeToken<List<Integer>>(){}.getType();
                 spotIDs = gson.fromJson(response.toString(), typeOfT);
                 //print result
                 success = true;
@@ -1223,7 +1223,7 @@ public class ServerConnector {
                 in.close();
 
                 Gson gson = new Gson();
-                Type typeOfT = new TypeToken<List<SpotDAO>>(){}.getType();
+                Type typeOfT = new TypeToken<List<Integer>>(){}.getType();
                 spotIDs = gson.fromJson(response.toString(), typeOfT);
                 //print result
                 success = true;
