@@ -157,7 +157,7 @@ def spotHistory(cookie, http_client, email):
     headers = {"Cookie": cookie}
     url = 'http://{0}:8888/view/history'.format(ip)
     body = urllib.urlencode({'email': email})
-    req = httpclient.HTTPRequest(url, 'POST', body=body, headers=headers)
+    req = httpclient.HTTPRequest(url, 'GET', headers=headers)
 
     res = http_client.fetch(req)
     return res.body
