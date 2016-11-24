@@ -265,7 +265,7 @@ public class ServerConnector {
         SpotDetailsTask s = new SpotDetailsTask(spotID+"");
         s.execute();
         while(!s.done)
-            ;
+            Log.i("SPAM","getting spot");
         if(s.success)
             return s.spot;
         return null;
