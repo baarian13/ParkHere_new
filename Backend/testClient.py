@@ -156,7 +156,8 @@ def cancelReservation(cookie, http_client, spotID):
 def spotHistory(cookie, http_client, email):
     headers = {"Cookie": cookie}
     url = 'http://{0}:8888/view/history'.format(ip)
-    body = urllib.urlencode({'email': email})
+    args = urllib.urlencode({'email' : email})
+    url = url + '?' + args
     req = httpclient.HTTPRequest(url, 'GET', headers=headers)
 
     res = http_client.fetch(req)
