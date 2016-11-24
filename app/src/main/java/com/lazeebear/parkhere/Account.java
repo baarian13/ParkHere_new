@@ -369,7 +369,9 @@ public class Account extends AppCompatActivity {
         String address = "";
         final int finalID = id;
         try {
+            System.out.println("Getting spot DAO from spot ID...");
             SpotDetailsDAO spot = ServerConnector.spotDetails(id);
+            System.out.println("Successfully got spot DAO!");
             address = spot.getAddress();
         } catch (Exception e){
             Log.i("ERROR", "Exception while getting spot info on account page");
