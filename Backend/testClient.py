@@ -331,7 +331,7 @@ class TestParkHereMethods(unittest.TestCase):
     def test_spot_history(self):
         http_client = httpclient.HTTPClient()
         cookie, code = signIn(http_client, 'qwerty@a.com', 'Password!1')
-        res = spotHistory('qwerty@a.com')
+        res = spotHistory(cookie, http_client,'qwerty@a.com')
         jsondata = json.loads(res)
         self.assertEqual(jsondata[0], 10)
         self.assertEqual(len(jsondata), 2)
