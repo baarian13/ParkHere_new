@@ -22,6 +22,7 @@ import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -1113,7 +1114,7 @@ public class ServerConnector {
 
     static class ViewSpotHistoryTask extends AsyncTask<Void,Void,Void>
     {
-        List<Integer> spotIDs;
+        ArrayList<Integer> spotIDs;
         String email;
         boolean done = false;
         boolean success = false;
@@ -1151,7 +1152,7 @@ public class ServerConnector {
                 in.close();
 
                 Gson gson = new Gson();
-                Type typeOfT = new TypeToken<List<SpotDAO>>(){}.getType();
+                Type typeOfT = new TypeToken<ArrayList<Integer>>(){}.getType();
                 spotIDs = gson.fromJson(response.toString(), typeOfT);
                 //print result
                 success = true;
@@ -1223,7 +1224,7 @@ public class ServerConnector {
                 in.close();
 
                 Gson gson = new Gson();
-                Type typeOfT = new TypeToken<List<SpotDAO>>(){}.getType();
+                Type typeOfT = new TypeToken<List<Integer>>(){}.getType();
                 spotIDs = gson.fromJson(response.toString(), typeOfT);
                 //print result
                 success = true;

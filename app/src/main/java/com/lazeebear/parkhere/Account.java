@@ -25,6 +25,7 @@ import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentUserDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -46,9 +47,9 @@ public class Account extends AppCompatActivity {
     private boolean currentReservationsOpen = false;
     private boolean userTypeEditorsShown = true;
     private boolean phoneNumberEditorsShown = true;
-    private List<Integer>  ownedSpotList = null;
-    private List<Integer> spotHistoryList = null;
-    private List<Integer> currentReservationsList = null;
+    private List<Integer>  ownedSpotList = new ArrayList<>();
+    private List<Integer> spotHistoryList = new ArrayList<>();
+    private List<Integer> currentReservationsList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,9 +204,25 @@ public class Account extends AppCompatActivity {
 
     private void fillInformation() {
         try {
+
             System.out.println("In Account page0: " + uniqueID);
             ReturnedUserDAO userInfo = ServerConnector.userDetails(uniqueID);
             System.out.println("successfully grabbed user info from server");
+            //currentReservationsList = ServerConnector.viewRentals(uniqueID);
+            if (currentReservationsList == null)
+                currentReservationsList = new ArrayList<>();
+
+            //ownedSpotList = userInfo.getSpots();
+            if (ownedSpotList == null)
+                ownedSpotList = new ArrayList<>();
+
+           // spotHistoryList = ServerConnector.viewSpotHistory(uniqueID);
+            if (spotHistoryList == null)
+                spotHistoryList = new ArrayList<>();
+
+            currentReservationsList.add(10);
+            currentReservationsList.add(11);
+            spotHistoryList.add(10);
             if(userInfo.isOwner()==1)
                 isOwner = true;
             else
@@ -248,378 +265,7 @@ public class Account extends AppCompatActivity {
             editSpinner.setSelection(getUserType());
 
             Log.i("STATE","Getting current reservations");
-            currentReservationsList = ServerConnector.viewRentals(uniqueID);
-            if (currentReservationsList == null)
-                currentReservationsList = new List<Integer>(){
-                    @Override
-                    public int size() {
-                        return 0;
-                    }
 
-                    @Override
-                    public boolean isEmpty() {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean contains(Object o) {
-                        return false;
-                    }
-
-                    @NonNull
-                    @Override
-                    public Iterator<Integer> iterator() {
-                        return null;
-                    }
-
-                    @NonNull
-                    @Override
-                    public Object[] toArray() {
-                        return new Object[0];
-                    }
-
-                    @NonNull
-                    @Override
-                    public <T> T[] toArray(T[] ts) {
-                        return null;
-                    }
-
-                    @Override
-                    public boolean add(Integer integer) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean remove(Object o) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean containsAll(Collection<?> collection) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean addAll(Collection<? extends Integer> collection) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean addAll(int i, Collection<? extends Integer> collection) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean removeAll(Collection<?> collection) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean retainAll(Collection<?> collection) {
-                        return false;
-                    }
-
-                    @Override
-                    public void clear() {
-
-                    }
-
-                    @Override
-                    public Integer get(int i) {
-                        return null;
-                    }
-
-                    @Override
-                    public Integer set(int i, Integer integer) {
-                        return null;
-                    }
-
-                    @Override
-                    public void add(int i, Integer integer) {
-
-                    }
-
-                    @Override
-                    public Integer remove(int i) {
-                        return null;
-                    }
-
-                    @Override
-                    public int indexOf(Object o) {
-                        return 0;
-                    }
-
-                    @Override
-                    public int lastIndexOf(Object o) {
-                        return 0;
-                    }
-
-                    @Override
-                    public ListIterator<Integer> listIterator() {
-                        return null;
-                    }
-
-                    @NonNull
-                    @Override
-                    public ListIterator<Integer> listIterator(int i) {
-                        return null;
-                    }
-
-                    @NonNull
-                    @Override
-                    public List<Integer> subList(int i, int i1) {
-                        return null;
-                    }
-                };
-
-            ownedSpotList = userInfo.getSpots();
-            if (ownedSpotList == null)
-                ownedSpotList = new List<Integer>() {
-                    @Override
-                    public int size() {
-                        return 0;
-                    }
-
-                    @Override
-                    public boolean isEmpty() {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean contains(Object o) {
-                        return false;
-                    }
-
-                    @NonNull
-                    @Override
-                    public Iterator<Integer> iterator() {
-                        return null;
-                    }
-
-                    @NonNull
-                    @Override
-                    public Object[] toArray() {
-                        return new Object[0];
-                    }
-
-                    @NonNull
-                    @Override
-                    public <T> T[] toArray(T[] ts) {
-                        return null;
-                    }
-
-                    @Override
-                    public boolean add(Integer integer) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean remove(Object o) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean containsAll(Collection<?> collection) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean addAll(Collection<? extends Integer> collection) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean addAll(int i, Collection<? extends Integer> collection) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean removeAll(Collection<?> collection) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean retainAll(Collection<?> collection) {
-                        return false;
-                    }
-
-                    @Override
-                    public void clear() {
-
-                    }
-
-                    @Override
-                    public Integer get(int i) {
-                        return null;
-                    }
-
-                    @Override
-                    public Integer set(int i, Integer integer) {
-                        return null;
-                    }
-
-                    @Override
-                    public void add(int i, Integer integer) {
-
-                    }
-
-                    @Override
-                    public Integer remove(int i) {
-                        return null;
-                    }
-
-                    @Override
-                    public int indexOf(Object o) {
-                        return 0;
-                    }
-
-                    @Override
-                    public int lastIndexOf(Object o) {
-                        return 0;
-                    }
-
-                    @Override
-                    public ListIterator<Integer> listIterator() {
-                        return null;
-                    }
-
-                    @NonNull
-                    @Override
-                    public ListIterator<Integer> listIterator(int i) {
-                        return null;
-                    }
-
-                    @NonNull
-                    @Override
-                    public List<Integer> subList(int i, int i1) {
-                        return null;
-                    }
-                };
-
-            spotHistoryList = ServerConnector.viewSpotHistory(uniqueID);
-            if (spotHistoryList == null){
-                spotHistoryList = new List<Integer>() {
-                    @Override
-                    public int size() {
-                        return 0;
-                    }
-
-                    @Override
-                    public boolean isEmpty() {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean contains(Object o) {
-                        return false;
-                    }
-
-                    @NonNull
-                    @Override
-                    public Iterator<Integer> iterator() {
-                        return null;
-                    }
-
-                    @NonNull
-                    @Override
-                    public Object[] toArray() {
-                        return new Object[0];
-                    }
-
-                    @NonNull
-                    @Override
-                    public <T> T[] toArray(T[] a) {
-                        return null;
-                    }
-
-                    @Override
-                    public boolean add(Integer integer) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean remove(Object o) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean containsAll(Collection<?> c) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean addAll(Collection<? extends Integer> c) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean addAll(int index, Collection<? extends Integer> c) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean removeAll(Collection<?> c) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean retainAll(Collection<?> c) {
-                        return false;
-                    }
-
-                    @Override
-                    public void clear() {
-
-                    }
-
-                    @Override
-                    public Integer get(int index) {
-                        return null;
-                    }
-
-                    @Override
-                    public Integer set(int index, Integer element) {
-                        return null;
-                    }
-
-                    @Override
-                    public void add(int index, Integer element) {
-
-                    }
-
-                    @Override
-                    public Integer remove(int index) {
-                        return null;
-                    }
-
-                    @Override
-                    public int indexOf(Object o) {
-                        return 0;
-                    }
-
-                    @Override
-                    public int lastIndexOf(Object o) {
-                        return 0;
-                    }
-
-                    @Override
-                    public ListIterator<Integer> listIterator() {
-                        return null;
-                    }
-
-                    @NonNull
-                    @Override
-                    public ListIterator<Integer> listIterator(int index) {
-                        return null;
-                    }
-
-                    @NonNull
-                    @Override
-                    public List<Integer> subList(int fromIndex, int toIndex) {
-                        return null;
-                    }
-                };
-            }
         } catch (Exception e){
             Log.i("ERROR", "Exception while getting user details opening account");
         }
@@ -670,13 +316,15 @@ public class Account extends AppCompatActivity {
             clearSpotList();
             LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
             int spotCt = ownedSpotList.size();
-//            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!account page on spot: " + spotCt);
+            System.out.println("Populating owned spots...");
             for (int i = 0; i < spotCt; i++) {
                 Button spotButton = createSpotButton(ownedSpotList.get(i));
-//                System.out.println("~~~~~~~~~~~~~~~~~~~~~~spotList: "+spotList.get(i));
+                System.out.println("Creating button with ID: "+ ownedSpotList.get(i));
                 spotButton.setId(ownedSpotList.get(i)); //for referencing from tests. doesn't need to be unique.
                 list.addView(spotButton);
             }
+
+            System.out.println("Successfully populated owned spots!!");
 
             ownedSpotsOpen = true;
             spotHistoryOpen = false;
@@ -689,10 +337,13 @@ public class Account extends AppCompatActivity {
             clearSpotList();
             LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
             int spotCt = spotHistoryList.size();
+            System.out.println("Populating spot history with " + spotCt + " buttons...");
             for (int i = 0; i < spotCt; i++) {
                 Button spotButton = createSpotButton(spotHistoryList.get(i));
+                System.out.println("Creating button with ID: " + spotHistoryList.get(i));
                 list.addView(spotButton);
             }
+            System.out.println("Successfully populated spot history!");
             spotHistoryOpen = true;
             ownedSpotsOpen = false;
             currentReservationsOpen = false;
@@ -705,7 +356,7 @@ public class Account extends AppCompatActivity {
             LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
             int spotCt = currentReservationsList.size();
             for (int i = 0; i < spotCt; i++) {
-                Button spotButton = createSpotButton(spotHistoryList.get(i));
+                Button spotButton = createSpotButton(currentReservationsList.get(i));
                 list.addView(spotButton);
             }
             currentReservationsOpen = true;
@@ -714,22 +365,25 @@ public class Account extends AppCompatActivity {
         }
     }
 
-    private Button createSpotButton(final int id) {
+    private Button createSpotButton(int id) {
         String address = "";
+        final int finalID = id;
         try {
             SpotDetailsDAO spot = ServerConnector.spotDetails(id);
             address = spot.getAddress();
         } catch (Exception e){
             Log.i("ERROR", "Exception while getting spot info on account page");
         }
+        //THIS DOES NOT GET CALLED
+        System.out.println("Creating button in createSpotButton()");
         Button button = new Button(this);
         button.setText(address);
         button.setOnClickListener( new View.OnClickListener(){
             public void onClick(View view){
-                addIntentDetailedSpotButton(id);
+                addIntentDetailedSpotButton(finalID);
             }
         });
-
+        System.out.println("Returning button in createSpotButton()");
         return button;
     }
 
