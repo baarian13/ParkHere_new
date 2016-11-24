@@ -320,13 +320,13 @@ class TestParkHereMethods(unittest.TestCase):
 
     #     http_client.close()
 
-    def test_cancel_spot(self):
-        http_client = httpclient.HTTPClient()
-        cookie, code = signIn(http_client, 'qwerty@a.com', 'Password!1')
-        spotID = 10
-        res = cancelReservation(cookie, http_client, spotID)
-        self.assertEqual(res, '200')
-        http_client.close()
+    #def test_cancel_spot(self):
+    #    http_client = httpclient.HTTPClient()
+    #    cookie, code = signIn(http_client, 'qwerty@a.com', 'Password!1')
+    #    spotID = 10
+    #    res = cancelReservation(cookie, http_client, spotID)
+    #    self.assertEqual(res, '200')
+    #    http_client.close()
 
     def test_spot_history(self):
         http_client = httpclient.HTTPClient()
