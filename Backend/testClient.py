@@ -153,6 +153,15 @@ def cancelReservation(cookie, http_client, spotID):
     res = http_client.fetch(req)
     return res.body
 
+def spotHistory(cookie, http_client, email):
+    headers = {"Cookie": cookie}
+    url = 'http://{0}:8888/view/history'.format(ip)
+    body = urllib.urlencode({'email': email})
+    req = httpclient.HTTPRequest(url, 'POST', body=body, headers=headers)
+
+    res = http_client.fetch(req)
+    return res.body
+
 # if __name__ == '__main__':
 #     http_client = httpclient.HTTPClient()
 #     #img = buildImgStr('/Users/henrylevy/Downloads/default.jpg')
@@ -317,6 +326,15 @@ class TestParkHereMethods(unittest.TestCase):
         spotID = 10
         res = cancelReservation(cookie, http_client, spotID)
         self.assertEqual(res, '200')
+        http_client.close()
+
+    def test_spot_history(self):
+        http_client = httpclient.HTTPClient()
+        cookie, code = signIn(http_client, 'qwerty@a.com', 'Password!1')
+        res = spotHistory('qwerty@a.com')
+        jsondata = json.loads(res)
+        self.assertEqual(jsondata[0], 10)
+        self.assertEqual(len(jsondata), 2)
         http_client.close()
 
 
