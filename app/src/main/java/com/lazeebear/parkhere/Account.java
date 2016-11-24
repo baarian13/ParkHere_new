@@ -212,17 +212,14 @@ public class Account extends AppCompatActivity {
             if (currentReservationsList == null)
                 currentReservationsList = new ArrayList<>();
 
-            //ownedSpotList = userInfo.getSpots();
+            ownedSpotList = userInfo.getSpots();
             if (ownedSpotList == null)
                 ownedSpotList = new ArrayList<>();
 
-           // spotHistoryList = ServerConnector.viewSpotHistory(uniqueID);
+           spotHistoryList = ServerConnector.viewSpotHistory(uniqueID);
             if (spotHistoryList == null)
                 spotHistoryList = new ArrayList<>();
 
-            currentReservationsList.add(10);
-            currentReservationsList.add(11);
-            spotHistoryList.add(10);
             if(userInfo.isOwner()==1)
                 isOwner = true;
             else
