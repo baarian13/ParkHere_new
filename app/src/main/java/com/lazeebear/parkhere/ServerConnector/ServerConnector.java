@@ -181,7 +181,7 @@ public class ServerConnector {
                 SearchSpotTask s = new SearchSpotTask(address);
                 s.execute();
                 while(!s.done)
-                    Log.i("SPAM","search");
+                    Thread.sleep(100);//Log.i("SPAM","search");
                 if(s.success)
                         return s.spots;
                 return null;
@@ -266,7 +266,7 @@ public class ServerConnector {
         SpotDetailsTask s = new SpotDetailsTask(spotID+"");
         s.execute();
         while(!s.done)
-            Log.i("SPAM","getting spot");
+            Thread.sleep(100);//Log.i("SPAM","getting spot");
         if(s.success)
             return s.spot;
         return null;
