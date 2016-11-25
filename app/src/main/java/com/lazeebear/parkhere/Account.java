@@ -208,7 +208,7 @@ public class Account extends AppCompatActivity {
             System.out.println("In Account page0: " + uniqueID);
             ReturnedUserDAO userInfo = ServerConnector.userDetails(uniqueID);
             System.out.println("successfully grabbed user info from server");
-            //currentReservationsList = ServerConnector.viewRentals(uniqueID);
+            currentReservationsList = ServerConnector.viewRentals(uniqueID);
             if (currentReservationsList == null)
                 currentReservationsList = new ArrayList<>();
 
