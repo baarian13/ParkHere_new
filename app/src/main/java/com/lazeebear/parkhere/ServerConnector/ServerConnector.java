@@ -1151,12 +1151,12 @@ public class ServerConnector {
                 in.close();
 
                 Gson gson = new Gson();
-                Type typeOfT = new TypeToken<List<Integer[]>>(){}.getType();
-                List<Integer[]> spotID_temp = gson.fromJson(response.toString(), typeOfT);
+                Type typeOfT = new TypeToken<List<List<Integer>>>(){}.getType();
+                List<List<Integer>> spotID_temp = gson.fromJson(response.toString(), typeOfT);
                 int size = spotID_temp.size();
                 System.out.println("Server Connector size: " + size);
                 for (int i=0; i<size; i++){
-                    spotIDs.add(spotID_temp.get(i)[0]);
+                    spotIDs.add(spotID_temp.get(i).get(0));
                 }
                 //print result
                 success = true;
