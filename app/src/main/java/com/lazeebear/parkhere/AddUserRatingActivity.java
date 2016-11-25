@@ -24,7 +24,7 @@ public class AddUserRatingActivity extends AppCompatActivity {
         //receives intent from Account class and from Spot class?
         Intent intent = getIntent();
         if (intent != null) {
-            userID = intent.getStringExtra(userID);
+            userID = intent.getStringExtra("id");
             fillInformation();
             submit.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
@@ -46,7 +46,13 @@ public class AddUserRatingActivity extends AppCompatActivity {
 
     private void addRatingUser() {
         RatingBar ratingBar = (RatingBar) findViewById(R.id.rating);
-        int rate = ratingBar.getNumStars();
-        //ServerConnector.addRatingUser(rate, userID);
+        int rating = ratingBar.getNumStars();
+        int returnCode = ServerConnector.rateUser(userID, rating);
+        if (returnCode == 200){
+            //return user to the account page of the user he rated
+            Intent intent = new Intent(this, Account.class);
+            intent.putExtra("id",userID);
+            startActivity(intent);
+        }
     }
 }

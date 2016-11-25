@@ -181,7 +181,7 @@ public class ServerConnector {
                 SearchSpotTask s = new SearchSpotTask(address);
                 s.execute();
                 while(!s.done)
-                        ;
+                    Log.i("SPAM","search");
                 if(s.success)
                         return s.spots;
                 return null;
@@ -1343,11 +1343,97 @@ public class ServerConnector {
         CancelReservationTask s = new CancelReservationTask(spotID);
         s.execute();
         while(!s.done)
-            ;
+            Log.i("SPAM","cancel reservation");
         if(s.success)
             return 200;
         else
             return 401;
     }
+    static class RateUserTask extends AsyncTask<Void,Void,Void>
+    {
+        String email;
+        int rating;
+        boolean done = false;
+        boolean success = false;
+
+        public RateUserTask(String email, int rating){
+            this.email = email;
+            this.rating = rating;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL("rate/user");
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                String urlParameters = null;
+
+                urlParameters = "email=" + email + "&rating=" + rating;
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+//            con.setDoOutput(false);
+//            con.setDoInput(true);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+    public static int rateUser(String email, int rating){
+        RateUserTask s = new RateUserTask(email, rating);
+        s.execute();
+        while(!s.done)
+            Log.i("SPAM","rate user");
+        if(s.success)
+            return 200;
+        else
+            return 401;
+    }
+
 
 }
