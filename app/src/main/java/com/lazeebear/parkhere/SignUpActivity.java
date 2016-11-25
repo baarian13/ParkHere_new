@@ -266,20 +266,24 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void attemptSignUp() {
         Log.i("STATE", "Sending sign up info to server.");
-        if (profilePicBitmap != null) {
-            writeImageDebugMessagesToLog();
-            ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
-                    sFirstName.getText().toString(), sLastName.getText().toString(),
-                    sPhoneNum.getText().toString(), isSeeker, isOwner,
-                    ValidationFunctions.convertBitmapToString(profilePicBitmap),
-                    ValidationFunctions.convertBitmapToString(verificationPhotoBitmap));
-            Log.i("STATE", "Received response from server. 1");
-        } else {
-            ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
-                    sFirstName.getText().toString(), sLastName.getText().toString(),
-                    sPhoneNum.getText().toString(), isSeeker, isOwner, null,
-                    ValidationFunctions.convertBitmapToString(verificationPhotoBitmap));
-            Log.i("STATE", "Received response from server. 1");
+        try {
+            if (profilePicBitmap != null) {
+                writeImageDebugMessagesToLog();
+                ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
+                        sFirstName.getText().toString(), sLastName.getText().toString(),
+                        sPhoneNum.getText().toString(), isSeeker, isOwner,
+                        ValidationFunctions.convertBitmapToString(profilePicBitmap),
+                        ValidationFunctions.convertBitmapToString(verificationPhotoBitmap));
+                Log.i("STATE", "Received response from server. 1");
+            } else {
+                ServerConnector.signup(sEmailView.getText().toString(), sPassword.getText().toString(),
+                        sFirstName.getText().toString(), sLastName.getText().toString(),
+                        sPhoneNum.getText().toString(), isSeeker, isOwner, null,
+                        ValidationFunctions.convertBitmapToString(verificationPhotoBitmap));
+                Log.i("STATE", "Received response from server. 1");
+            }
+        } catch (Exception e){
+            Log.i("ERROR", "Exception while signing up");
         }
         Log.i("STATE", "Received response from server. 2");
         startVerificationActivityIntent();

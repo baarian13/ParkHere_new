@@ -507,8 +507,12 @@ public class Account extends AppCompatActivity {
         int choiceIndex = spinner.getSelectedItemPosition();
         setUserType(choiceIndex);
         //send
-        SentUserDAO updatedUser = new SentUserDAO(uniqueID, null, null, null, null, null, isSeeker(), isOwner());
-        ServerConnector.modifyUser(updatedUser);
+        try {
+            SentUserDAO updatedUser = new SentUserDAO(uniqueID, null, null, null, null, null, isSeeker(), isOwner());
+            ServerConnector.modifyUser(updatedUser);
+        } catch (Exception e){
+            Log.i("ERROR", "Exception while modifying user type");
+        }
         //update view
         resetViewVisibility();
         hideComponents();
@@ -531,8 +535,12 @@ public class Account extends AppCompatActivity {
         String phoneNumberString = phoneNumberEditText.getText().toString();
 
         if (ValidationFunctions.isPhoneNum(phoneNumberString)){
-            SentUserDAO updatedUser = new SentUserDAO(uniqueID, null, null, null, phoneNumberString, null, isSeeker(), isOwner());
-            ServerConnector.modifyUser(updatedUser);
+            try {
+                SentUserDAO updatedUser = new SentUserDAO(uniqueID, null, null, null, phoneNumberString, null, isSeeker(), isOwner());
+                ServerConnector.modifyUser(updatedUser);
+            } catch (Exception e){
+                Log.i("ERROR", "Exception while modifying phone number");
+            }
         }
 
         //this is not a temporary variable so do not erase!
@@ -666,8 +674,12 @@ public class Account extends AppCompatActivity {
                 ImageView profilePicView = (ImageView) findViewById(R.id.account_profile_picture);
 
                 // send the new profile picture back to the server.
-                SentUserDAO updatedUser = new SentUserDAO(uniqueID, null, null, null, null, profilePicBase64, isSeeker(), isOwner());
-                ServerConnector.modifyUser(updatedUser);
+                try {
+                    SentUserDAO updatedUser = new SentUserDAO(uniqueID, null, null, null, null, profilePicBase64, isSeeker(), isOwner());
+                    ServerConnector.modifyUser(updatedUser);
+                } catch (Exception e){
+                    Log.i("ERROR", "Exception while modifying user image");
+                }
 
                 // refresh view
                 profilePicView.setImageBitmap(profilePicBitmap);

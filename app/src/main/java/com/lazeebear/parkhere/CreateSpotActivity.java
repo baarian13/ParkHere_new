@@ -313,8 +313,12 @@ public class CreateSpotActivity extends AppCompatActivity {
         String endString = formatDateTime(date_button_upper.getText().toString(), time_button_upper.getText().toString());
 
         //send data
-        SentSpotDAO newSpot = new SentSpotDAO(addressString, startString, endString, base64photo, description, price, email, spot_type, isCovered, cancellation, 0);
-        ServerConnector.createSpot(newSpot);
+        try {
+            SentSpotDAO newSpot = new SentSpotDAO(addressString, startString, endString, base64photo, description, price, email, spot_type, isCovered, cancellation, 0);
+            ServerConnector.createSpot(newSpot);
+        } catch (Exception e){
+            Log.i("ERROR", "Exception while creating spot");
+        }
 
         Intent intent = new Intent(this, Account.class);
         intent.putExtra("id",uniqueID);

@@ -396,7 +396,7 @@ public class ServerConnector {
         s.execute();
         Log.i("STATE","Waiting for user details");
         while(!s.done)
-            Log.i("SPAM","user details");
+            Thread.sleep(100);//Log.i("SPAM","user details");
         Log.i("STATE","Finished waiting for user details");
         if(s.success) {
             user = s.user;
@@ -484,7 +484,7 @@ public class ServerConnector {
         s.execute();
         Log.i("STATE","waiting for check user to finish");
         while(!s.done)
-            Log.i("SPAM","check user");
+            Thread.sleep(100);//Log.i("SPAM","check user");
         Log.i("STATE","finished checking user");
         if(s.success) {
             return s.ret;
@@ -567,12 +567,12 @@ public class ServerConnector {
         }
     }
 
-    public static boolean signin(String email, String password) {
+    public static boolean signin(String email, String password) throws Exception {
         SignInTask s = new SignInTask(email, password);
         s.execute();
         Log.i("STATE","Waiting for signin");
         while(!s.done)
-            Log.i("SPAM","sign in");
+            Thread.sleep(100);//Log.i("SPAM","sign in");
         Log.i("STATE","Finished signin");
         return s.success;
     }
@@ -694,12 +694,12 @@ public class ServerConnector {
         return entity.getStatusCode().value();
     }
     */
-    public static int signup(String email, String password, String first, String last, String phone, int seeker, int owner, String profilePic, String verificationPhoto) {
+    public static int signup(String email, String password, String first, String last, String phone, int seeker, int owner, String profilePic, String verificationPhoto) throws Exception {
         SignUpTask s = new SignUpTask(email, password, first, last, phone, seeker, owner, profilePic, verificationPhoto);
         s.execute();
         Log.i("STATE","start waiting for sign up task");
         while(!s.done)
-            Log.i("SPAM","sign up");
+            Thread.sleep(100);//Log.i("SPAM","sign up");
         Log.i("STATE","signup: done");
         if(s.success)
             return 200;
@@ -837,12 +837,12 @@ public class ServerConnector {
         return entity.getStatusCode().value();
     }
     */
-    public static int modifyUser(SentUserDAO user) {
+    public static int modifyUser(SentUserDAO user) throws Exception{
         ModifyUserTask s = new ModifyUserTask(user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.isSeaker(), user.isOwner(), user.getProfilePic());
         s.execute();
         Log.i("STATE","waiting for modify user");
         while(!s.done)
-            Log.i("SPAM","modify user");
+            Thread.sleep(100);//Log.i("SPAM","modify user");
         Log.i("STATE","finished waiting for modify user");
         if(s.success)
             return 200;
@@ -1017,11 +1017,11 @@ public class ServerConnector {
         }
     }
 
-    public static int createSpot(SentSpotDAO spot){
+    public static int createSpot(SentSpotDAO spot) throws Exception{
         CreateSpotTask s = new CreateSpotTask(spot);
         s.execute();
         while(!s.done)
-            ;
+            Thread.sleep(100);
         if(s.success)
             return 200;
         else
@@ -1101,11 +1101,11 @@ public class ServerConnector {
         }
     }
 
-    public static int deleteSpot(int spotID){
+    public static int deleteSpot(int spotID) throws Exception{
         DeleteSpotTask s = new DeleteSpotTask(spotID);
         s.execute();
         while(!s.done)
-            ;
+            Thread.sleep(100);
         if(s.success)
             return 200;
         else
@@ -1182,7 +1182,7 @@ public class ServerConnector {
         s.execute();
         Log.i("STATE","waiting for view spot history task");
         while(!s.done)
-            Log.i("SPAM","view spot history");
+            Thread.sleep(100);//Log.i("SPAM","view spot history");
         Log.i("STATE","finished waiting for view spot history");
         if(s.success)
             return s.spotIDs;
@@ -1259,7 +1259,7 @@ public class ServerConnector {
         s.execute();
         Log.i("STATE","Waiting for view rentals task");
         while(!s.done)
-            Log.i("SPAM","view rentals");
+            Thread.sleep(100);//Log.i("SPAM","view rentals");
         Log.i("STATE","finished waiting for view rentals");
         if(s.success)
             return s.spotIDs;
@@ -1339,11 +1339,11 @@ public class ServerConnector {
         }
     }
 
-    public static int cancelReservation(int spotID){
+    public static int cancelReservation(int spotID) throws Exception{
         CancelReservationTask s = new CancelReservationTask(spotID);
         s.execute();
         while(!s.done)
-            Log.i("SPAM","cancel reservation");
+            Thread.sleep(100);//Log.i("SPAM","cancel reservation");
         if(s.success)
             return 200;
         else
@@ -1424,11 +1424,11 @@ public class ServerConnector {
         }
     }
 
-    public static int rateUser(String email, int rating){
+    public static int rateUser(String email, int rating) throws Exception{
         RateUserTask s = new RateUserTask(email, rating);
         s.execute();
         while(!s.done)
-            Log.i("SPAM","rate user");
+            Thread.sleep(100);//Log.i("SPAM","rate user");
         if(s.success)
             return 200;
         else

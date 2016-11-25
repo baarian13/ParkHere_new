@@ -231,29 +231,33 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
 //            showProgress(true);
-            if(ServerConnector.signin(email, password)){
-                try {
-                    { // check if the user is verified by querying the server for (all of) the user's details.
-                        //ReturnedUserDAO userInfo = ServerConnector.userDetails(email);
-                        //verified = userInfo.getIsVerified(); // TODO: Make userDAO Parcelable to not double-query the server
-                        Log.i("STATE", "finished signing in / getting user details");
+            try {
+                if (ServerConnector.signin(email, password)) {
+                    try {
+                        { // check if the user is verified by querying the server for (all of) the user's details.
+                            //ReturnedUserDAO userInfo = ServerConnector.userDetails(email);
+                            //verified = userInfo.getIsVerified(); // TODO: Make userDAO Parcelable to not double-query the server
+                            Log.i("STATE", "finished signing in / getting user details");
+                        }
+                        verified = 1; //0 is false, 1 is true
+                        if (verified == 1) { //if verified
+                            Log.i("STATE", "user is verified");
+                            Intent intent = new Intent(this, Account.class);
+                            //setUserInformation();
+                            intent.putExtra("id", email);
+                            Log.i("STATE", "starting account activity");
+                            startActivity(intent);
+                        } else {
+                            Log.i("STATE", "user is not verified");
+                            Intent intent = new Intent(this, UserVerificationActivity.class);
+                            startActivity(intent);
+                        }
+                    } catch (Exception e) {
+                        Log.i("STATE", "Error while logging in: exception when getting user details from server.");
                     }
-                    verified = 1; //0 is false, 1 is true
-                    if (verified == 1) { //if verified
-                        Log.i("STATE","user is verified");
-                        Intent intent = new Intent(this, Account.class);
-                        //setUserInformation();
-                        intent.putExtra("id", email);
-                        Log.i("STATE","starting account activity");
-                        startActivity(intent);
-                    } else {
-                        Log.i("STATE","user is not verified");
-                        Intent intent = new Intent(this, UserVerificationActivity.class);
-                        startActivity(intent);
-                    }
-                } catch (Exception e) {
-                    Log.i("STATE", "Error while logging in: exception when getting user details from server.");
                 }
+            } catch (Exception e){
+                Log.i("ERROR", "Exception while signing in");
             }
         }
     }
@@ -407,8 +411,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             } catch (InterruptedException e) {
                 return false;
             }
-
-            return ServerConnector.signin(mEmail, mPassword);
+            try {
+                return ServerConnector.signin(mEmail, mPassword);
+            } catch (Exception e){
+                Log.i("ERROR", "Exception while signing in");
+            }
+            return false;
         }
 
         @Override

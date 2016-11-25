@@ -45,14 +45,18 @@ public class AddUserRatingActivity extends AppCompatActivity {
     }
 
     private void addRatingUser() {
-        RatingBar ratingBar = (RatingBar) findViewById(R.id.rating);
-        int rating = ratingBar.getNumStars();
-        int returnCode = ServerConnector.rateUser(userID, rating);
-        if (returnCode == 200){
-            //return user to the account page of the user he rated
-            Intent intent = new Intent(this, Account.class);
-            intent.putExtra("id",userID);
-            startActivity(intent);
+        try {
+            RatingBar ratingBar = (RatingBar) findViewById(R.id.rating);
+            int rating = ratingBar.getNumStars();
+            int returnCode = ServerConnector.rateUser(userID, rating);
+            if (returnCode == 200) {
+                //return user to the account page of the user he rated
+                Intent intent = new Intent(this, Account.class);
+                intent.putExtra("id", userID);
+                startActivity(intent);
+            }
+        } catch (Exception e){
+            Log.i("ERROR", "Exception while updating user rating");
         }
     }
 }

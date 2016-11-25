@@ -168,7 +168,11 @@ public class SpotDetailActivity extends AppCompatActivity {
 
     private void deleteSpot() {
         //delete spot first
-        ServerConnector.deleteSpot(spotID);
+        try {
+            ServerConnector.deleteSpot(spotID);
+        } catch (Exception e){
+            Log.i("ERROR", "Exception while deleting spot");
+        }
         //then redirect to account page
         Intent intent = new Intent(this, Account.class);
         intent.putExtra("id",userUniqueID);
@@ -177,7 +181,11 @@ public class SpotDetailActivity extends AppCompatActivity {
 
     private void cancelReservation() {
         //ServerConnector.
-        ServerConnector.cancelReservation(spotID);
+        try {
+            ServerConnector.cancelReservation(spotID);
+        } catch (Exception e){
+            Log.i("ERROR", "Exception while cancelling reservation");
+        }
         //refresh view
         Intent intent = new Intent(this, SpotDetailActivity.class);
         intent.putExtra("id",spotID+"");
