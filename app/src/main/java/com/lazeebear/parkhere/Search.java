@@ -21,6 +21,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public class Search extends AppCompatActivity {
     private DatePickerDialog datePicker_lower, datePicker_upper;
@@ -218,13 +219,17 @@ public class Search extends AppCompatActivity {
             Log.i("ERROR", "Exception while getting spot list during search");
         }
         Intent intent = new Intent(this, SpotListActivity.class);
-        ArrayList<Integer> spotIDs = new ArrayList<Integer>();
+        ArrayList<Integer> spotIDs = new ArrayList<>();
+        //too lazy to create a pair class..
+        ArrayList<String> spotAddresses = new ArrayList<>();
         int size = spots.size();
         for (int i=0; i< size; i++) {
             spotIDs.add(spots.get(i).getId());
+            spotAddresses.add(spots.get(i).getAddress());
             System.out.println("Adding spot ID " + spots.get(i).getId() + " to the intent from Search to SpotList");
         }
         intent.putExtra("ids",spotIDs);
+        intent.putExtra("addresses",spotAddresses);
         startActivity(intent);
     }
 

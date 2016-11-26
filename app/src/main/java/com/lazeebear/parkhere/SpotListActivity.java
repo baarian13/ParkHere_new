@@ -42,17 +42,18 @@ public class SpotListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_spot_list);
         Intent intent = getIntent();
         ArrayList<Integer> spotIDs = intent.getIntegerArrayListExtra("ids");
+        ArrayList<String> spotAddresses = intent.getStringArrayListExtra("addresses");
         int loop = spotIDs.size();
         System.out.println("Received intent for spot list includes " + loop + " spots");
         for (int i=0; i<loop; i++) {
             System.out.println("    spot id: " + spotIDs.get(i));
-            populateList(spotIDs.get(i));
+            populateList(spotIDs.get(i), spotAddresses.get(i));
         }
         addActionListeners();
     }
 
-    private void populateList(int id) {
-        try {
+    private void populateList(int id, String address) {
+        /*try {
             SpotDetailsDAO spot = ServerConnector.spotDetails(id);
             LinearLayout list = (LinearLayout) findViewById(R.id.spotList);
             Button spotButton = createSpotButton(spot.getAddress());
@@ -61,7 +62,13 @@ public class SpotListActivity extends AppCompatActivity {
             list.addView(spotButton);
         } catch (Exception e){
             Log.i("ERROR", "Exception while getting spot details creating spot list");
-        }
+        }*/
+
+        LinearLayout list = (LinearLayout) findViewById(R.id.spotList);
+        Button spotButton = createSpotButton(address);
+        spotButton.setId(id);
+//            spotButton.setId(R.id.reservedSpotId); //for testing, since "id" is hidden on the Server side for now. they don't need to be unique.
+        list.addView(spotButton);
     }
 
     private Button createSpotButton(final String address) {
