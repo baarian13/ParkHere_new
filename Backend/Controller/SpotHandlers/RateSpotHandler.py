@@ -1,6 +1,6 @@
 import tornado.web
 import tornado.gen
-from Controller.UserHandlers.AbstractSpotHandler import AbstractSpotHandler
+from Controller.SpotHandlers.AbstractSpotHandler import AbstractSpotHandler
 
 SUCCESS = '200'
 FAILURE = '401'
