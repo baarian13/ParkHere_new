@@ -1349,6 +1349,7 @@ public class ServerConnector {
         else
             return 401;
     }
+
     static class RateUserTask extends AsyncTask<Void,Void,Void>
     {
         String email;
@@ -1436,4 +1437,90 @@ public class ServerConnector {
     }
 
 
+
+    static class RateSpotTask extends AsyncTask<Void,Void,Void>
+    {
+        int spotId;
+        int rating;
+        boolean done = false;
+        boolean success = false;
+
+        public RateSpotTask(int spotId, int rating){
+            this.spotId = spotId;
+            this.rating = rating;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL("rate/spot");
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                String urlParameters = null;
+
+                urlParameters = "spotId=" + spotId + "&rating=" + rating;
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+//            con.setDoOutput(false);
+//            con.setDoInput(true);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+    public static int rateSpot(int spotId, int rating) throws Exception{
+        RateSpotTask s = new RateSpotTask(spotId, rating);
+        s.execute();
+        while(!s.done)
+            Thread.sleep(100);//Log.i("SPAM","rate user");
+        if(s.success)
+            return 200;
+        else
+            return 401;
+    }
 }
