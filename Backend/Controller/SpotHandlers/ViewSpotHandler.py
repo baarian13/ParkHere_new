@@ -23,5 +23,5 @@ class ViewSpotHandler(AbstractSpotHandler):
                         'description'       : res[9],
                         'price'             : float(res[10]),
                         'picture'           : res[11],
-                        'rating'            : intres[12]}
+                        'rating'            : res[12]}
             self.write(json.dumps(results))
