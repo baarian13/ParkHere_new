@@ -28,6 +28,8 @@ class Spot(DatabaseObject):
                     description VARCHAR(300),
                     picturePath VARCHAR(300),
                     cancelationPolicy SMALLINT NOT NULL,
+                    numReviews INT NOT NULL,
+                    rating FLOAT NOT NULL,
                     FOREIGN KEY (renterEmail) REFERENCES USERS(email),
                     FOREIGN KEY (ownerEmail) REFERENCES USERS(email),
                     PRIMARY KEY (ID));'''.format(TABLE_NAME)
@@ -44,7 +46,7 @@ class Spot(DatabaseObject):
                  ownerEmail, isBooked, price,
                  start, end, isCovered,
                  cancelationPolicy, isRecurring,
-                 description="", picturePath="", renterEmail=None):
+                 description="", picturePath="", renterEmail=None, numReviews=0, rating=0,):
         '''
             :type address: str
             :type spotType: int
@@ -57,6 +59,8 @@ class Spot(DatabaseObject):
             :type cancelationPolicy: int
             :type isRecurring: bool
             :type renterEmail: str or None
+            :type numReviews: int
+            :type rating: int
         '''
         assert spotType in self.SPOT_TYPES
         assert cancelationPolicy in self.CANCELATION_POLICIES
@@ -77,6 +81,8 @@ class Spot(DatabaseObject):
         self.description       = description
         self.picturePath       = str(picturePath)
         self.latitude, self.longitude = getLatitudeLongitude(self.address)
+        self.numReviews         = numReviews
+        self.rating             = rating
 
     def __iter__(self):
         return iter([('address'          , self.address),
@@ -92,7 +98,10 @@ class Spot(DatabaseObject):
                      ('isCovered'        , self.isCovered),
                      ('isRecurring'      , self.isRecurring),
                      ('cancelationPolicy', self.cancelationPolicy),
-                     ('picturePath'      , self.picturePath)])
+                     ('picturePath'      , self.picturePath),
+                     ('numReviews'        , self.numReviews),
+                     ('rating'            , self.rating)])
+
 
     @classmethod
     def searchByDistanceQuery(cls, latitude, longitude, maxDistance=25, maxResults=20):
@@ -157,4 +166,14 @@ class Spot(DatabaseObject):
         return '''UPDATE {0} SET picturePath=\'{1}\' WHERE ownerEmail=\'{2}\' AND address=\'{3}\';'''.format(cls.TABLE_NAME, path, ownerEmail, address)
     def isValidSpot(self): 
         return self.start < date.today() < self.end
+
+
+    @classmethod
+    def getRating(cls, spotId):
+        return '''SELECT rating, numReviews FROM {0}
+                        WHERE ID = \'{1}\';'''.format(cls.TABLE_NAME, spotId)
+
+    @classmethod
+    def setRating(cls, spotId, rating, numReviews):
+        return '''UPDATE {0} SET rating=\'{1}\' , numReviews = \'{2}\' WHERE ID=\'{3}\';'''.format(cls.TABLE_NAME, rating, numReviews, spotId)
 

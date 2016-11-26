@@ -113,3 +113,23 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
         self.objStorageManager.uploadMedia(path, pictureString)
         print 'succesful media upload'
         self.execute(Spot.addPicture(path, ownerEmail, address))
+
+    def rateSpot(self, spotId, rating):
+        self.cursor.execute(Spot.getRating(spotId))
+        results = self.cursor.fetchall()[0]
+        oldrating = results[0]
+        numReviews = results[1]
+        print "here1"
+        print 'rating ' +rating
+        rating = (int(oldrating)) * (int(numReviews)) + int(rating)
+        print "here.5"
+        numReviews = int(numReviews) + 1
+        print "here2"
+
+        rating = float(rating)/float(numReviews)
+        print "here2"
+        print rating
+        print numReviews
+        self.execute(Spot.setRating(spotId, rating, numReviews))
+        self.cursor.execute('''SELECT rating FROM SPOTS WHERE id = \'1\';''')
+        print self.cursor.fetchall()[0][0]
