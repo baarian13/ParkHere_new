@@ -1,13 +1,13 @@
 import tornado.web
 import tornado.gen
-from Controller.UserHandlers.AbstractUserHandler import AbstractUserHandler
+from Controller.UserHandlers.AbstractSpotHandler import AbstractSpotHandler
 
 SUCCESS = '200'
 FAILURE = '401'
 PARTIAL = '206'
 
 
-class RateUserHandler(AbstractSpotHandler):
+class RateSpotHandler(AbstractSpotHandler):
 
     #@tornado.web.authenticated # ensures that user has valid token/is signed in
     @tornado.gen.coroutine

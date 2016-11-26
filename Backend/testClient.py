@@ -105,6 +105,17 @@ def rateUser(cookie, http_client, email, rating):
     print "body:"
     print res.body
 
+def rateSpot(cookie, http_client, spotId, rating):
+    headers = {"Cookie": cookie}
+    url = 'http://{0}:8888/rate/spot'.format(ip)
+    body = urllib.urlencode({'spotId'        : spotId,
+                             'rating'       : rating})
+    req = httpclient.HTTPRequest(url, 'POST', body=body, headers=headers)
+
+    res = http_client.fetch(req)
+    print "body:"
+    print res.body
+
 def modifyUser1(cookie, http_client, phone, isSeeker):
     headers = {"Cookie": cookie}
     url = 'http://{0}:8888/modify/user'.format(ip)
@@ -248,6 +259,21 @@ class TestParkHereMethods(unittest.TestCase):
     #     self.assertEqual(jsondata["rating"], 5.0)
     #       http_client.close()
 
+    def test_rate_spot(self):
+         http_client = httpclient.HTTPClient()
+         spot = 10
+         cookie, code = signIn(http_client, 'a@b.com', 'password1!')
+         info = viewSpot(cookie, http_client, spot)
+         jsondata = json.loads(info)
+         print jsondata["rating"]
+         self.assertEqual(jsondata["rating"], 0.0)
+         rateSpot(cookie, http_client, spot, 5)
+         info = viewSpot(cookie, http_client, spot)
+         jsondata = json.loads(info)
+         print jsondata["rating"]
+         self.assertEqual(jsondata["rating"], 5.0)
+         http_client.close()
+
 
     # def test_modify_user(self):
     #     http_client = httpclient.HTTPClient()
@@ -329,14 +355,14 @@ class TestParkHereMethods(unittest.TestCase):
     #    self.assertEqual(res, '200')
     #    http_client.close()
 
-    def test_spot_history(self):
-        http_client = httpclient.HTTPClient()
-        cookie, code = signIn(http_client, 'qwerty@a.com', 'Password!1')
-        res = spotHistory(cookie, http_client,'qwerty@a.com')
-        jsondata = json.loads(res)
-        #self.assertEqual(jsondata[0][0], 10)
-        self.assertEqual(len(jsondata), 2)
-        http_client.close()
+    #def test_spot_history(self):
+    #    http_client = httpclient.HTTPClient()
+    #    cookie, code = signIn(http_client, 'qwerty@a.com', 'Password!1')
+    #    res = spotHistory(cookie, http_client,'qwerty@a.com')
+    #    jsondata = json.loads(res)
+    #    #self.assertEqual(jsondata[0][0], 10)
+    #    self.assertEqual(len(jsondata), 2)
+    #    http_client.close()
 
 
 

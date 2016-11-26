@@ -17,6 +17,7 @@ from Controller.SpotHandlers.ViewPostingsHandler import ViewPostingsHandler
 from Controller.SpotHandlers.ViewRentalsHandler import ViewRentalsHandler
 from Controller.SpotHandlers.ViewSpotHandler import ViewSpotHandler
 from Controller.SpotHandlers.ViewSpotHistoryHandler import ViewSpotHistoryHandler
+from Controller.SpotHandlers.RateSpotHandler import RateSpotHandler
 from Controller.UserHandlers.ModifyUserProfileHandler import ModifyUserProfileHandler
 from Controller.UserHandlers.RateUserHandler import RateUserHandler
 from Controller.UserHandlers.ViewUserProfileHandler import ViewUserProfileHandler
@@ -43,6 +44,7 @@ application = tornado.web.Application([
     ("/view/history",ViewSpotHistoryHandler),
     ("/modify/user", ModifyUserProfileHandler),
     ("/rate/user", RateUserHandler),
+    ("/rate/spot", RateSpotHandler),
     ("/post/spot", PostSpotHandler),
     ("/get/token", GetClientTokenHandler),
     ("/check/user", CheckUserHandler),
