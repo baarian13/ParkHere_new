@@ -92,8 +92,7 @@ public class SpotDetailActivity extends AppCompatActivity {
         try {
             SpotDetailsDAO spot = ServerConnector.spotDetails(spotID);
             userUniqueID = spot.getOwnerEmail();
-            //TO-DO
-            int rating = 3;
+
             double price = 10.00;
             ReturnedUserDAO userInfo = ServerConnector.userDetails(userUniqueID);
             String firstName = userInfo.getFirst();
@@ -109,7 +108,7 @@ public class SpotDetailActivity extends AppCompatActivity {
                 spotPicture.setImageBitmap(ValidationFunctions.convertBase64StringToBitmap(spot.getPicture()));
             }
             RatingBar spotRating = (RatingBar) findViewById(R.id.rating_spot_spotDetail);
-            spotRating.setRating(rating);
+            spotRating.setRating(spot.getRating());
             TextView priceTextView = (TextView) findViewById(R.id.price_spotDetail);
             price = addFee(price);
             priceTextView.setText("$" + price);
