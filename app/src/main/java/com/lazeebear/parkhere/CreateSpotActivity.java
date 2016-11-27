@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.location.Address;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -14,6 +15,7 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -22,12 +24,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.lazeebear.parkhere.DAOs.SentObjects.AddressDetailsDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentSpotDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class CreateSpotActivity extends AppCompatActivity {
     private TextView address, price_field, description_field;
@@ -40,6 +45,7 @@ public class CreateSpotActivity extends AppCompatActivity {
     private int year, month, day, hour, minute;
     private String base64photo;
     public static final int GET_FROM_GALLERY = 3; //request code for opening the gallery
+    private Integer selectedAddress;
 
     //is needed for creating the spot
     //but to redirect the user back to the account page
@@ -70,7 +76,9 @@ public class CreateSpotActivity extends AppCompatActivity {
 
         if (intent != null) {
             uniqueID = intent.getStringExtra("id");
+            selectedAddress = intent.getIntExtra("addressID",0);
             setActionListeners();
+            autofillInformationFromAddress(selectedAddress);
         }
     }
 
@@ -241,6 +249,23 @@ public class CreateSpotActivity extends AppCompatActivity {
         createTimePickers();
         setUploadButtonListener();
         setSubmitButtonListener();
+    }
+
+    // autofill information from the address
+    private void autofillInformationFromAddress(Integer addressID) {
+        AddressDetailsDAO addressDetailsDAO = ServerConnector.getAddressDetails(addressID);
+        address.setText(addressDetailsDAO.getAddress());
+        description_field.setText(addressDetailsDAO.getDescription());
+        //spot type
+
+        // isCovered
+        boolean covered = (addressDetailsDAO.getIsCovered() == 1) ? true : false;
+        covered_checkbox.setChecked(covered);
+
+        // spot photo
+        Bitmap bitmap = ValidationFunctions.convertBase64StringToBitmap(addressDetailsDAO.getPicture());
+        upload_photo_image_view.setImageBitmap(bitmap);
+        upload_photo_image_view.setVisibility(View.VISIBLE);
     }
 
     private void setCancellationPolicyListener(){
