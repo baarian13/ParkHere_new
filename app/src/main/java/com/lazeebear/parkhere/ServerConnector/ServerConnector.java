@@ -1611,7 +1611,7 @@ public class ServerConnector {
 
     static class GetAddressesTask extends AsyncTask<Void,Void,Void>{
         String ownerEmail;
-        AddressDetailsDAO addressDetailsDAO;
+        List<Integer> addresses = new ArrayList<Integer>;
         boolean done = false, success = false;
 
         public GetAddressesTask(String ownerEmail){
@@ -1621,49 +1621,38 @@ public class ServerConnector {
         protected void onPreExecute() {}
         protected Void doInBackground(Void... params) {
             try {
-                String url = formatURL(""); //TODO where does this URL come from?
+                String url = formatURL("TODO"+ownerEmail); //TODO
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-                //add reuqest header
-                con.setRequestMethod("POST");
+                con.setRequestMethod("GET");
                 con.setRequestProperty("User-Agent", USER_AGENT);
-                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-                String urlParameters = null;
-
-                urlParameters = "ownerEmail=" + ownerEmail;
-
-                // Send post request
-                con.setDoOutput(true);
-                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-                wr.writeBytes(urlParameters);
-                wr.flush();
-                wr.close();
-                Map<String, List<String>> headerFields = con.getHeaderFields();
-                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
-
-                if (cookiesHeader != null) {
-                    for (String cookie : cookiesHeader) {
-                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
-                    }
-                }
+                setConnCookies(con);
+                con.connect();
                 int responseCode = con.getResponseCode();
-                System.out.println("\nSending 'POST' request to URL : " + url);
-                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("\nSending 'GET' request to URL : " + url);
                 System.out.println("Response Code : " + responseCode);
 
-//            con.setDoOutput(false);
-//            con.setDoInput(true);
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(con.getInputStream()));
                 String inputLine;
                 StringBuffer response = new StringBuffer();
-
+                System.out.println("Grabbed buffer");
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
                 }
                 in.close();
+                System.out.println("Getting gson object..");
+                Gson gson = new Gson();
+                Type typeOfT = new TypeToken<List<List<Integer>>>(){}.getType();
+                List<List<Integer>> addresses_temp = gson.fromJson(response.toString(), typeOfT);
+                int size = addresses.size();
+                System.out.println("Returned object size: " + size);
+                for (int i=0; i<size; i++){
+                    addresses.add(addresses_temp.get(i).get(0));
+                }
+                //print result
                 success = true;
+                Log.i("STATE","view spot history - success = true");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1674,7 +1663,13 @@ public class ServerConnector {
     }
 
     public static List<Integer> getAddressesOf(String email) throws Exception{
-
+        GetAddressesTask s = new GetAddressesTask(email);
+        s.execute();
+        while (!s.done)
+            Thread.sleep(100); //Log.i("SPAM", "get addresses of user")
+        if (s.success)
+            return s.addresses;
+        return null;
     }
 
     public static AddressDetailsDAO getAddressDetails(int addressID){
