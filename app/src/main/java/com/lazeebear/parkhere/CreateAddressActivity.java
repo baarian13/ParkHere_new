@@ -199,11 +199,7 @@ public class CreateAddressActivity extends AppCompatActivity {
         addressEnter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (selectedPosition != 404){
                     startIntent();
-                } else {
-                    createNewAddressLayout.setVisibility(View.VISIBLE);
-                }
             }
         });
     }

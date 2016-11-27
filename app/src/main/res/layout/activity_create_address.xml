@@ -38,12 +38,14 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/address_input_description"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_email"/>
 
                 <CheckBox
                     android:id="@+id/address_isCovered_checkbox"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:text="@string/covered_label"/>
 
                 <Button
                     android:id="@+id/address_select_photo"
@@ -59,14 +61,14 @@
                     android:id="@+id/address_create_new_submit_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/submit" />
+                    android:text="Create New Address" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/address_submit_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/submit" />
+                android:text="Continue" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
