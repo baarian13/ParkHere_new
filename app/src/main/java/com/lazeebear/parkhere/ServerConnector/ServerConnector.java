@@ -1611,7 +1611,7 @@ public class ServerConnector {
 
     static class GetAddressesTask extends AsyncTask<Void,Void,Void>{
         String ownerEmail;
-        List<Integer> addresses = new ArrayList<Integer>;
+        List<Integer> addresses = new ArrayList<>();
         boolean done = false, success = false;
 
         public GetAddressesTask(String ownerEmail){
@@ -1673,10 +1673,11 @@ public class ServerConnector {
     }
 
     public static AddressDetailsDAO getAddressDetails(int addressID){
+        return null;
     }
 
     public static int modifyAddress(int addressID, String ownerEmail, String description,
                 int spotType, int isCovered, int price, String picture) throws Exception {
-
+        return 0;
     }
 }
