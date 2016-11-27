@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
+import com.lazeebear.parkhere.DAOs.SentObjects.AddressDetailsDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentSpotDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentUserDAO;
 
@@ -1522,5 +1523,165 @@ public class ServerConnector {
             return 200;
         else
             return 401;
+    }
+
+    static class CreateAddressTask extends AsyncTask<Void,Void,Void>{
+        String address, ownerEmail, description , picture;
+        int spotType, isCovered;
+        boolean done = false, success = false;
+
+        public CreateAddressTask(String address, String ownerEmail, String description, int spotType,
+                                 int isCovered, String picture){
+            this.address = address;
+            this.ownerEmail = ownerEmail;
+            this.description = description;
+            this.spotType = spotType;
+            this.isCovered = isCovered;
+            this.picture = picture;
+        }
+
+        protected void onPreExecute() {}
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL(""); //TODO where does this URL come from?
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                String urlParameters = null;
+
+                urlParameters = "ownerEmail=" + ownerEmail + "&address=" + address +
+                                "&description=" + description + "&spotType=" + spotType +
+                                "&isCovered=" + isCovered + "&picturePath=" + picture;
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+//            con.setDoOutput(false);
+//            con.setDoInput(true);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+        protected void onPostExecute() {}
+    }
+
+    public static int createAddress(String address, String ownerEmail, String description,
+                                     int spotType, int isCovered, String picture) throws Exception {
+        CreateAddressTask s = new CreateAddressTask(address, ownerEmail, description, spotType, isCovered, picture);
+        s.execute();
+        while(!s.done)
+            Thread.sleep(100);//Log.i("SPAM","rate user");
+        if(s.success)
+            return 200;
+        else
+            return 401;
+    }
+
+    static class GetAddressesTask extends AsyncTask<Void,Void,Void>{
+        String ownerEmail;
+        AddressDetailsDAO addressDetailsDAO;
+        boolean done = false, success = false;
+
+        public GetAddressesTask(String ownerEmail){
+            this.ownerEmail = ownerEmail;
+        }
+
+        protected void onPreExecute() {}
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL(""); //TODO where does this URL come from?
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                String urlParameters = null;
+
+                urlParameters = "ownerEmail=" + ownerEmail;
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+//            con.setDoOutput(false);
+//            con.setDoInput(true);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+        protected void onPostExecute() {}
+    }
+
+    public static List<Integer> getAddressesOf(String email) throws Exception{
+
+    }
+
+    public static AddressDetailsDAO getAddressDetails(int addressID){
+    }
+
+    public static int modifyAddress(int addressID, String ownerEmail, String description,
+                int spotType, int isCovered, int price, String picture) throws Exception {
+
     }
 }
