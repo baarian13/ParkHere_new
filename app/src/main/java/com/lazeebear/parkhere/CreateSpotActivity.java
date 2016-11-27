@@ -234,6 +234,46 @@ public class CreateSpotActivity extends AppCompatActivity {
         timePicker_upper.show();
     }
 
+    //make sure there is at least an hour difference
+    private boolean validateDateTime(){
+        //already validates date ( if day1 > day2)
+
+        //assume if day1 < day2 we are fine
+        //the only exception would be something like
+        // 1/1/2000 11:59PM    ----->    1/2/2000 0:00AM
+
+        //check for day1 == day2
+        String dateLower = date_button_lower.getText().toString();
+        String dateUpper = date_button_upper.getText().toString();
+        if (dateLower.equals(dateUpper)){
+            String timeLower = time_button_lower.getText().toString();
+            String timeUpper = time_button_upper.getText().toString();
+
+            int lowerHour;
+            int lowerMinute;
+            int upperHour;
+            int upperMinute;
+            String[] timeLowerSplit = timeLower.split(":");
+            lowerHour = Integer.parseInt(timeLowerSplit[0]);
+            lowerMinute = Integer.parseInt(timeLowerSplit[1]);
+            String[] timeUpperSplit = timeUpper.split(":");
+            upperHour = Integer.parseInt(timeUpperSplit[0]);
+            upperMinute = Integer.parseInt(timeUpperSplit[1]);
+
+            lowerMinute = lowerHour * 60 + lowerMinute;
+            upperMinute = upperHour * 60 + upperMinute;
+
+            int minuteDifference = upperMinute - lowerMinute;
+            if (minuteDifference < 60)
+                return false;
+            else
+                return true;
+        }
+
+        //we are assuming everything else will be fine
+        return true;
+    }
+
 
     private void setActionListeners(){
         setCancellationPolicyListener();
@@ -295,6 +335,13 @@ public class CreateSpotActivity extends AppCompatActivity {
     }
 
     private void createSpot(){
+
+        if (!validateDateTime())
+        {
+            System.out.println("Date range has to be at least one hour");
+            return;
+        }
+
         String addressString = address.getText().toString();
 
         String email = uniqueID;
