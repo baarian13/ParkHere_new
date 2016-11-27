@@ -58,6 +58,9 @@
     <string name="time_slot_label">Time Slot</string>
     <string name="search_button_label">Search</string>
 
+    <!--create address-->
+    <string name="address_create_new">Create New Address</string>
+
     <!--create parking spot-->
     <string name="repeat_weekly_label">Repeat Weekly</string>
     <string name="date_hint_label">mm/dd/yy</string>

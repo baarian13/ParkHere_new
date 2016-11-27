@@ -86,6 +86,9 @@
                 <!-- <data android:scheme="${applicationId}.braintree" /> -->
             </intent-filter>
         </activity>
+        <activity android:name=".CreateAddressActivity"
+            android:label="Select Address"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AddSpotRatingActivity" />
         <activity android:name=".Filter" />
         <!-- Configure the fileprovider for Android API 24+ when taking photos -->

@@ -425,7 +425,7 @@ public class Account extends AppCompatActivity {
     }
 
     private void goToCreateSpot() {
-        Intent intent = new Intent(this, CreateSpotActivity.class);
+        Intent intent = new Intent(this, CreateAddressActivity.class);
         intent.putExtra("id",uniqueID);
         startActivity(intent);
     }
