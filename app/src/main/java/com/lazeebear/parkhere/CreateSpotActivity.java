@@ -78,6 +78,7 @@ public class CreateSpotActivity extends AppCompatActivity {
         if (intent != null) {
             uniqueID = intent.getStringExtra("id");
             selectedAddress = intent.getIntExtra("addressID",0);
+            base64photo = intent.getStringExtra("photo");
             setActionListeners();
             autofillInformationFromAddress(selectedAddress);
         }
@@ -306,6 +307,9 @@ public class CreateSpotActivity extends AppCompatActivity {
         // spot photo
         Bitmap bitmap = ValidationFunctions.convertBase64StringToBitmap(addressDetailsDAO.getPicture());
         upload_photo_image_view.setImageBitmap(bitmap);
+
+        //TODO remove this later and test the autofill with the server
+        upload_photo_image_view.setImageBitmap(ValidationFunctions.convertBase64StringToBitmap(base64photo));
         upload_photo_image_view.setVisibility(View.VISIBLE);
     }
 

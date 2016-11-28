@@ -40,6 +40,7 @@ public class CreateAddressActivity extends AppCompatActivity {
     private String base64photo;
     private static final int GET_FROM_GALLERY = 3;
 
+    private ArrayAdapter<String> adapter;
     private ArrayList<String> addressList;
 
     @Override
@@ -106,6 +107,7 @@ public class CreateAddressActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     addressEnter.setVisibility(View.VISIBLE);
+                    hideCreateNewAddressItems();
                     String address = address_input_address.getText().toString();
                     String description = address_input_description.getText().toString();
                     int spotType = 0;
@@ -114,9 +116,13 @@ public class CreateAddressActivity extends AppCompatActivity {
                         isCovered = 1;
                     else
                         isCovered = 0;
-                    ServerConnector.createAddress(address, uniqueID, description, spotType, isCovered, base64photo);
+                    int newAddressID = 1; //TODO = ServerConnector.createAddress(address, uniqueID, description, spotType, isCovered, base64photo);
+
                     //reload the spinner
-                    populateSpinnerWithAddresses(); //TODO: hopefully this works as a refresh
+                    addressList.add(address);
+                    addresses.add(newAddressID);
+                    adapter.notifyDataSetChanged();
+                    addressSelect.setAdapter(adapter);
                 } catch (Exception e){
                     Log.i("STATE","Error while creating new address");
                 }
@@ -133,7 +139,7 @@ public class CreateAddressActivity extends AppCompatActivity {
                 AddressDetailsDAO details = ServerConnector.getAddressDetails(addresses.get(i));
                 addressList.add(details.getAddress());
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, addressList);
+            adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, addressList);
 
             addressSelect.setAdapter(adapter);
         } catch (Exception e) {
@@ -212,6 +218,7 @@ public class CreateAddressActivity extends AppCompatActivity {
     private void startIntent() {
         Intent intent = new Intent(this, CreateSpotActivity.class);
         intent.putExtra("id",uniqueID);
+        intent.putExtra("photo",base64photo);
         intent.putExtra("addressID",addresses.get(selectedPosition));
         startActivity(intent);
     }

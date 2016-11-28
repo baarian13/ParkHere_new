@@ -39,7 +39,7 @@
                     android:id="@+id/address_input_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_email"/>
+                    android:hint="@string/description_label"/>
 
                 <CheckBox
                     android:id="@+id/address_isCovered_checkbox"
@@ -50,7 +50,8 @@
                 <Button
                     android:id="@+id/address_select_photo"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:text="@string/address_choose_photo"/>
 
                 <ImageView
                     android:id="@+id/address_image_preview"
