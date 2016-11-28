@@ -110,7 +110,7 @@ class Spot(DatabaseObject):
     def searchByTimeQuery(cls, start, end, maxResults=20):
         return '''SELECT ID, address, start, end, spotType, ownerEmail,
         renterEmail, isRecurring, isCovered, cancelationPolicy
-    FROM SPOTS WHERE start >= \'{0}\'  AND end <= \'{1}\' ORDER BY start;'''.format(start, end, maxResults)
+    FROM SPOTS WHERE start <= \'{0}\'  AND end >= \'{1}\' ORDER BY start;'''.format(start, end, maxResults)
 
     @classmethod
     def searchIDByRenterEmailQuery(cls, renterEmail):
