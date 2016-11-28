@@ -203,13 +203,13 @@ public class ValidationFunctions {
          * or if Base64.decode throws bad-base64 exception
          * strip the string "data:image/jpg;base64" off it
          */
-        final String encodedString = "data:image/jpg;base64, ....";
-        final String pureBase64Encoded = encodedString.substring(encodedString.indexOf(",")  + 1);
+        //final String encodedString = "data:image/jpg;base64, ....";
+        //final String pureBase64Encoded = encodedString.substring(encodedString.indexOf(",")  + 1);
         //byte[] decodedBytes = Base64.decode(pureBase64Encoded, Base64.DEFAULT);
-        byte[] decodedString = Base64.decode(pureBase64Encoded, Base64.URL_SAFE);
+        //byte[] decodedString = Base64.decode(pureBase64Encoded, Base64.URL_SAFE);
 
         //use Base64.URL_SAFE instead of Base64.DEFAULT if it's a String from a JSON object.
-        //byte[] decodedString = Base64.decode(encodedImage, Base64.URL_SAFE);
+        byte[] decodedString = Base64.decode(encodedImage, Base64.URL_SAFE);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 }
