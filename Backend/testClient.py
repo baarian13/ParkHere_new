@@ -185,6 +185,15 @@ def spotHistory(cookie, http_client, email):
     res = http_client.fetch(req)
     return res.body
 
+def contactCustomerService(cookie, http_client, email, message):
+    headers = {"Cookie": cookie}
+    url = 'http://{0}:8888/contact/service'.format(ip)
+    body = urllib.urlencode({'email': email,
+                             'message': message})
+    req = httpclient.HTTPRequest(url, 'POST', body=body, headers=headers)
+    
+    res = http_client.fetch(req)
+    return res.body
 # if __name__ == '__main__':
 #     http_client = httpclient.HTTPClient()
 #     #img = buildImgStr('/Users/henrylevy/Downloads/default.jpg')
@@ -270,20 +279,20 @@ class TestParkHereMethods(unittest.TestCase):
     #     self.assertEqual(jsondata["rating"], 5.0)
     #       http_client.close()
 
-    def test_rate_spot(self):
-         http_client = httpclient.HTTPClient()
-         spot = 10
-         cookie, code = signIn(http_client, 'a@b.com', 'password1!')
-         info = viewSpot(cookie, http_client, spot)
-         jsondata = json.loads(info)
-         print jsondata["rating"]
-         self.assertEqual(jsondata["rating"], 0.0)
-         rateSpot(cookie, http_client, spot, 5)
-         info = viewSpot(cookie, http_client, spot)
-         jsondata = json.loads(info)
-         print jsondata["rating"]
-         self.assertEqual(jsondata["rating"], 5.0)
-         http_client.close()
+    # def test_rate_spot(self):
+    #      http_client = httpclient.HTTPClient()
+    #      spot = 10
+    #      cookie, code = signIn(http_client, 'a@b.com', 'password1!')
+    #      info = viewSpot(cookie, http_client, spot)
+    #      jsondata = json.loads(info)
+    #      print jsondata["rating"]
+    #      self.assertEqual(jsondata["rating"], 0.0)
+    #      rateSpot(cookie, http_client, spot, 5)
+    #      info = viewSpot(cookie, http_client, spot)
+    #      jsondata = json.loads(info)
+    #      print jsondata["rating"]
+    #      self.assertEqual(jsondata["rating"], 5.0)
+    #      http_client.close()
 
 
     # def test_modify_user(self):
@@ -317,14 +326,14 @@ class TestParkHereMethods(unittest.TestCase):
     #     self.assertEqual(jsondata[0]["end"], "2016-11-12 14:00:00")
     #     http_client.close()
 
-    def test_search_time_spot(self):
-        http_client = httpclient.HTTPClient()
-        cookie, code = signIn(http_client, 'rob2@rob.com', 'Password1$')
-        res = searchSpotTime(cookie, http_client,"2016-10-19 11:58:00","2016-10-26 22:40:00")
-        print res
-        jsondata = json.loads(res)
-        self.assertEqual(jsondata[0]["address"], '1200 West 35th street, Los Angeles CA, 90007')
-        http_client.close()
+    # def test_search_time_spot(self):
+    #     http_client = httpclient.HTTPClient()
+    #     cookie, code = signIn(http_client, 'rob2@rob.com', 'Password1$')
+    #     res = searchSpotTime(cookie, http_client,"2016-10-19 11:58:00","2016-10-26 22:40:00")
+    #     print res
+    #     jsondata = json.loads(res)
+    #     self.assertEqual(jsondata[0]["address"], '1200 West 35th street, Los Angeles CA, 90007')
+    #     http_client.close()
 
 
     # def test_view_spot(self):
@@ -384,7 +393,12 @@ class TestParkHereMethods(unittest.TestCase):
     #    self.assertEqual(len(jsondata), 2)
     #    http_client.close()
 
-
+    def test_contact_service(self):
+        http_client = httpclient.HTTPClient()
+        cookie, code = signIn(http_client, 'qwerty@a.com', 'Password!1')
+        res = contactCustomerService(cookie, http_client, "qwerty@.com", "testing")
+        self.assertEqual(res,'200')
+        http_client.close()
 
 
 

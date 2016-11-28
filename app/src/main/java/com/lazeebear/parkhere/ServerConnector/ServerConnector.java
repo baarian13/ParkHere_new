@@ -191,12 +191,14 @@ public class ServerConnector {
     static class SearchSpotDateTask extends AsyncTask<Void,Void,Void>
     {
         List<SpotDAO> spots;
-        String address;
+        String start;
+        String end;
         boolean done = false;
         boolean success = false;
 
-        public SearchSpotDateTask(String address){
-            this.address = address;
+        public SearchSpotDateTask(String start, String end){
+            this.start = start;
+            this.end = end;
         }
 
         protected void onPreExecute() {
@@ -205,7 +207,7 @@ public class ServerConnector {
         }
         protected Void doInBackground(Void... params) {
             try {
-                String url = formatURL("search/spot/date?address="+ address.replace(' ', '+'));
+                String url = formatURL("search/spot/date?start="+start+"&end="+end);
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setRequestMethod("GET");
@@ -246,8 +248,8 @@ public class ServerConnector {
         }
     }
 
-    public static List<SpotDAO> searchSpotLocation(String address) throws Exception {
-        SearchSpotDateTask s = new SearchSpotDateTask(address);
+    public static List<SpotDAO> searchSpotLocation(String start, String end) throws Exception {
+        SearchSpotDateTask s = new SearchSpotDateTask(start,end);
         s.execute();
         while(!s.done)
             Thread.sleep(100);//Log.i("SPAM","search");
@@ -637,6 +639,92 @@ public class ServerConnector {
 
     public static boolean signin(String email, String password) throws Exception {
         SignInTask s = new SignInTask(email, password);
+        s.execute();
+        Log.i("STATE","Waiting for signin");
+        while(!s.done)
+            Thread.sleep(100);//Log.i("SPAM","sign in");
+        Log.i("STATE","Finished signin");
+        return s.success;
+    }
+
+    static class ContactServiceTask extends AsyncTask<Void,Void,Void>
+    {
+        String email;
+        String message;
+        boolean done = false;
+        boolean success = false;
+
+        public ContactServiceTask(String email, String message){
+            this.email = email;
+            this.message = message;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL("contact/service");
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+                String urlParameters = "email=" + email + "&message=" + message;
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                //print result
+                success = true;
+                Log.i("STATE","success = true");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            Log.i("STATE", "done = true");
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+    public static boolean contactService(String email, String message) throws Exception {
+        ContactServiceTask s = new ContactServiceTask(email, message);
         s.execute();
         Log.i("STATE","Waiting for signin");
         while(!s.done)
