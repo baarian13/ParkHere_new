@@ -9,5 +9,5 @@ class ViewSpotHistoryHandler(AbstractSpotHandler):
     def get(self):
         renterEmail = self.get_argument("email")
         if renterEmail:
-            results = self.db.getSpotHistoryIDsRentedBy(renterEmail)
+            results = self.db.getSpotHistoryRentedBy(renterEmail)
             self.write(json.dumps(results))

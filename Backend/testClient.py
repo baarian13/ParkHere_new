@@ -384,6 +384,7 @@ class TestParkHereMethods(unittest.TestCase):
     #    self.assertEqual(res, '200')
     #    http_client.close()
 
+    #ID only
     #def test_spot_history(self):
     #    http_client = httpclient.HTTPClient()
     #    cookie, code = signIn(http_client, 'qwerty@a.com', 'Password!1')
@@ -392,13 +393,22 @@ class TestParkHereMethods(unittest.TestCase):
     #    #self.assertEqual(jsondata[0][0], 10)
     #    self.assertEqual(len(jsondata), 2)
     #    http_client.close()
-
-    def test_contact_service(self):
+    #more data
+    def test_spot_history(self):
         http_client = httpclient.HTTPClient()
         cookie, code = signIn(http_client, 'qwerty@a.com', 'Password!1')
-        res = contactCustomerService(cookie, http_client, "qwerty@.com", "testing")
-        self.assertEqual(res,'200')
+        res = spotHistory(cookie, http_client,'qwerty@a.com')
+        jsondata = json.loads(res)
+        self.assertEqual(jsondata[0]["address"], "702 West 28th street, Los Angeles CA, 90007")
+        self.assertEqual(jsondata[0]["id"], 10)
         http_client.close()
+
+    #def test_contact_service(self):
+    #    http_client = httpclient.HTTPClient()
+    #    cookie, code = signIn(http_client, 'qwerty@a.com', 'Password!1')
+    #    res = contactCustomerService(cookie, http_client, "qwerty@.com", "testing")
+    #    self.assertEqual(res,'200')
+    #    http_client.close()
 
 
 

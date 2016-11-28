@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         SharedPreferences prefs = getSharedPreferences(prefName,0);
         String email = prefs.getString(prefEmail,"");
         String password = prefs.getString(prefPassword,"");
-        //System.out.println("Prefs: " + email + " and " + password);
+        System.out.println("Prefs: " + email + " and " + password);
         if (email != "" && password != ""){
 
             login(email, password);

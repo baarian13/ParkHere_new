@@ -9,5 +9,5 @@ class ViewRentalsHandler(AbstractSpotHandler):
     def get(self):
         renterEmail = self.get_argument("email")
         if renterEmail:
-            results = self.db.getSpotIDsRentedBy(renterEmail)
+            results = self.db.getSpotsRentedBy(renterEmail)
             self.write(json.dumps(results))
