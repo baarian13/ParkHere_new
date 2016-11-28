@@ -149,12 +149,12 @@ class Spot(DatabaseObject):
     @classmethod
     def searchByRenterEmailQuery(cls, renterEmail):
         return '''SELECT ID, address, start, end, spotType, ownerEmail,
-        renterEmail, isRecurring, isCovered, cancelationPolicy FROM {0} WHERE renterEmail = {1} AND end >= \'{2}\';'''.format(cls.TABLE_NAME, renterEmail, time.strftime("%Y-%m-%d %H:%M:%S"))
+        renterEmail, isRecurring, isCovered, cancelationPolicy FROM {0} WHERE renterEmail = \'{1}\' AND end >= \'{2}\';'''.format(cls.TABLE_NAME, renterEmail, time.strftime("%Y-%m-%d %H:%M:%S"))
 
     @classmethod
     def searchHistoryByRenterEmailQuery(cls, renterEmail):
         return '''SELECT ID, address, start, end, spotType, ownerEmail,
-        renterEmail, isRecurring, isCovered, cancelationPolicy FROM {0} WHERE renterEmail = {1} AND end < \'{2}\';'''.format(cls.TABLE_NAME, renterEmail, time.strftime("%Y-%m-%d %H:%M:%S"))
+        renterEmail, isRecurring, isCovered, cancelationPolicy FROM {0} WHERE renterEmail = \'{1}\' AND end < \'{2}\';'''.format(cls.TABLE_NAME, renterEmail, time.strftime("%Y-%m-%d %H:%M:%S"))
 
     @classmethod
     def cancelReservation(cls, spotID):
