@@ -80,6 +80,16 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
         latitude, longitude = getLatitudeLongitude(address)
         self.cursor.execute(Spot.searchByDistanceQuery(latitude, longitude, maxDistance, maxResults))
         return self.cursor.fetchall()
+
+    def searchForSpotsDateTime(self, start, end, maxResults=20):
+        '''
+        :type address: str
+        :type maxDistance: int
+        :type maxResults: int
+        :rtype: list
+        '''
+        self.cursor.execute(Spot.searchByTimeQuery(start, end, maxResults))
+        return self.cursor.fetchall()
     
     def viewSpotInfo(self, spotID):
         self.cursor.execute(Spot.viewSpotInfo(spotID))

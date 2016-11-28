@@ -49,9 +49,20 @@ def signIn(http_client, email, password):
     return cookie, res.body
 
 def searchSpot(cookie, http_client, address):
-    url = 'http://{0}:8888/search/spot'.format(ip)
+    url = 'http://{0}:8888/search/spot/location'.format(ip)
     headers = {'Cookie'  : cookie}
     args = urllib.urlencode({'address' : address})
+    url = url + '?' + args
+    req = httpclient.HTTPRequest(url, 'GET', headers=headers)
+    
+    res = http_client.fetch(req)
+    return res.body
+
+def searchSpotTime(cookie, http_client, start, end):
+    url = 'http://{0}:8888/search/spot/date'.format(ip)
+    headers = {'Cookie'  : cookie}
+    args = urllib.urlencode({'start' : start, 
+                             'end'   : end})
     url = url + '?' + args
     req = httpclient.HTTPRequest(url, 'GET', headers=headers)
     
@@ -306,6 +317,15 @@ class TestParkHereMethods(unittest.TestCase):
     #     self.assertEqual(jsondata[0]["end"], "2016-11-12 14:00:00")
     #     http_client.close()
 
+    def test_search_time_spot(self):
+        http_client = httpclient.HTTPClient()
+        cookie, code = signIn(http_client, 'rob2@rob.com', 'Password1$')
+        res = searchSpotTime(cookie, http_client,"2016-10-19 11:58:00","2016-10-26 22:40:00")
+        print res
+        jsondata = json.loads(res)
+        self.assertEqual(jsondata[0]["address"], '1200 West 35th street, Los Angeles CA, 90007')
+        http_client.close()
+
 
     # def test_view_spot(self):
     #     http_client = httpclient.HTTPClient()
@@ -363,6 +383,7 @@ class TestParkHereMethods(unittest.TestCase):
     #    #self.assertEqual(jsondata[0][0], 10)
     #    self.assertEqual(len(jsondata), 2)
     #    http_client.close()
+
 
 
 
