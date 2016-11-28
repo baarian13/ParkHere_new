@@ -46,6 +46,7 @@ public class CreateSpotActivity extends AppCompatActivity {
     private String base64photo;
     public static final int GET_FROM_GALLERY = 3; //request code for opening the gallery
     private Integer selectedAddress;
+    private ArrayList<String> addressList;
 
     //is needed for creating the spot
     //but to redirect the user back to the account page

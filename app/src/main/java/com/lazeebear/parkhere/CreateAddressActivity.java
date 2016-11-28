@@ -40,6 +40,8 @@ public class CreateAddressActivity extends AppCompatActivity {
     private String base64photo;
     private static final int GET_FROM_GALLERY = 3;
 
+    private ArrayList<String> addressList;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -92,6 +94,8 @@ public class CreateAddressActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 createNewAddressLayout.setVisibility(View.VISIBLE);
+                address_create_new_button.setVisibility(View.GONE);
+                addressEnter.setVisibility(View.GONE);
             }
         });
     }
@@ -101,6 +105,7 @@ public class CreateAddressActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    addressEnter.setVisibility(View.VISIBLE);
                     String address = address_input_address.getText().toString();
                     String description = address_input_description.getText().toString();
                     int spotType = 0;
@@ -123,7 +128,7 @@ public class CreateAddressActivity extends AppCompatActivity {
         try{
             addresses = ServerConnector.getAddressesOf(uniqueID);
 
-            ArrayList<String> addressList = new ArrayList<String>();
+            addressList = new ArrayList<>();
             for (int i = 0; i < addresses.size(); i++) {
                 AddressDetailsDAO details = ServerConnector.getAddressDetails(addresses.get(i));
                 addressList.add(details.getAddress());
