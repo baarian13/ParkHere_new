@@ -14,6 +14,7 @@ import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.AddressDetailsDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentSpotDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentUserDAO;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDateDAO;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -190,7 +191,7 @@ public class ServerConnector {
 
     static class SearchSpotDateTask extends AsyncTask<Void,Void,Void>
     {
-        List<SpotDAO> spots;
+        List<SpotDateDAO> spots;
         String start;
         String end;
         boolean done = false;
@@ -230,7 +231,7 @@ public class ServerConnector {
                 in.close();
 
                 Gson gson = new Gson();
-                Type typeOfT = new TypeToken<List<SpotDAO>>(){}.getType();
+                Type typeOfT = new TypeToken<List<SpotDateDAO>>(){}.getType();
                 spots = gson.fromJson(response.toString(), typeOfT);
                 //print result
                 success = true;
@@ -248,7 +249,7 @@ public class ServerConnector {
         }
     }
 
-    public static List<SpotDAO> searchSpotLocation(String start, String end) throws Exception {
+    public static List<SpotDateDAO> searchSpotDate(String start, String end) throws Exception {
         SearchSpotDateTask s = new SearchSpotDateTask(start,end);
         s.execute();
         while(!s.done)

@@ -27,6 +27,16 @@ class CreateAddressHandler(AbstractAddressHandler):
                 'address'           : self.get_argument("address", ""),
                 'spotType'          : int(self.get_argument("spotType", "")),
                 'isCovered'         : bool(int(self.get_argument("isCovered", ""))),
-                'description'       : self.get_argument("description", ""),
-                'picturePath'		: self.get_argument("picturePath","")}
+                'description'       : self.get_argument("description", "")}
         address = Address(**args)
+        try:
+            self.db.insertIntoTable(address)
+            picture = self.get_argument("picture","")
+            if picture:
+                try:
+                    self.db.submitPicture(picture, self.get_argument("email",""), self.get_argument("address",""))
+                except Exception as e:
+                    print 'picture exception'
+                    self.write('206')
+        except Exception as e:
+            self.write('401')

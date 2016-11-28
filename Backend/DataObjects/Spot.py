@@ -28,8 +28,8 @@ class Spot(DatabaseObject):
                     description VARCHAR(300),
                     picturePath VARCHAR(300),
                     cancelationPolicy SMALLINT NOT NULL,
-                    numReviews INT NOT NULL,
-                    rating FLOAT NOT NULL,
+                    addressID INT NOT NULL,
+                    FOREIGN KEY (addressID) REFERENCES ADDRESSES(ID),
                     FOREIGN KEY (renterEmail) REFERENCES USERS(email),
                     FOREIGN KEY (ownerEmail) REFERENCES USERS(email),
                     PRIMARY KEY (ID));'''.format(TABLE_NAME)
@@ -45,8 +45,8 @@ class Spot(DatabaseObject):
     def __init__(self, address, spotType,
                  ownerEmail, isBooked, price,
                  start, end, isCovered,
-                 cancelationPolicy, isRecurring,
-                 description="", picturePath="", renterEmail=None, numReviews=0, rating=0,):
+                 cancelationPolicy, isRecurring, addressID,
+                 description="", picturePath="", renterEmail=None):
         '''
             :type address: str
             :type spotType: int
@@ -59,8 +59,6 @@ class Spot(DatabaseObject):
             :type cancelationPolicy: int
             :type isRecurring: bool
             :type renterEmail: str or None
-            :type numReviews: int
-            :type rating: int
         '''
         assert spotType in self.SPOT_TYPES
         assert cancelationPolicy in self.CANCELATION_POLICIES
@@ -80,9 +78,8 @@ class Spot(DatabaseObject):
         self.isRecurring       = isRecurring
         self.description       = description
         self.picturePath       = str(picturePath)
+        self.addressID         = addressID
         self.latitude, self.longitude = getLatitudeLongitude(self.address)
-        self.numReviews         = numReviews
-        self.rating             = rating
 
     def __iter__(self):
         return iter([('address'          , self.address),
@@ -99,9 +96,8 @@ class Spot(DatabaseObject):
                      ('isRecurring'      , self.isRecurring),
                      ('cancelationPolicy', self.cancelationPolicy),
                      ('picturePath'      , self.picturePath),
-                     ('numReviews'        , self.numReviews),
-                     ('rating'            , self.rating)])
-
+                     ('addressID'        , self.addressID),
+                     ('description'      , self.description)])
 
     @classmethod
     def searchByDistanceQuery(cls, latitude, longitude, maxDistance=25, maxResults=20):
@@ -115,6 +111,7 @@ class Spot(DatabaseObject):
         return '''SELECT ID, address, start, end, spotType, ownerEmail,
         renterEmail, isRecurring, isCovered, cancelationPolicy
     FROM SPOTS WHERE start >= \'{0}\'  AND end <= \'{1}\' ORDER BY start;'''.format(start, end, maxResults)
+
     @classmethod
     def searchIDByRenterEmailQuery(cls, renterEmail):
         return '''SELECT ID FROM {0} WHERE renterEmail=\'{1}\' AND end >= \'{2}\';'''.format(cls.TABLE_NAME, renterEmail, time.strftime("%Y-%m-%d %H:%M:%S"))
@@ -139,7 +136,7 @@ class Spot(DatabaseObject):
     @classmethod
     def viewSpotInfo(cls, spotID):
         return '''SELECT address, start, end, spotType, ownerEmail,
-        renterEmail, isRecurring, isCovered, cancelationPolicy, description, price, rating FROM SPOTS WHERE ID = {0};'''.format(spotID)
+        renterEmail, isRecurring, isCovered, cancelationPolicy, description, price FROM SPOTS WHERE ID = {0};'''.format(spotID)
 
     @classmethod
     def searchByOwnerEmailQuery(cls, ownerEmail):
@@ -171,14 +168,4 @@ class Spot(DatabaseObject):
         return '''UPDATE {0} SET picturePath=\'{1}\' WHERE ownerEmail=\'{2}\' AND address=\'{3}\';'''.format(cls.TABLE_NAME, path, ownerEmail, address)
     def isValidSpot(self): 
         return self.start < date.today() < self.end
-
-
-    @classmethod
-    def getRating(cls, spotId):
-        return '''SELECT rating, numReviews FROM {0}
-                        WHERE ID = \'{1}\';'''.format(cls.TABLE_NAME, spotId)
-
-    @classmethod
-    def setRating(cls, spotId, rating, numReviews):
-        return '''UPDATE {0} SET rating=\'{1}\' , numReviews = \'{2}\' WHERE ID=\'{3}\';'''.format(cls.TABLE_NAME, rating, numReviews, spotId)
 
