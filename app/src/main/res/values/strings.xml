@@ -60,6 +60,7 @@
 
     <!--create address-->
     <string name="address_create_new">Create New Address</string>
+    <string name="address_choose_photo">Upload Photo</string>
 
     <!--create parking spot-->
     <string name="repeat_weekly_label">Repeat Weekly</string>

@@ -1588,7 +1588,7 @@ public class ServerConnector {
         while(!s.done)
             Thread.sleep(100);//Log.i("SPAM","rate user");
         if(s.success)
-            return 200;
+            return s.addressID;
         else
             return 401;
     }
@@ -1681,9 +1681,10 @@ public class ServerConnector {
             return 401;
     }
 
+    // TODO: retrieve the addressID of the newly created address from the Server.
     static class CreateAddressTask extends AsyncTask<Void,Void,Void>{
         String address, ownerEmail, description , picture;
-        int spotType, isCovered;
+        int spotType, isCovered, addressID;
         boolean done = false, success = false;
 
         public CreateAddressTask(String address, String ownerEmail, String description, int spotType,
@@ -1753,6 +1754,7 @@ public class ServerConnector {
         protected void onPostExecute() {}
     }
 
+    // return the addressID of the newly created address
     public static int createAddress(String address, String ownerEmail, String description,
                                      int spotType, int isCovered, String picture) throws Exception {
         CreateAddressTask s = new CreateAddressTask(address, ownerEmail, description, spotType, isCovered, picture);
@@ -1819,17 +1821,26 @@ public class ServerConnector {
     }
 
     public static List<Integer> getAddressesOf(String email) throws Exception{
+        return returnPlaceholderAddressList();
+        /*
         GetAddressesTask s = new GetAddressesTask(email);
         s.execute();
         while (!s.done)
             Thread.sleep(100); //Log.i("SPAM", "get addresses of user")
         if (s.success)
             return s.addresses;
-        return null;
+        return null;*/
+    }
+
+    private static List<Integer> returnPlaceholderAddressList() {
+        List<Integer> placeholder = new ArrayList<>();
+        placeholder.add(1);
+        return placeholder;
     }
 
     public static AddressDetailsDAO getAddressDetails(int addressID){
-        return null;
+        AddressDetailsDAO placeholder = new AddressDetailsDAO("example address", "owneremail", "description here", 1, 1, "");
+        return placeholder;
     }
 
     public static int modifyAddress(int addressID, String ownerEmail, String description,
