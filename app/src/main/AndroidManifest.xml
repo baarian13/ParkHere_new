@@ -90,6 +90,9 @@
             android:label="Select Address"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".AddSpotRatingActivity" />
+        <activity android:name=".ContactCustomerServiceActivity"
+            android:label="Contact Customer Service"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Filter" />
         <!-- Configure the fileprovider for Android API 24+ when taking photos -->
         <provider

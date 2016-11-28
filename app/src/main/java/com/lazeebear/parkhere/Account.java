@@ -281,6 +281,7 @@ public class Account extends AppCompatActivity {
         addConfirmUserTypeListener();
         addConfirmPhoneNumberListener();
         addChangeProfilePicListener();
+        addContactButtonListener();
     }
 
     private void addOwnedSpotsButtonActionListener() {
@@ -686,5 +687,21 @@ public class Account extends AppCompatActivity {
                 profilePicView.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    public void addContactButtonListener() {
+        Button contactUsButton = (Button) findViewById(R.id.contactCS_button_account);
+        contactUsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openContactCustomerServiceActivity();
+            }
+        });
+    }
+
+    public void openContactCustomerServiceActivity() {
+        Intent intent = new Intent(this, ContactCustomerServiceActivity.class);
+        intent.putExtra("id",uniqueID);
+        startActivity(intent);
     }
 }

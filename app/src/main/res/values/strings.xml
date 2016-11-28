@@ -92,4 +92,10 @@
     <string name="toggle_private_profile_button">View Private Profile</string>
     <string name="change_profile_pic_button">Change Profile Picture</string>
 
+    <!--customer service-->
+    <string name="contact_cs_label">Contact Customer Service</string>
+    <string name="contact_cs_textedit_hint">Type here...</string>
+    <string name="contact_cs_submit_button_label">Submit</string>
+    <string name="contact_us_label">Contact Us</string>
+
 </resources>
