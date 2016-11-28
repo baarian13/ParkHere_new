@@ -316,15 +316,15 @@ class TestParkHereMethods(unittest.TestCase):
     #     self.assertEqual(res, '200')
     #     http_client.close()
 
-    # def test_search_spot(self):
-    #     http_client = httpclient.HTTPClient()
-    #     cookie, code = signIn(http_client, 'rob@rob.com', 'Password1$')
-    #     res = searchSpot(cookie, http_client,"2801 Menlo Ave, Los Angeles, CA")
-    #     jsondata = json.loads(res)
-    #     self.assertEqual(jsondata[0]["address"], '2801 Menlo Ave, Los Angeles CA, 90007')
-    #     self.assertEqual(jsondata[0]["start"], "2016-11-12 12:00:00")
-    #     self.assertEqual(jsondata[0]["end"], "2016-11-12 14:00:00")
-    #     http_client.close()
+     def test_search_spot(self):
+         http_client = httpclient.HTTPClient()
+         cookie, code = signIn(http_client, 'rob@rob.com', 'Password1$')
+         res = searchSpot(cookie, http_client,"2801 Menlo Ave, Los Angeles, CA")
+         jsondata = json.loads(res)
+         self.assertEqual(jsondata[0]["address"], '2801 Menlo Ave, Los Angeles CA, 90007')
+         self.assertEqual(jsondata[0]["start"], "2016-11-12 12:00:00")
+         self.assertEqual(jsondata[0]["end"], "2016-11-12 14:00:00")
+         http_client.close()
 
     # def test_search_time_spot(self):
     #     http_client = httpclient.HTTPClient()
@@ -394,14 +394,14 @@ class TestParkHereMethods(unittest.TestCase):
     #    self.assertEqual(len(jsondata), 2)
     #    http_client.close()
     #more data
-    def test_spot_history(self):
-        http_client = httpclient.HTTPClient()
-        cookie, code = signIn(http_client, 'qwerty@a.com', 'Password!1')
-        res = spotHistory(cookie, http_client,'qwerty@a.com')
-        jsondata = json.loads(res)
-        self.assertEqual(jsondata[0]["address"], "702 West 28th street, Los Angeles CA, 90007")
-        self.assertEqual(jsondata[0]["id"], 10)
-        http_client.close()
+    #def test_spot_history(self):
+    #    http_client = httpclient.HTTPClient()
+    #    cookie, code = signIn(http_client, 'qwerty@a.com', 'Password!1')
+    #    res = spotHistory(cookie, http_client,'qwerty@a.com')
+    #    jsondata = json.loads(res)
+    #    self.assertEqual(jsondata[0]["address"], "702 West 28th street, Los Angeles CA, 90007")
+    #    self.assertEqual(jsondata[0]["id"], 10)
+    #    http_client.close()
 
     #def test_contact_service(self):
     #    http_client = httpclient.HTTPClient()
