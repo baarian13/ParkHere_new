@@ -1354,7 +1354,7 @@ public class ServerConnector {
 
     static class ViewRentalsTask extends AsyncTask<Void,Void,Void>
     {
-        List<Integer> spotIDs = new ArrayList<>();
+        List<SpotButtonDAO> spots = new ArrayList<>();
         String email;
         boolean done = false;
         boolean success = false;
@@ -1392,13 +1392,13 @@ public class ServerConnector {
                 in.close();
 
                 Gson gson = new Gson();
-                Type typeOfT = new TypeToken<List<List<Integer>>>(){}.getType();
-                List<List<Integer>> spotID_temp = gson.fromJson(response.toString(), typeOfT);
-                int size = spotID_temp.size();
+                Type typeOfT = new TypeToken<List<SpotButtonDAO>>(){}.getType();
+                spots = gson.fromJson(response.toString(), typeOfT);
+                /*int size = spotID_temp.size();
                 System.out.println("Returned object size: " + size);
                 for (int i=0; i<size; i++){
-                    spotIDs.add(spotID_temp.get(i).get(0));
-                }
+                    spots.add(spotID_temp.get(i));
+                }*/
                 //print result
                 success = true;
                 Log.i("STATE","view rentals - success = true");
@@ -1417,7 +1417,7 @@ public class ServerConnector {
         }
     }
 
-    public static List<Integer> viewRentals(String email) throws Exception {
+    public static List<SpotButtonDAO> viewRentals(String email) throws Exception {
         ViewRentalsTask s = new ViewRentalsTask(email);
         s.execute();
         Log.i("STATE","Waiting for view rentals task");
@@ -1425,7 +1425,7 @@ public class ServerConnector {
             Thread.sleep(100);//Log.i("SPAM","view rentals");
         Log.i("STATE","finished waiting for view rentals");
         if(s.success)
-            return s.spotIDs;
+            return s.spots;
         return null;
     }
 
