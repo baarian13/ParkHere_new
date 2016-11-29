@@ -32,30 +32,17 @@ class SQLAddressDatabaseManager(SQLDatabaseManager):
     def deleteAddress(self, ownerEmail, spotID):
         self.execute(Address.deleteAddress(ownerEmail, spotID))
 
-	'''create address'''
+    def updateSpotType(self, addressID, spotType):
+        self.execute(Address.updateSpotType(addressID, spotType))
 
-	'''modify address'''
+    def updateIsCovered(self, addressID, isCovered):
+        self.execute(Address.updateIsCovered(addressID, isCovered))
 
-	'''delete address'''
+    def updateDescription(self, addressID, description):
+        self.execute(Address.updateDescription(addressID, description))
 
-	'''(opt) delete address and related spots'''
-
-	'''get all addresses owned by user with email'''
-	def getAddressesOwnedBy(self, userEmail):
-		'''
-		:type userEmail: str
-		:rtype: list of strings
-		'''
-		self.cursor.execute(Address.searchBy)
-
-
-	'''get the info of a specific address by address name'''
-	def getAddressInfo(self, address):
-		'''
-		:type address:str
-		:rtype: list?
-		'''
-		self.cursor.execute(Address.viewAddressInfo(addressID))
+    def viewAddressInfo(self, addressID):
+        self.cursor.execute(Address.viewAddressInfo(addressID))
         info = list(self.cursor.fetchall()[0])
         try:
             self.cursor.execute(Address.getPicturePath(addressID))
@@ -66,48 +53,10 @@ class SQLAddressDatabaseManager(SQLDatabaseManager):
             print e
         return info
 
-''' this file: Model > SpotDatabaseManager.py '''
-''' from Model > SpotDatabaseManager.py:
-		def viewSpotInfo(self, spotID):
-        self.cursor.execute(Spot.viewSpotInfo(spotID))
-        info = list(self.cursor.fetchall()[0])
-        try:
-            self.cursor.execute(Spot.getPicturePath(spotID))
-            picturePath = self.cursor.fetchall()[0][0]
-            print picturePath
-            info.append(self.objStorageManager.downloadPictureAsB64(picturePath))
-        except Exception as e:
-            print e
-        return info
-'''
-''' from DataObjects > Spot.py:
- @classmethod
-    def viewSpotInfo(cls, spotID):
-        return ''SELECT address, start, end, spotType, ownerEmail,
-        renterEmail, isRecurring, isCovered, cancelationPolicy, description, price, rating FROM SPOTS WHERE ID = {0};''.format(spotID)
-
-'''
-''' from Controller > SpotHandlers > ViewSpotHandler.py:
-class ViewSpotHandler(AbstractSpotHandler):
-    @tornado.web.authenticated
-    @tornado.gen.coroutine
-    def get(self):
-        spotID = self.get_argument("spotID")
-        #needs to be finished
-        if spotID:
-            res = self.db.viewSpotInfo(spotID)
-            results = { 'address'           : res[0],
-                        'start'             : str(res[1].strftime('%Y-%m-%d %H:%M:%S')),
-                        'end'               : str(res[2].strftime('%Y-%m-%d %H:%M:%S')),
-                        'spotType'          : res[3],
-                        'ownerEmail'        : res[4],
-                        'renterEmail'       : res[5],
-                        'isRecurring'       : res[6],
-                        'isCovered'         : res[7],
-                        'cancelationPolicy' : res[8],
-                        'description'       : res[9],
-                        'price'             : float(res[10]),
-                        'rating'           : res[11],
-                        'picture'            : res[12]}
-            self.write(json.dumps(results))
-'''
+    def getAddressIDsOwnedBy(self, userEmail):
+        '''
+        :type userEmail: str
+        :rtype: list
+        '''
+        self.cursor.execute(Address.searchIDByOwnerEmailQuery(userEmail))
+        return self.cursor.fetchall()

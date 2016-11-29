@@ -73,3 +73,29 @@ class Address(DatabaseObject):
     @classmethod
     def deleteAddress(cls, ownerEmail, spotID):
         return '''DELETE FROM ADDRESSES where ID = {0} and ownerEmail = \'{1}\';'''.format(spotID, ownerEmail)
+
+
+    @classmethod
+    def updateSpotType(cls, addressID, spotType):
+        return '''UPDATE {0} SET spotType = \'{1}\' WHERE ID = {2};'''.format(cls.TABLE_NAME, spotType, addressID)
+
+    @classmethod
+    def updateIsCovered(cls, addressID, isCovered):
+        return '''UPDATE {0} SET isCovered = \'{1}\' WHERE ID = {2};'''.format(cls.TABLE_NAME, isCovered, addressID)
+
+    @classmethod
+    def updateDescription(cls, addressID, description):
+        return '''UPDATE {0} SET description = \'{1}\' WHERE ID = {2};'''.format(cls.TABLE_NAME, description, addressID)
+
+    @classmethod
+    def viewAddressInfo(cls, addressID):
+        return '''SELECT ownerEmail, address, spotType, isCovered, description FROM ADDRESSES WHERE ID = {0};'''.format(addressID)
+
+    @classmethod
+    def getPicturePath(cls, addressID):
+        return '''SELECT picturePath FROM ADDRESSES WHERE ID = {0};'''.format(addressID)
+
+    @classmethod
+    def searchIDByOwnerEmailQuery(cls, ownerEmail):
+        return '''SELECT ID FROM {0} WHERE ownerEmail=\'{1}\';'''.format(cls.TABLE_NAME, ownerEmail)
+
