@@ -1912,15 +1912,14 @@ public class ServerConnector {
     }
 
     public static List<Integer> getAddressesOf(String email) throws Exception{
-        return returnPlaceholderAddressList();
-        /*
+        //return returnPlaceholderAddressList();
         GetAddressesTask s = new GetAddressesTask(email);
         s.execute();
         while (!s.done)
             Thread.sleep(100); //Log.i("SPAM", "get addresses of user")
         if (s.success)
             return s.addresses;
-        return null;*/
+        return null;
     }
 
     private static List<Integer> returnPlaceholderAddressList() {
