@@ -48,7 +48,7 @@ public class CreateAddressActivity extends AppCompatActivity {
     private ArrayList<String> addressList;
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_address);
 
@@ -68,7 +68,7 @@ public class CreateAddressActivity extends AppCompatActivity {
         selectedPosition = 404;
 
         Intent intent = getIntent();
-        if (intent != null){
+        if (intent != null) {
             uniqueID = intent.getStringExtra("id");
             mode = intent.getIntExtra("mode", ValidationFunctions.mode_create_address);
             hideCreateNewAddressItems();
@@ -180,7 +180,7 @@ public class CreateAddressActivity extends AppCompatActivity {
     }
 
     private void populateSpinnerWithAddresses() {
-        try{
+        try {
             addresses = ServerConnector.getAddressesOf(uniqueID);
 
             addressDetailsDAOList = new ArrayList<>();
@@ -190,11 +190,11 @@ public class CreateAddressActivity extends AppCompatActivity {
                 addressDetailsDAOList.add(details);
                 addressList.add(details.getAddress());
             }
-            adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, addressList);
+            adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, addressList);
 
             addressSelect.setAdapter(adapter);
         } catch (Exception e) {
-            Log.i("STATE","Error while getting the addresses of " + uniqueID);
+            Log.i("STATE", "Error while getting the addresses of " + uniqueID);
         }
     }
 
@@ -210,8 +210,10 @@ public class CreateAddressActivity extends AppCompatActivity {
                     fillInInformation(selectedPosition);
                 }
             }
+
             @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
     }
 
@@ -230,7 +232,7 @@ public class CreateAddressActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         //Detects request codes
-        if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
+        if (requestCode == GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
@@ -248,14 +250,14 @@ public class CreateAddressActivity extends AppCompatActivity {
 
     private void checkPermissionsAndOpenGallery() {
         //if validation returns false, it means it's already been granted
-        if (!ValidationFunctions.needToGrantGalleryPermissions(this)){
+        if (!ValidationFunctions.needToGrantGalleryPermissions(this)) {
             openGallery();
         }
         //else go to onRequestPermissionsResult for the intent to select a file.
     }
 
     private void openGallery() {
-        Log.i("STATE","Open gallery.");
+        Log.i("STATE", "Open gallery.");
         //permission granted. Open gallery.
         Intent i = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -266,16 +268,16 @@ public class CreateAddressActivity extends AppCompatActivity {
         addressEnter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    startIntent();
+                startIntent();
             }
         });
     }
 
     private void startIntent() {
         Intent intent = new Intent(this, CreateSpotActivity.class);
-        intent.putExtra("id",uniqueID);
-        intent.putExtra("photo",base64photo);
-        intent.putExtra("addressID",addresses.get(selectedPosition));
+        intent.putExtra("id", uniqueID);
+        intent.putExtra("photo", base64photo);
+        intent.putExtra("addressID", addresses.get(selectedPosition));
         startActivity(intent);
     }
 
