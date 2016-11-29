@@ -30,10 +30,10 @@ from Controller.UserHandlers.ContactCustomerServiceHandler import ContactCustome
 #from Controller.SpotHandlers.ModifyPriceHandler import ModifyPriceHandler
 
 #from Controller.AddressHandlers.CreateAddressHandler import CreateAddressHandler
-from Controller.AddressHandlers.DeleteAddressHandler import DeleteAddressHandler
-from Controller.AddressHandlers.GetUserAddressHandler import GetUserAddressHandler
-from Controller.AddressHandlers.ModifyAddressHandler import ModifyAddressHandler
-from Controller.AddressHandlers.ViewAddressHandler import ViewAddressHandler
+#from Controller.AddressHandlers.DeleteAddressHandler import DeleteAddressHandler
+#from Controller.AddressHandlers.GetUserAddressHandler import GetUserAddressHandler
+#from Controller.AddressHandlers.ModifyAddressHandler import ModifyAddressHandler
+#from Controller.AddressHandlers.ViewAddressHandler import ViewAddressHandler
 
 settings = {
     "cookie_secret": "ADSFGHARY3457fgSDFHSDFjusdfASDFGH2345h=sdg",
@@ -62,12 +62,12 @@ application = tornado.web.Application([
     ("/get/token", GetClientTokenHandler),
     ("/check/user", CheckUserHandler),
     ("/cancel/reservation", CancelReservationHandler),
-    ("/contact/service", ContactCustomerServiceHandler),
+    ("/contact/service", ContactCustomerServiceHandler)#,
     #("/create/address", CreateAddressHandler),
-    ("/delete/address", DeleteAddressHandler),
-    ("/get/address", GetUserAddressHandler),
-    ("/modify/address", ModifyAddressHandler),
-    ("/view/address", ViewAddressHandler)#,
+    #("/delete/address", DeleteAddressHandler),
+    #("/get/address", GetUserAddressHandler),
+    #("/modify/address", ModifyAddressHandler),
+    #("/view/address", ViewAddressHandler),
     #("/modify/price", ModifyPriceHandler)
 ], ssl_options={
     "certfile": os.path.join(data_dir, "server.crt"),
