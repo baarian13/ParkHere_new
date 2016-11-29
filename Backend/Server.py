@@ -29,7 +29,7 @@ from Controller.SpotHandlers.CancelReservationHandler import CancelReservationHa
 from Controller.UserHandlers.ContactCustomerServiceHandler import ContactCustomerServiceHandler
 #from Controller.SpotHandlers.ModifyPriceHandler import ModifyPriceHandler
 
-from Controller.AddressHandlers.CreateAddressHandler import CreateAddressHandler
+#from Controller.AddressHandlers.CreateAddressHandler import CreateAddressHandler
 from Controller.AddressHandlers.DeleteAddressHandler import DeleteAddressHandler
 from Controller.AddressHandlers.GetUserAddressHandler import GetUserAddressHandler
 from Controller.AddressHandlers.ModifyAddressHandler import ModifyAddressHandler
@@ -63,7 +63,7 @@ application = tornado.web.Application([
     ("/check/user", CheckUserHandler),
     ("/cancel/reservation", CancelReservationHandler),
     ("/contact/service", ContactCustomerServiceHandler),
-    ("/create/address", CreateAddressHandler),
+    #("/create/address", CreateAddressHandler),
     ("/delete/address", DeleteAddressHandler),
     ("/get/address", GetUserAddressHandler),
     ("/modify/address", ModifyAddressHandler),
