@@ -50,6 +50,7 @@ public class Account extends AppCompatActivity {
     private List<Integer>  ownedSpotList = new ArrayList<>();
     private List<Integer> spotHistoryList = new ArrayList<>();
     private List<Integer> currentReservationsList = new ArrayList<>();
+    private LinearLayout spotList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,7 @@ public class Account extends AppCompatActivity {
         searchSpotButton.setVisibility(View.VISIBLE);
         Button spotHistoryButton = (Button) findViewById(R.id.spotHistoryButton_account);
         spotHistoryButton.setVisibility(View.VISIBLE);
-        LinearLayout spotList = (LinearLayout) findViewById(R.id.spotList_account);
+        spotList = (LinearLayout) findViewById(R.id.spotList_account);
         spotList.setVisibility(View.VISIBLE);
         TextView phoneNumber = (TextView) findViewById(R.id.phoneNumber);
         phoneNumber.setVisibility(View.VISIBLE);
@@ -303,8 +304,8 @@ public class Account extends AppCompatActivity {
     }
 
     private void clearSpotList(){
-        LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
-        list.removeAllViews();
+        //spotList = (LinearLayout) findViewById(R.id.spotList_account);
+        spotList.removeAllViews();
     }
 
     //we only have one list to show
@@ -312,14 +313,14 @@ public class Account extends AppCompatActivity {
     private void populateOwnedSpots() {
         if (!ownedSpotsOpen) {
             clearSpotList();
-            LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
+            //spotList = (LinearLayout) findViewById(R.id.spotList_account);
             int spotCt = ownedSpotList.size();
             System.out.println("Populating owned spots...");
             for (int i = 0; i < spotCt; i++) {
                 Button spotButton = createSpotButton(ownedSpotList.get(i));
                 System.out.println("Creating button with ID: "+ ownedSpotList.get(i));
                 spotButton.setId(ownedSpotList.get(i)); //for referencing from tests. doesn't need to be unique.
-                list.addView(spotButton);
+                spotList.addView(spotButton);
             }
 
             System.out.println("Successfully populated owned spots!!");
@@ -333,13 +334,13 @@ public class Account extends AppCompatActivity {
     private void populateSpotsHistory() {
         if (!spotHistoryOpen) {
             clearSpotList();
-            LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
+            //spotList = (LinearLayout) findViewById(R.id.spotList_account);
             int spotCt = spotHistoryList.size();
             System.out.println("Populating spot history with " + spotCt + " buttons...");
             for (int i = 0; i < spotCt; i++) {
                 Button spotButton = createSpotButton(spotHistoryList.get(i));
                 System.out.println("Creating button with ID: " + spotHistoryList.get(i));
-                list.addView(spotButton);
+                spotList.addView(spotButton);
             }
             System.out.println("Successfully populated spot history!");
             spotHistoryOpen = true;
@@ -351,11 +352,11 @@ public class Account extends AppCompatActivity {
     private void populateCurrentReservations() {
         if (!currentReservationsOpen) {
             clearSpotList();
-            LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
+            spotList = (LinearLayout) findViewById(R.id.spotList_account);
             int spotCt = currentReservationsList.size();
             for (int i = 0; i < spotCt; i++) {
                 Button spotButton = createSpotButton(currentReservationsList.get(i));
-                list.addView(spotButton);
+                spotList.addView(spotButton);
             }
             currentReservationsOpen = true;
             spotHistoryOpen = false;
