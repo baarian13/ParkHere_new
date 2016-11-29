@@ -1,6 +1,7 @@
 package com.lazeebear.parkhere;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -51,6 +52,10 @@ public class Account extends AppCompatActivity {
     private List<SpotButtonDAO>  ownedSpotList = new ArrayList<>();
     private List<SpotButtonDAO> spotHistoryList = new ArrayList<>();
     private List<SpotButtonDAO> currentReservationsList = new ArrayList<>();
+    //copy/pasted from login activity
+    private String prefName = "User Data";
+    private String prefEmail = "email";
+    private String prefPassword = "password";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -379,7 +384,6 @@ public class Account extends AppCompatActivity {
             Log.i("ERROR", "Exception while getting spot info on account page");
         }
         */
-        //THIS DOES NOT GET CALLED
         System.out.println("Creating button in createSpotButton()");
         Button button = new Button(this);
         button.setText(address);
@@ -480,6 +484,12 @@ public class Account extends AppCompatActivity {
     }
 
     private void logout(){
+        //clear cache
+        SharedPreferences prefs = getSharedPreferences(prefName, 0);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(prefEmail, "");
+        editor.putString(prefPassword, "");
+        editor.commit();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
