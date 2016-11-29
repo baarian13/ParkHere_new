@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -71,7 +72,7 @@ public class CreateAddressActivity extends AppCompatActivity {
         if (intent != null) {
             uniqueID = intent.getStringExtra("id");
             mode = intent.getIntExtra("mode", ValidationFunctions.mode_create_address);
-            hideCreateNewAddressItems();
+            setVisibilityOfCreateNewAddressItems(View.GONE);
             setActionListeners();
             populateSpinnerWithAddresses();
         }
@@ -86,8 +87,8 @@ public class CreateAddressActivity extends AppCompatActivity {
         setSubmitNewAddressButtonListener();
     }
 
-    private void hideCreateNewAddressItems() {
-        createNewAddressLayout.setVisibility(View.GONE);
+    private void setVisibilityOfCreateNewAddressItems(int visibility) {
+        createNewAddressLayout.setVisibility(visibility);
         /*address_input_address.setVisibility(View.GONE);
         address_input_description.setVisibility(View.GONE);
         address_iscovered_checkbox.setVisibility(View.GONE);
@@ -116,6 +117,7 @@ public class CreateAddressActivity extends AppCompatActivity {
         //if in create mode, hide this button instead of setting a listener.
         switch (mode) {
             case (ValidationFunctions.mode_create_address):
+                delete_address_button.setVisibility(View.GONE);
                 break;
             case (ValidationFunctions.mode_edit_address):
                 delete_address_button.setOnClickListener(new View.OnClickListener() {
@@ -136,6 +138,7 @@ public class CreateAddressActivity extends AppCompatActivity {
         submit_address_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!ValidationBoxes()) return; //if something is not valid, quit.
                 //get information
                 String address = address_input_address.getText().toString();
                 String description = address_input_description.getText().toString();
@@ -150,7 +153,7 @@ public class CreateAddressActivity extends AppCompatActivity {
                     case (ValidationFunctions.mode_create_address):
                         try {
                             addressEnter.setVisibility(View.VISIBLE);
-                            hideCreateNewAddressItems();
+                            setVisibilityOfCreateNewAddressItems(View.GONE);
 
                             int newAddressID = ServerConnector.createAddress(address, uniqueID, description, spotType, isCovered, base64photo);
 
@@ -162,6 +165,7 @@ public class CreateAddressActivity extends AppCompatActivity {
                             break;
                         } catch (Exception e) {
                             Log.i("STATE", "Error while creating new address");
+                            setVisibilityOfCreateNewAddressItems(View.VISIBLE);
                         }
                         break;
                     case (ValidationFunctions.mode_edit_address):
@@ -170,15 +174,45 @@ public class CreateAddressActivity extends AppCompatActivity {
                                     address, base64photo, description, uniqueID, spotType, isCovered);
                             ServerConnector.modifyAddress(editedAddress);
                             // hide the stuff after the spot has been updated.
-                            hideCreateNewAddressItems();
+                            setVisibilityOfCreateNewAddressItems(View.GONE);
                             break;
                         } catch (Exception e) {
                             Log.i("STATE", "Error while editing address");
+                            setVisibilityOfCreateNewAddressItems(View.VISIBLE);
                         }
                         break;
                 }
             }
         });
+    }
+
+    private boolean ValidationBoxes() {
+        address_input_address.setError(null);
+        address_input_description.setError(null);
+        //upload_photo_button.setError(null); photo not required.
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // Check every box
+        // Input address
+        if (TextUtils.isEmpty(address_input_address.getText())) {
+            address_input_address.setError("Address must not be empty!");
+            focusView = address_input_address;
+            cancel = true;
+        }
+        // description
+        if (TextUtils.isEmpty(address_input_description.getText())) {
+            address_input_description.setError("Description must not be empty!");
+            focusView = address_input_description;
+            cancel = true;
+        }
+
+        if (cancel) {
+            focusView.requestFocus();
+            return false;
+        }
+        return true;
     }
 
     private void populateSpinnerWithAddresses() {
