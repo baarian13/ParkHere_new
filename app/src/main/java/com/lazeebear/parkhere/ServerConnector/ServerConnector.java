@@ -1588,7 +1588,7 @@ public class ServerConnector {
         while(!s.done)
             Thread.sleep(100);//Log.i("SPAM","rate user");
         if(s.success)
-            return s.addressID;
+            return s.rating;
         else
             return 401;
     }
@@ -1762,7 +1762,7 @@ public class ServerConnector {
         while(!s.done)
             Thread.sleep(100);//Log.i("SPAM","rate user");
         if(s.success)
-            return 200;
+            return 200; //s.addressID
         else
             return 401;
     }
@@ -1839,7 +1839,8 @@ public class ServerConnector {
     }
 
     public static AddressDetailsDAO getAddressDetails(int addressID){
-        AddressDetailsDAO placeholder = new AddressDetailsDAO("example address", "owneremail", "description here", 1, 1, "");
+        AddressDetailsDAO placeholder = new AddressDetailsDAO("1200 West 25th street, Los Angeles CA, 90007",
+                "a@b.com", "description here", 1, 1, "");
         return placeholder;
     }
 
