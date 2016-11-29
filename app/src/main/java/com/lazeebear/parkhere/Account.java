@@ -466,9 +466,11 @@ public class Account extends AppCompatActivity {
     }
 
     private void addSpotHistoryButtonActionListener() {
+        addressSelect.setVisibility(View.GONE);
         Button spotHistoryButton = (Button) findViewById(R.id.spotHistoryButton_account);
         spotHistoryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                addressSelect.setVisibility(View.GONE);
                 populateSpotsHistory();
             }
         });
@@ -630,6 +632,7 @@ public class Account extends AppCompatActivity {
         Button editUserTypeButton = (Button) findViewById(R.id.editUserTypeButton_account);
         editUserTypeButton.setOnClickListener((new View.OnClickListener() {
             public void onClick(View view) {
+                addressSelect.setVisibility(View.GONE);
                 toggleUserTypeEditors();
             }
         }));
@@ -639,6 +642,7 @@ public class Account extends AppCompatActivity {
         Button editPhoneNumberButton = (Button) findViewById(R.id.editPhoneNumberButton_account);
         editPhoneNumberButton.setOnClickListener((new View.OnClickListener() {
             public void onClick(View view) {
+                addressSelect.setVisibility(View.GONE);
                 togglePhoneNumberEditors();
             }
         }));
@@ -700,6 +704,7 @@ public class Account extends AppCompatActivity {
 
     // upload different profile picture
     private void addChangeProfilePicListener() {
+        addressSelect.setVisibility(View.GONE);
         Button changeProfilePicButton = (Button) findViewById(R.id.account_change_profile_pic_button);
         changeProfilePicButton.setOnClickListener(new View.OnClickListener() {
             @Override
