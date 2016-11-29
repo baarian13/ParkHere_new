@@ -50,7 +50,7 @@ public class Account extends AppCompatActivity {
     private boolean phoneNumberEditorsShown = true;
     private List<SpotButtonDAO>  ownedSpotList = new ArrayList<>();
     private List<SpotButtonDAO> spotHistoryList = new ArrayList<>();
-    private List<Integer> currentReservationsList = new ArrayList<>();
+    private List<SpotButtonDAO> currentReservationsList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,7 +209,7 @@ public class Account extends AppCompatActivity {
             System.out.println("In Account page0: " + uniqueID);
             ReturnedUserDAO userInfo = ServerConnector.userDetails(uniqueID);
             System.out.println("successfully grabbed user info from server");
-            //currentReservationsList = ServerConnector.viewRentals(uniqueID);
+            currentReservationsList = ServerConnector.viewRentals(uniqueID);
             if (currentReservationsList == null)
                 currentReservationsList = new ArrayList<>();
 
@@ -354,8 +354,10 @@ public class Account extends AppCompatActivity {
             clearSpotList();
             LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
             int spotCt = currentReservationsList.size();
+            System.out.println("Populating current reservations with " + spotCt + " buttons...");
             for (int i = 0; i < spotCt; i++) {
-                Button spotButton = createSpotButton(null);
+                Button spotButton = createSpotButton(currentReservationsList.get(i));
+                System.out.println("Creating button with ID: " + currentReservationsList.get(i));
                 list.addView(spotButton);
             }
             currentReservationsOpen = true;

@@ -147,7 +147,7 @@ class Spot(DatabaseObject):
 
     @classmethod
     def searchByOwnerEmailQuery(cls, ownerEmail):
-        return '''SELECT ID, address, start, end FROM SPOTS WHERE ownerEmail = \'{0}\';'''.format(ownerEmail)
+        return '''SELECT ID, address FROM SPOTS WHERE ownerEmail = \'{0}\';'''.format(ownerEmail)
 
     @classmethod
     def deleteSpot(cls, ownerEmail, spotID):

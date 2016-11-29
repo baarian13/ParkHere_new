@@ -9,5 +9,7 @@ class ViewPostingsHandler(AbstractSpotHandler):
     def get(self):
         ownerEmail = self.get_argument('email')
         if ownerEmail:
-            results = self.db.getSpotIDsOwnedBy(ownerEmail)
+            results = [{'id'       : res[0],
+                        'address'  : res[1]}
+                       for res in self.db.getSpotsOwnedBy(ownerEmail)]
             self.write(json.dumps(results))
