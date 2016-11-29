@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,6 +24,7 @@ import android.content.res.Resources;
 
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
+import com.lazeebear.parkhere.DAOs.SentObjects.AddressDetailsDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentUserDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
@@ -51,6 +54,11 @@ public class Account extends AppCompatActivity {
     private List<Integer> spotHistoryList = new ArrayList<>();
     private List<Integer> currentReservationsList = new ArrayList<>();
     private LinearLayout spotList;
+    // address selection
+    private Spinner addressSelect;
+    private List<Integer> addresses;
+    private ArrayAdapter<String> adapter;
+    private ArrayList<String> addressList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +91,8 @@ public class Account extends AppCompatActivity {
         phoneNumber.setVisibility(View.VISIBLE);
         TextView email = (TextView) findViewById(R.id.email);
         email.setVisibility(View.VISIBLE);
+        addressSelect = (Spinner) findViewById(R.id.account_select_address);
+        addressSelect.setVisibility(View.GONE);
 
         hideUserTypeEditors();
         hidePhoneNumberEditors();
@@ -283,13 +293,14 @@ public class Account extends AppCompatActivity {
         addConfirmPhoneNumberListener();
         addChangeProfilePicListener();
         addContactButtonListener();
+        setAddressSelectionListener();
     }
 
     private void addOwnedSpotsButtonActionListener() {
         Button ownedSpotsButton = (Button) findViewById(R.id.ownedSpotsButton);
         ownedSpotsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                populateOwnedSpots();
+                populateOwnedAddresses();
             }
         });
     }
@@ -298,6 +309,7 @@ public class Account extends AppCompatActivity {
         Button currentReservationsButton = (Button) findViewById(R.id.currentReservationsButton);
         currentReservationsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                addressSelect.setVisibility(View.GONE);
                 populateCurrentReservations();
             }
         });
@@ -308,6 +320,45 @@ public class Account extends AppCompatActivity {
         spotList.removeAllViews();
     }
 
+    private void populateOwnedAddresses() {
+        // populate with owned addresses
+        populateSpinnerWithAddresses();
+        addressSelect.setVisibility(View.VISIBLE);
+        populateOwnedSpots();
+        //hideAllSpots(); // hide all spots so the user much select an address first.
+    }
+
+    private void populateSpinnerWithAddresses() {
+        try{
+            addresses = ServerConnector.getAddressesOf(uniqueID);
+
+            addressList = new ArrayList<>();
+            for (int i = 0; i < addresses.size(); i++) {
+                AddressDetailsDAO details = ServerConnector.getAddressDetails(addresses.get(i));
+                addressList.add(details.getAddress());
+            }
+            adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, addressList);
+
+            addressSelect.setAdapter(adapter);
+        } catch (Exception e) {
+            Log.i("STATE","Error while getting the addresses of " + uniqueID);
+        }
+    }
+
+    private void setAddressSelectionListener() {
+        addressSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //Resources res = getResources();
+                //int selectedPosition = parent.getSelectedItemPosition();
+                String text = parent.getSelectedItem().toString();
+                changeVisibilityOfAllSpotsListedWithText(text, View.VISIBLE);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+    }
+
     //we only have one list to show
     //so remove everything already there and replace with the new content
     private void populateOwnedSpots() {
@@ -315,7 +366,7 @@ public class Account extends AppCompatActivity {
             clearSpotList();
             //spotList = (LinearLayout) findViewById(R.id.spotList_account);
             int spotCt = ownedSpotList.size();
-            System.out.println("Populating owned spots...");
+            System.out.println("Populating owned spots with " + spotCt + " buttons...");
             for (int i = 0; i < spotCt; i++) {
                 Button spotButton = createSpotButton(ownedSpotList.get(i));
                 System.out.println("Creating button with ID: "+ ownedSpotList.get(i));
@@ -361,6 +412,26 @@ public class Account extends AppCompatActivity {
             currentReservationsOpen = true;
             spotHistoryOpen = false;
             ownedSpotsOpen = false;
+        }
+    }
+
+    // visibility must be View.VISIBLE, View.INVISIBLE, or View.GONE
+    // hide all buttons with text, show all buttons with text.
+    private void changeVisibilityOfAllSpotsListedWithText(String text, int visibility) {
+        int count = spotList.getChildCount();
+        for(int i = 0; i<count; i++) {
+            Button spot = (Button) spotList.getChildAt(i);
+            if (spot.getText().equals(text)) {
+                spot.setVisibility(visibility);
+            }
+        }
+    }
+
+    private void hideAllSpots() {
+        int count = spotList.getChildCount();
+        for(int i = 0; i<count; i++) {
+            Button spot = (Button) spotList.getChildAt(i);
+            spot.setVisibility(View.GONE);
         }
     }
 
