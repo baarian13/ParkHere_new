@@ -2199,7 +2199,7 @@ public class ServerConnector {
         }
     }
 
-    public static AddressDetailsDAO AddressDetails(int addressID) throws Exception {
+    public static AddressDetailsDAO AddressDetails(Integer addressID) throws Exception {
         AddressDetailsTask s = new AddressDetailsTask(addressID+"");
         s.execute();
         while(!s.done)

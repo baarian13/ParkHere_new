@@ -25,7 +25,7 @@ import android.content.res.Resources;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotButtonDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
-import com.lazeebear.parkhere.DAOs.SentObjects.AddressDetailsDAO;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.AddressDetailsDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentUserDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
@@ -335,7 +335,7 @@ public class Account extends AppCompatActivity {
 
             addressList = new ArrayList<>();
             for (int i = 0; i < addresses.size(); i++) {
-                AddressDetailsDAO details = ServerConnector.getAddressDetails(addresses.get(i));
+                AddressDetailsDAO details = ServerConnector.AddressDetails(addresses.get(i));
                 addressList.add(details.getAddress());
             }
             adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, addressList);
