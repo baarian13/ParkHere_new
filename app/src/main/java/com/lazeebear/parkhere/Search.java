@@ -13,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotAddressDateDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDateDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
@@ -215,10 +216,10 @@ public class Search extends AppCompatActivity {
         System.out.println("search_page lowerDateTime: " + lowerDateTime);
         System.out.println("search_page upperDateTime: " + upperDateTime);
 
-        List<SpotDateDAO> spots = null; //List<SpotDateDAO> spots = null;
+        List<SpotAddressDateDAO> spots = null; //List<SpotDateDAO> spots = null;
         try {
 //            spots = ServerConnector.searchSpot(addressString);
-            spots = ServerConnector.searchSpotDate(lowerDateTime, upperDateTime);
+            spots = ServerConnector.searchSpotAddressAndDate(addressString, lowerDateTime, upperDateTime);
         } catch (Exception e) {
             Log.i("ERROR", "Exception while getting spot list during search");
         }

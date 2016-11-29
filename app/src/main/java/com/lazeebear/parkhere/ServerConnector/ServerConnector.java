@@ -285,7 +285,7 @@ public class ServerConnector {
         }
         protected Void doInBackground(Void... params) {
             try {
-                String url = formatURL("search/spot/locationanddate?address="+ address.replace(' ', '+')+"start="+start+"&end="+end);
+                String url = formatURL("search/spot/locationanddate?address="+ address.replace(' ', '+')+"&start="+start+"&end="+end);
 //                String url = formatURL("search/spot/locationanddate?start="+start+"&end="+end);
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
