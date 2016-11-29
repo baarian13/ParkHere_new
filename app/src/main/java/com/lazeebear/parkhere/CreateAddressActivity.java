@@ -132,6 +132,7 @@ public class CreateAddressActivity extends AppCompatActivity {
     }
 
     private void setSubmitNewAddressButtonListener() {
+        if (mode == ValidationFunctions.mode_edit_address) submit_address_button.setText("Edit Selected Address");
         submit_address_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,7 +166,7 @@ public class CreateAddressActivity extends AppCompatActivity {
                         break;
                     case (ValidationFunctions.mode_edit_address):
                         try {
-                            SentAddressDAO editedAddress = new SentAddressDAO(selectedPosition,
+                            SentAddressDAO editedAddress = new SentAddressDAO(addresses.get(selectedPosition),
                                     address, base64photo, description, uniqueID, spotType, isCovered);
                             ServerConnector.modifyAddress(editedAddress);
                             // hide the stuff after the spot has been updated.
