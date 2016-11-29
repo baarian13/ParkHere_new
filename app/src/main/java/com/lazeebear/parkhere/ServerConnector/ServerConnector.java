@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotButtonDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
@@ -1269,9 +1270,11 @@ public class ServerConnector {
             return 401;
     }
 
+    //using id + address instead of just address
     static class ViewSpotHistoryTask extends AsyncTask<Void,Void,Void>
     {
-        List<Integer> spotIDs = new ArrayList<>();
+        //List<Integer> spotIDs = new ArrayList<>();
+        List<SpotButtonDAO> spots = new ArrayList<>();
         String email;
         boolean done = false;
         boolean success = false;
@@ -1309,13 +1312,16 @@ public class ServerConnector {
                 in.close();
                 System.out.println("Getting gson object..");
                 Gson gson = new Gson();
-                Type typeOfT = new TypeToken<List<List<Integer>>>(){}.getType();
-                List<List<Integer>> spotID_temp = gson.fromJson(response.toString(), typeOfT);
+                //Type typeOfT = new TypeToken<List<List<Integer>>>(){}.getType();
+                //List<List<Integer>> spotID_temp = gson.fromJson(response.toString(), typeOfT);
+                Type typeOfT = new TypeToken<List<SpotButtonDAO>>(){}.getType();
+                spots = gson.fromJson(response.toString(), typeOfT);
+                /*
                 int size = spotID_temp.size();
                 System.out.println("Returned object size: " + size);
                 for (int i=0; i<size; i++){
                     spotIDs.add(spotID_temp.get(i).get(0));
-                }
+                }*/
                 //print result
                 success = true;
                 Log.i("STATE","view spot history - success = true");
@@ -1334,7 +1340,7 @@ public class ServerConnector {
         }
     }
 
-    public static List<Integer> viewSpotHistory(String email) throws Exception {
+    public static List<SpotButtonDAO> viewSpotHistory(String email) throws Exception {
         ViewSpotHistoryTask s = new ViewSpotHistoryTask(email);
         s.execute();
         Log.i("STATE","waiting for view spot history task");
@@ -1342,7 +1348,7 @@ public class ServerConnector {
             Thread.sleep(100);//Log.i("SPAM","view spot history");
         Log.i("STATE","finished waiting for view spot history");
         if(s.success)
-            return s.spotIDs;
+            return s.spots;
         return null;
     }
 
@@ -1588,7 +1594,7 @@ public class ServerConnector {
         while(!s.done)
             Thread.sleep(100);//Log.i("SPAM","rate user");
         if(s.success)
-            return s.rating;
+            return s.rating; //return 200?
         else
             return 401;
     }

@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.content.res.Resources;
 
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotButtonDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.AddressDetailsDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentUserDAO;
@@ -51,7 +52,7 @@ public class Account extends AppCompatActivity {
     private boolean userTypeEditorsShown = true;
     private boolean phoneNumberEditorsShown = true;
     private List<Integer>  ownedSpotList = new ArrayList<>();
-    private List<Integer> spotHistoryList = new ArrayList<>();
+    private List<SpotButtonDAO> spotHistoryList = new ArrayList<>();
     private List<Integer> currentReservationsList = new ArrayList<>();
     private LinearLayout spotList;
     // address selection
@@ -219,7 +220,7 @@ public class Account extends AppCompatActivity {
             System.out.println("In Account page0: " + uniqueID);
             ReturnedUserDAO userInfo = ServerConnector.userDetails(uniqueID);
             System.out.println("successfully grabbed user info from server");
-            currentReservationsList = ServerConnector.viewRentals(uniqueID);
+            //currentReservationsList = ServerConnector.viewRentals(uniqueID);
             if (currentReservationsList == null)
                 currentReservationsList = new ArrayList<>();
 
@@ -368,7 +369,7 @@ public class Account extends AppCompatActivity {
             int spotCt = ownedSpotList.size();
             System.out.println("Populating owned spots with " + spotCt + " buttons...");
             for (int i = 0; i < spotCt; i++) {
-                Button spotButton = createSpotButton(ownedSpotList.get(i));
+                Button spotButton = createSpotButton(null);
                 System.out.println("Creating button with ID: "+ ownedSpotList.get(i));
                 spotButton.setId(ownedSpotList.get(i)); //for referencing from tests. doesn't need to be unique.
                 spotList.addView(spotButton);
@@ -406,7 +407,7 @@ public class Account extends AppCompatActivity {
             spotList = (LinearLayout) findViewById(R.id.spotList_account);
             int spotCt = currentReservationsList.size();
             for (int i = 0; i < spotCt; i++) {
-                Button spotButton = createSpotButton(currentReservationsList.get(i));
+                Button spotButton = createSpotButton(null);
                 spotList.addView(spotButton);
             }
             currentReservationsOpen = true;
@@ -435,9 +436,10 @@ public class Account extends AppCompatActivity {
         }
     }
 
-    private Button createSpotButton(int id) {
-        String address = "";
-        final int finalID = id;
+    private Button createSpotButton(SpotButtonDAO dao) {
+        String address = dao.getAddress();
+        final int finalID = dao.getID();
+        /*
         try {
             System.out.println("Getting spot DAO from spot ID...");
             SpotDetailsDAO spot = ServerConnector.spotDetails(id);
@@ -446,6 +448,7 @@ public class Account extends AppCompatActivity {
         } catch (Exception e){
             Log.i("ERROR", "Exception while getting spot info on account page");
         }
+        */
         //THIS DOES NOT GET CALLED
         System.out.println("Creating button in createSpotButton()");
         Button button = new Button(this);
