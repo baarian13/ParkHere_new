@@ -166,6 +166,12 @@ class Spot(DatabaseObject):
         :rtype: str
         '''
         return '''UPDATE {0} SET picturePath=\'{1}\' WHERE ownerEmail=\'{2}\' AND address=\'{3}\';'''.format(cls.TABLE_NAME, path, ownerEmail, address)
+   
+    @classmethod
+    def modifyPrice(cls, spotID, price):
+        return '''UPDATE {0} SET price = \'{1}\' WHERE spotID=\'{2}\';'''.format(cls.TABLE_NAME, price, spotID)
+
+
     def isValidSpot(self): 
         return self.start < date.today() < self.end
 

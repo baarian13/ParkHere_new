@@ -26,6 +26,7 @@ from Controller.SpotHandlers.GetClientTokenHandler import GetClientTokenHandler
 from Controller.UserHandlers.CheckUserHandler import CheckUserHandler
 from Controller.SpotHandlers.CancelReservationHandler import CancelReservationHandler
 from Controller.UserHandlers.ContactCustomerServiceHandler import ContactCustomerServiceHandler
+from Controller.SpotHandlers.ModifyPriceHandler import ModifyPriceHandler
 
 from Controller.AddressHandlers.CreateAddressHandler import CreateAddressHandler
 from Controller.AddressHandlers.DeleteAddressHandler import DeleteAddressHandler
@@ -64,7 +65,8 @@ application = tornado.web.Application([
     ("/delete/address", DeleteAddressHandler),
     ("/get/address", GetUserAddressHandler),
     ("/modify/address", ModifyAddressHandler),
-    ("/view/address", ViewAddressHandler)
+    ("/view/address", ViewAddressHandler),
+    ("/modify/price", ModifyPriceHandler)
 ], ssl_options={
     "certfile": os.path.join(data_dir, "server.crt"),
     "keyfile": os.path.join(data_dir, "server.key"),

@@ -143,3 +143,7 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
         self.execute(Spot.setRating(spotId, rating, numReviews))
         self.cursor.execute('''SELECT rating FROM SPOTS WHERE id = \'1\';''')
         print self.cursor.fetchall()[0][0]
+
+    def updatePrice(self, spotID, price):
+        self.execute(Spot.updatePrice(spotID, price))
+

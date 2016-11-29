@@ -1,6 +1,6 @@
 import tornado.web
 from Controller.AbstractBaseHandler import AbstractBaseHandler
-from Model.UserDatabaseManager import SQLUserDatabaseManager
+from Model.AddressDatabaseManager import SQLAddressDatabaseManager
 
 class AbstractAddressHandler(AbstractBaseHandler):
 

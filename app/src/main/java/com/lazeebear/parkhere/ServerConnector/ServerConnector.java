@@ -2135,4 +2135,116 @@ public class ServerConnector {
         return null;
     }
 
+    static class ModifyPriceTask extends AsyncTask<Void,Void,Void>
+    {
+        int spotID;
+        String price;
+        boolean done = false;
+        boolean success = false;
+
+        public ModifyPriceTask(int spotID, String price) {
+            this.spotID = spotID;
+            this.price = price;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL("modify/price");
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                String urlParameters = null;
+//
+//                if (profilePic != null) {
+//                    urlParameters = "email=" + email + "&password=" + password + "&first=" + first +
+//                            "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner + "&profilePic="
+//                            + profilePic.toString();
+//                } else {
+                urlParameters = "spotID=" + spotID + "&price=" + price;
+//                }
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                con.connect();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+//            con.setDoOutput(false);
+//            con.setDoInput(true);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                success = true;
+                Log.i("STATE","modify price - success = true");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            Log.i("STATE","modify price - done = true");
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+
+    /*
+    Success - 200 returned
+    Partial Success - 206 returned (Profile photo submission unsuccessful
+    Failure - 401 returned
+     */
+    /*
+    public static int signup(SentUserDAO user) {
+        String url = Configs.baseURL + Configs.signupEndpoint;
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity entity = restTemplate.postForEntity(url, user, Object.class);
+
+        return entity.getStatusCode().value();
+    }
+    */
+    public static int modifyPrice(int spotID, String price) throws Exception{
+        ModifyPriceTask s = new ModifyPriceTask(spotID, price);
+        s.execute();
+        Log.i("STATE","waiting for modify price");
+        while(!s.done)
+            Thread.sleep(100);//Log.i("SPAM","modify user");
+        Log.i("STATE","finished waiting for modify price");
+        if(s.success)
+            return 200;
+        else
+            return 401;
+    }
 }
