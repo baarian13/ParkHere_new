@@ -48,7 +48,7 @@ public class Account extends AppCompatActivity {
     private boolean currentReservationsOpen = false;
     private boolean userTypeEditorsShown = true;
     private boolean phoneNumberEditorsShown = true;
-    private List<Integer>  ownedSpotList = new ArrayList<>();
+    private List<SpotButtonDAO>  ownedSpotList = new ArrayList<>();
     private List<SpotButtonDAO> spotHistoryList = new ArrayList<>();
     private List<SpotButtonDAO> currentReservationsList = new ArrayList<>();
 
@@ -213,7 +213,7 @@ public class Account extends AppCompatActivity {
             if (currentReservationsList == null)
                 currentReservationsList = new ArrayList<>();
 
-            ownedSpotList = userInfo.getSpots();
+            ownedSpotList = ServerConnector.spotsOwned(uniqueID);
             if (ownedSpotList == null)
                 ownedSpotList = new ArrayList<>();
 
@@ -315,11 +315,11 @@ public class Account extends AppCompatActivity {
             clearSpotList();
             LinearLayout list = (LinearLayout) findViewById(R.id.spotList_account);
             int spotCt = ownedSpotList.size();
-            System.out.println("Populating owned spots...");
+            System.out.println("Populating owned spots with size " + spotCt + "...");
             for (int i = 0; i < spotCt; i++) {
-                Button spotButton = createSpotButton(null);
+                Button spotButton = createSpotButton(ownedSpotList.get(i));
                 System.out.println("Creating button with ID: "+ ownedSpotList.get(i));
-                spotButton.setId(ownedSpotList.get(i)); //for referencing from tests. doesn't need to be unique.
+                //spotButton.setId(ownedSpotList.get(i)); //for referencing from tests. doesn't need to be unique.
                 list.addView(spotButton);
             }
 
@@ -385,6 +385,31 @@ public class Account extends AppCompatActivity {
         button.setText(address);
         button.setOnClickListener( new View.OnClickListener(){
             public void onClick(View view){
+                addIntentDetailedSpotButton(finalID);
+            }
+        });
+        System.out.println("Returning button in createSpotButton()");
+        return button;
+    }
+
+    private Button createSpotButtonIDonly(int id) {
+        String address = "";
+        final int finalID = id;
+
+        try {
+            System.out.println("Getting spot DAO from spot ID " + id + "...");
+            SpotDetailsDAO spot = ServerConnector.spotDetails(id);
+            System.out.println("Successfully got spot DAO!");
+            address = spot.getAddress();
+        } catch (Exception e){
+            Log.i("ERROR", "Exception while getting spot info on account page");
+        }
+
+        System.out.println("Creating button in createSpotButton()");
+        Button button = new Button(this);
+        button.setText(address);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
                 addIntentDetailedSpotButton(finalID);
             }
         });
