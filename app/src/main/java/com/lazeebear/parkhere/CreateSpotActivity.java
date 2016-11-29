@@ -24,7 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.lazeebear.parkhere.DAOs.SentObjects.AddressDetailsDAO;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.AddressDetailsDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentSpotDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
@@ -295,22 +295,26 @@ public class CreateSpotActivity extends AppCompatActivity {
 
     // autofill information from the address
     private void autofillInformationFromAddress(Integer addressID) {
-        AddressDetailsDAO addressDetailsDAO = ServerConnector.getAddressDetails(addressID);
-        address.setText(addressDetailsDAO.getAddress());
-        description_field.setText(addressDetailsDAO.getDescription());
-        //spot type
+        try {
+            AddressDetailsDAO addressDetailsDAO = ServerConnector.AddressDetails(addressID);
+            address.setText(addressDetailsDAO.getAddress());
+            description_field.setText(addressDetailsDAO.getDescription());
+            //spot type
 
-        // isCovered
-        boolean covered = (addressDetailsDAO.getIsCovered() == 1) ? true : false;
-        covered_checkbox.setChecked(covered);
+            // isCovered
+            boolean covered = (addressDetailsDAO.getIsCovered() == 1);
+            covered_checkbox.setChecked(covered);
 
-        // spot photo
-        Bitmap bitmap = ValidationFunctions.convertBase64StringToBitmap(addressDetailsDAO.getPicture());
-        upload_photo_image_view.setImageBitmap(bitmap);
+            // spot photo
+            Bitmap bitmap = ValidationFunctions.convertBase64StringToBitmap(addressDetailsDAO.getPicture());
+            upload_photo_image_view.setImageBitmap(bitmap);
 
-        //TODO remove this later and test the autofill with the server
-        upload_photo_image_view.setImageBitmap(ValidationFunctions.convertBase64StringToBitmap(base64photo));
-        upload_photo_image_view.setVisibility(View.VISIBLE);
+            //TODO remove this later and test the autofill with the server
+            upload_photo_image_view.setImageBitmap(ValidationFunctions.convertBase64StringToBitmap(base64photo));
+            upload_photo_image_view.setVisibility(View.VISIBLE);
+        } catch (Exception e){
+            Log.i("STATE", "error while getting details about address");
+        }
     }
 
     private void setCancellationPolicyListener(){

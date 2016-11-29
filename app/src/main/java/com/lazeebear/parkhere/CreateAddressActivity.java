@@ -123,6 +123,7 @@ public class CreateAddressActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if (addressSelect.getChildCount() > 0) {
                             AddressDetailsDAO detailsDAO = addressDetailsDAOList.get(selectedPosition);
+                            Log.i("STATE", "deleting the address " + detailsDAO.getAddress());
                             //TODO ServerConnector.deleteAddress(detailsDAO.getID());
                         }
                     }
