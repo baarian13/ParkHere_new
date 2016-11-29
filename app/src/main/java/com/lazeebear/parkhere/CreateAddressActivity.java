@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.location.Address;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,7 +21,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import com.lazeebear.parkhere.DAOs.SentObjects.AddressDetailsDAO;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.AddressDetailsDAO;
+import com.lazeebear.parkhere.DAOs.SentObjects.SentAddressDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
 import java.io.IOException;
@@ -30,7 +32,7 @@ import java.util.List;
 public class CreateAddressActivity extends AppCompatActivity {
     private String uniqueID;
     private Spinner addressSelect;
-    private Button addressEnter, upload_photo_button, submit_address_button, address_create_new_button;
+    private Button addressEnter, upload_photo_button, submit_address_button, address_create_new_button, delete_address_button;
     private TextInputEditText address_input_description, address_input_address;
     private CheckBox address_iscovered_checkbox;
     private ImageView upload_photo_image_view;
@@ -39,6 +41,8 @@ public class CreateAddressActivity extends AppCompatActivity {
     private List<Integer> addresses;
     private String base64photo;
     private static final int GET_FROM_GALLERY = 3;
+    private int mode; // "create" (0) or "edit" (1)
+    private List<AddressDetailsDAO> addressDetailsDAOList;
 
     private ArrayAdapter<String> adapter;
     private ArrayList<String> addressList;
@@ -59,20 +63,23 @@ public class CreateAddressActivity extends AppCompatActivity {
         upload_photo_button = (Button) findViewById(R.id.address_select_photo);
         upload_photo_image_view = (ImageView) findViewById(R.id.address_image_preview);
         submit_address_button = (Button) findViewById(R.id.address_create_new_submit_button);
+        delete_address_button = (Button) findViewById(R.id.address_delete_address_button);
 
         selectedPosition = 404;
 
         Intent intent = getIntent();
         if (intent != null){
             uniqueID = intent.getStringExtra("id");
+            mode = intent.getIntExtra("mode", ValidationFunctions.mode_create_address);
+            hideCreateNewAddressItems();
             setActionListeners();
             populateSpinnerWithAddresses();
         }
     }
 
     private void setActionListeners() {
-        hideCreateNewAddressItems();
         setCreateNewAddressButtonListener();
+        setDeleteAddressButtonListener();
         setAddressSelectionListener();
         setButtonListener();
         setUploadPhotoButtonListener();
@@ -90,41 +97,83 @@ public class CreateAddressActivity extends AppCompatActivity {
     }
 
     private void setCreateNewAddressButtonListener() {
-        //unhide the items
-        address_create_new_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createNewAddressLayout.setVisibility(View.VISIBLE);
-                address_create_new_button.setVisibility(View.GONE);
-                addressEnter.setVisibility(View.GONE);
-            }
-        });
+        //if in edit mode, hide this button instead of setting a listener.
+        if (mode == ValidationFunctions.mode_edit_address) {
+            address_create_new_button.setVisibility(View.GONE);
+        } else { //unhide the information boxes when the button is clicked
+            address_create_new_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    createNewAddressLayout.setVisibility(View.VISIBLE);
+                    address_create_new_button.setVisibility(View.GONE);
+                    addressEnter.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
+
+    private void setDeleteAddressButtonListener() {
+        //if in create mode, hide this button instead of setting a listener.
+        switch (mode) {
+            case (ValidationFunctions.mode_create_address):
+                break;
+            case (ValidationFunctions.mode_edit_address):
+                delete_address_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (addressSelect.getChildCount() > 0) {
+                            AddressDetailsDAO detailsDAO = addressDetailsDAOList.get(selectedPosition);
+                            //TODO ServerConnector.deleteAddress(detailsDAO.getID());
+                        }
+                    }
+                });
+        }
     }
 
     private void setSubmitNewAddressButtonListener() {
         submit_address_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    addressEnter.setVisibility(View.VISIBLE);
-                    hideCreateNewAddressItems();
-                    String address = address_input_address.getText().toString();
-                    String description = address_input_description.getText().toString();
-                    int spotType = 0;
-                    int isCovered = 1; //0 false 1 true
-                    if (address_iscovered_checkbox.isChecked())
-                        isCovered = 1;
-                    else
-                        isCovered = 0;
-                    int newAddressID = 1; //TODO = ServerConnector.createAddress(address, uniqueID, description, spotType, isCovered, base64photo);
+                //get information
+                String address = address_input_address.getText().toString();
+                String description = address_input_description.getText().toString();
+                int spotType = 0;
+                int isCovered = 1; //0 false 1 true
+                if (address_iscovered_checkbox.isChecked())
+                    isCovered = 1;
+                else
+                    isCovered = 0;
 
-                    //reload the spinner
-                    addressList.add(address);
-                    addresses.add(newAddressID);
-                    adapter.notifyDataSetChanged();
-                    addressSelect.setAdapter(adapter);
-                } catch (Exception e){
-                    Log.i("STATE","Error while creating new address");
+                switch (mode) {
+                    case (ValidationFunctions.mode_create_address):
+                        try {
+                            addressEnter.setVisibility(View.VISIBLE);
+                            hideCreateNewAddressItems();
+
+                            int newAddressID = ServerConnector.createAddress(address, uniqueID, description, spotType, isCovered, base64photo);
+
+                            //reload the spinner
+                            addressList.add(address);
+                            addresses.add(newAddressID);
+                            adapter.notifyDataSetChanged();
+                            addressSelect.setAdapter(adapter);
+                            break;
+                        } catch (Exception e) {
+                            Log.i("STATE", "Error while creating new address");
+                        }
+                        break;
+                    case (ValidationFunctions.mode_edit_address):
+                        try {
+                            SentAddressDAO editedAddress = new SentAddressDAO(selectedPosition,
+                                    address, base64photo, description, uniqueID, spotType, isCovered);
+                            ServerConnector.modifyAddress(editedAddress);
+                            // hide the stuff after the spot has been updated.
+                            hideCreateNewAddressItems();
+                            break;
+                        } catch (Exception e) {
+                            Log.i("STATE", "Error while editing address");
+                        }
+                        break;
                 }
             }
         });
@@ -134,9 +183,11 @@ public class CreateAddressActivity extends AppCompatActivity {
         try{
             addresses = ServerConnector.getAddressesOf(uniqueID);
 
+            addressDetailsDAOList = new ArrayList<>();
             addressList = new ArrayList<>();
             for (int i = 0; i < addresses.size(); i++) {
-                AddressDetailsDAO details = ServerConnector.getAddressDetails(addresses.get(i));
+                AddressDetailsDAO details = ServerConnector.AddressDetails(addresses.get(i));
+                addressDetailsDAOList.add(details);
                 addressList.add(details.getAddress());
             }
             adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, addressList);
@@ -153,6 +204,11 @@ public class CreateAddressActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Resources res = getResources();
                 selectedPosition = parent.getSelectedItemPosition();
+
+                if (mode == ValidationFunctions.mode_edit_address) {
+                    createNewAddressLayout.setVisibility(View.VISIBLE);
+                    fillInInformation(selectedPosition);
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) { }
@@ -221,5 +277,22 @@ public class CreateAddressActivity extends AppCompatActivity {
         intent.putExtra("photo",base64photo);
         intent.putExtra("addressID",addresses.get(selectedPosition));
         startActivity(intent);
+    }
+
+    // fills in the information when editing a selected address
+    private void fillInInformation(int index) {
+        if (mode != ValidationFunctions.mode_edit_address) return;
+
+        AddressDetailsDAO address = addressDetailsDAOList.get(index);
+        address_input_address.setText(address.getAddress());
+        address_input_address.setEnabled(false); //you can't edit the address.
+        address_input_description.setText(address.getDescription());
+        if (address.getIsCovered() == 0) { //0 false 1 true
+            address_iscovered_checkbox.setChecked(false);
+        } else {
+            address_iscovered_checkbox.setChecked(true);
+        }
+        upload_photo_image_view.setImageBitmap(ValidationFunctions
+                .convertBase64StringToBitmap(address.getPicture()));
     }
 }

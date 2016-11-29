@@ -35,6 +35,8 @@ import static java.security.AccessController.getContext;
 public class ValidationFunctions {
 
     public static final int minLengthOfPassword = 10;
+    public static final int mode_create_address = 0;
+    public static final int mode_edit_address = 1;
 
     //for requesting storage permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 3;
