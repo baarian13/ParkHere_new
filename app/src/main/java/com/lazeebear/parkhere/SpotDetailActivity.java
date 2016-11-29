@@ -28,6 +28,7 @@ public class SpotDetailActivity extends AppCompatActivity {
 
     private int spotID;
     private String userUniqueID;
+    private String lowerDateTime, upperDateTime;
     private boolean isSpotOwner = false;
 
     private boolean editPriceOpen = true;
@@ -46,6 +47,8 @@ public class SpotDetailActivity extends AppCompatActivity {
         if (intent != null) {
             spotID = Integer.parseInt(intent.getStringExtra("id"));
             System.out.println("SpotDetail spot id: " + spotID);
+            lowerDateTime = intent.getStringExtra("lowerDateTime");
+            upperDateTime = intent.getStringExtra("upperDateTime");
             setInformation();
             hideInformation();
             setActionListeners();

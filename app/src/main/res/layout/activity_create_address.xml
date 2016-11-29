@@ -15,7 +15,8 @@
             <Spinner
                 android:id="@+id/address_selection"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_choose_address"/>
 
             <Button
                 android:id="@+id/address_create_new_button"
@@ -62,9 +63,13 @@
                     android:id="@+id/address_create_new_submit_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Create New Address" />
+                    android:text="@string/address_create_new" />
             </LinearLayout>
-
+            <Button
+                android:id="@+id/address_delete_address_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete Address"/>
             <Button
                 android:id="@+id/address_submit_button"
                 android:layout_width="wrap_content"

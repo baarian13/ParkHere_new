@@ -1,6 +1,5 @@
 import tornado.gen
 from Controller.AddressHandlers.AbstractAddressHandler import AbstractAddressHandler
-from DataObjects.Address import Address
 
 SUCCESS = '200'
 FAILURE = '401'

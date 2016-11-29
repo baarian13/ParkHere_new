@@ -8,11 +8,14 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotAddressDateDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotButtonDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
-import com.lazeebear.parkhere.DAOs.SentObjects.AddressDetailsDAO;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.AddressDetailsDAO;
+import com.lazeebear.parkhere.DAOs.SentObjects.SentAddressDAO;
+import com.lazeebear.parkhere.DAOs.SentObjects.SentAddressDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentSpotDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentUserDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDateDAO;
@@ -252,6 +255,79 @@ public class ServerConnector {
 
     public static List<SpotDateDAO> searchSpotDate(String start, String end) throws Exception {
         SearchSpotDateTask s = new SearchSpotDateTask(start,end);
+        s.execute();
+        while(!s.done)
+            Thread.sleep(100);//Log.i("SPAM","search");
+        if(s.success)
+            return s.spots;
+        return null;
+    }
+
+    //////////  search by both address and date ////////////
+    static class SearchSpotAddressAndDateTask extends AsyncTask<Void,Void,Void>
+    {
+        List<SpotAddressDateDAO> spots;
+        String address;
+        String start;
+        String end;
+        boolean done = false;
+        boolean success = false;
+
+        public SearchSpotAddressAndDateTask(String address, String start, String end){
+            this.address = address;
+            this.start = start;
+            this.end = end;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL("search/spot/locationanddate?address="+ address.replace(' ', '+')+"start="+start+"&end="+end);
+//                String url = formatURL("search/spot/locationanddate?start="+start+"&end="+end);
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                setConnCookies(con);
+                con.connect();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'GET' request to URL : " + url);
+                System.out.println("Response Code : " + responseCode);
+
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                Gson gson = new Gson();
+                Type typeOfT = new TypeToken<List<SpotAddressDateDAO>>(){}.getType();
+                spots = gson.fromJson(response.toString(), typeOfT);
+                //print result
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+    public static List<SpotAddressDateDAO> searchSpotAddressAndDate(String address, String start, String end) throws Exception {
+        SearchSpotAddressAndDateTask s = new SearchSpotAddressAndDateTask(address, start, end);
         s.execute();
         while(!s.done)
             Thread.sleep(100);//Log.i("SPAM","search");
@@ -1128,7 +1204,7 @@ public class ServerConnector {
                 urlParameters = "email=" + spot.getEmail() + "&address=" + spot.getAddress() + "&spotType=" + spot.getSpotType()+ "&isCovered=" + spot.isCovered() +
                         "&cancelationPolicy=" + spot.getCancelationPolicy() + "&price=" + spot.getPrice() + "&start=" + spot.getStartTime()
                         + "&end=" + spot.getEndTime() + "&description=" + spot.getDescription() + "&isRecurring=" + spot.isRecurring()
-                        + "&picture=" + spot.getPicture();
+                        + "&picture=" + spot.getPicture() + "&addressID=" +spot.getAddressID();
 
                 // Send post request
                 con.setDoOutput(true);
@@ -1202,7 +1278,7 @@ public class ServerConnector {
         }
         protected Void doInBackground(Void... params) {
             try {
-                String url = formatURL("post/spot");
+                String url = formatURL("delete/spot");
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -1594,7 +1670,7 @@ public class ServerConnector {
         while(!s.done)
             Thread.sleep(100);//Log.i("SPAM","rate user");
         if(s.success)
-            return 200;//return s.addressID;
+            return s.rating; //return 200?
         else
             return 401;
     }
@@ -1706,7 +1782,7 @@ public class ServerConnector {
         protected void onPreExecute() {}
         protected Void doInBackground(Void... params) {
             try {
-                String url = formatURL(""); //TODO where does this URL come from?
+                String url = formatURL("create/address"); //TODO where does this URL come from?
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -1718,7 +1794,7 @@ public class ServerConnector {
 
                 urlParameters = "ownerEmail=" + ownerEmail + "&address=" + address +
                                 "&description=" + description + "&spotType=" + spotType +
-                                "&isCovered=" + isCovered + "&picturePath=" + picture;
+                                "&isCovered=" + isCovered + "&picture=" + picture;
 
                 // Send post request
                 con.setDoOutput(true);
@@ -1768,7 +1844,7 @@ public class ServerConnector {
         while(!s.done)
             Thread.sleep(100);//Log.i("SPAM","rate user");
         if(s.success)
-            return 200;
+            return 200; //s.addressID
         else
             return 401;
     }
@@ -1785,7 +1861,7 @@ public class ServerConnector {
         protected void onPreExecute() {}
         protected Void doInBackground(Void... params) {
             try {
-                String url = formatURL("TODO"+ownerEmail); //TODO
+                String url = formatURL("get/address?email="+ownerEmail); //TODO
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setRequestMethod("GET");
@@ -1843,14 +1919,406 @@ public class ServerConnector {
         placeholder.add(1);
         return placeholder;
     }
+    static class DeleteAddressTask extends AsyncTask<Void,Void,Void>
+    {
+        int addressID;
+        boolean done = false;
+        boolean success = false;
 
-    public static AddressDetailsDAO getAddressDetails(int addressID){
-        AddressDetailsDAO placeholder = new AddressDetailsDAO("example address", "owneremail", "description here", 1, 1, "");
-        return placeholder;
+        public DeleteAddressTask(int addressID){
+            this.addressID = addressID;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL("delete/address");
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                String urlParameters = null;
+
+                urlParameters = "addressID=" + addressID;
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+//            con.setDoOutput(false);
+//            con.setDoInput(true);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
     }
 
-    public static int modifyAddress(int addressID, String ownerEmail, String description,
-                int spotType, int isCovered, int price, String picture) throws Exception {
-        return 0;
+    public static int deleteAddress(int addressID) throws Exception{
+        DeleteAddressTask s = new DeleteAddressTask(addressID);
+        s.execute();
+        while(!s.done)
+            Thread.sleep(100);
+        if(s.success)
+            return 200;
+        else
+            return 401;
+    }
+
+
+    static class ModifyAddressTask extends AsyncTask<Void,Void,Void>
+    {
+        int addressID;
+        String address;
+        String picture;
+        String description;
+        String email;
+        int spotType;
+        int isCovered;
+        boolean done = false;
+        boolean success = false;
+
+        public ModifyAddressTask(int addressID, String address, String picture, String description, String email, int spotType, int isCovered) {
+            this.addressID = addressID;
+            this.address = address;
+            this.picture = picture;
+            this.description = description;
+            this.email = email;
+            this.spotType = spotType;
+            this.isCovered = isCovered;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL("modify/address");
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                String urlParameters = null;
+//
+//                if (profilePic != null) {
+//                    urlParameters = "email=" + email + "&password=" + password + "&first=" + first +
+//                            "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner + "&profilePic="
+//                            + profilePic.toString();
+//                } else {
+                urlParameters = "";
+                if (email != null)
+                    urlParameters += "&email=" + email;
+                if (picture != null)
+                    urlParameters += "&picture=" + picture;
+                if(description != null)
+                    urlParameters += "&description=" + description;
+                if(address != null)
+                    urlParameters += "&address=" + address;
+                urlParameters += "&addressID=" + addressID + "&spotType=" + spotType + "&isCovered=" + isCovered;
+
+                if (!urlParameters.equals((""))){
+                    urlParameters = urlParameters.substring(1);
+                    System.out.println("~~~~~~~~~~~~~"+urlParameters);
+                }
+//                }
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                con.connect();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+//            con.setDoOutput(false);
+//            con.setDoInput(true);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                success = true;
+                Log.i("STATE","modify user - success = true");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            Log.i("STATE","modify user - done = true");
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+
+    /*
+    Success - 200 returned
+    Partial Success - 206 returned (Profile photo submission unsuccessful
+    Failure - 401 returned
+     */
+    /*
+    public static int signup(SentUserDAO user) {
+        String url = Configs.baseURL + Configs.signupEndpoint;
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity entity = restTemplate.postForEntity(url, user, Object.class);
+
+        return entity.getStatusCode().value();
+    }
+    */
+    public static int modifyAddress(SentAddressDAO address) throws Exception{
+        ModifyAddressTask s = new ModifyAddressTask(address.getAddressID(), address.getAddress(), address.getPicture(), address.getDescription(), address.getEmail(), address.getSpotType(), address.getIsCovered());
+        s.execute();
+        Log.i("STATE","waiting for modify user");
+        while(!s.done)
+            Thread.sleep(100);//Log.i("SPAM","modify user");
+        Log.i("STATE","finished waiting for modify user");
+        if(s.success)
+            return 200;
+        else
+            return 401;
+    }
+
+    static class AddressDetailsTask extends AsyncTask<Void,Void,Void>
+    {
+        String addressID;
+        AddressDetailsDAO address;
+        boolean done = false;
+        boolean success = false;
+
+        public AddressDetailsTask(String id){
+            this.addressID = id;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL("view/address?addressID="+addressID);
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                setConnCookies(con);
+                con.connect();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'GET' request to URL : " + url);
+                System.out.println("Response Code : " + responseCode);
+
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                Gson gson = new Gson();
+                Type typeOfT = new TypeToken<AddressDetailsDAO>(){}.getType();
+                address = gson.fromJson(response.toString(), typeOfT);
+                //print result
+                success = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+    public static AddressDetailsDAO AddressDetails(Integer addressID) throws Exception {
+        AddressDetailsTask s = new AddressDetailsTask(addressID+"");
+        s.execute();
+        while(!s.done)
+            Thread.sleep(100);//Log.i("SPAM","getting spot");
+        if(s.success)
+            return s.address;
+        return null;
+    }
+
+    static class ModifyPriceTask extends AsyncTask<Void,Void,Void>
+    {
+        int spotID;
+        String price;
+        boolean done = false;
+        boolean success = false;
+
+        public ModifyPriceTask(int spotID, String price) {
+            this.spotID = spotID;
+            this.price = price;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL("modify/price");
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                String urlParameters = null;
+//
+//                if (profilePic != null) {
+//                    urlParameters = "email=" + email + "&password=" + password + "&first=" + first +
+//                            "&last=" + last + "&phone=" + phone + "&seeker=" + seeker + "&owner=" + owner + "&profilePic="
+//                            + profilePic.toString();
+//                } else {
+                urlParameters = "spotID=" + spotID + "&price=" + price;
+//                }
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                con.connect();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+//            con.setDoOutput(false);
+//            con.setDoInput(true);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                success = true;
+                Log.i("STATE","modify price - success = true");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            Log.i("STATE","modify price - done = true");
+            return null;
+        }
+
+
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+
+    /*
+    Success - 200 returned
+    Partial Success - 206 returned (Profile photo submission unsuccessful
+    Failure - 401 returned
+     */
+    /*
+    public static int signup(SentUserDAO user) {
+        String url = Configs.baseURL + Configs.signupEndpoint;
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity entity = restTemplate.postForEntity(url, user, Object.class);
+
+        return entity.getStatusCode().value();
+    }
+    */
+    public static int modifyPrice(int spotID, String price) throws Exception{
+        ModifyPriceTask s = new ModifyPriceTask(spotID, price);
+        s.execute();
+        Log.i("STATE","waiting for modify price");
+        while(!s.done)
+            Thread.sleep(100);//Log.i("SPAM","modify user");
+        Log.i("STATE","finished waiting for modify price");
+        if(s.success)
+            return 200;
+        else
+            return 401;
     }
 }

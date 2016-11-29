@@ -90,7 +90,18 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
         '''
         self.cursor.execute(Spot.searchByTimeQuery(start, end, maxResults))
         return self.cursor.fetchall()
-    
+
+    def searchForSpotsLocationAndDate(self, address, start, end, maxDistance=25, maxResults=20):
+        '''
+        :type address: str
+        :type maxDistance: int
+        :type maxResults: int
+        :rtype: list
+        '''
+        latitude, longitude = getLatitudeLongitude(address)
+        self.cursor.execute(Spot.searchByDisAndTimeQuery(latitude, longitude, start, end, maxDistance, maxResults))
+        return self.cursor.fetchall()
+
     def viewSpotInfo(self, spotID):
         self.cursor.execute(Spot.viewSpotInfo(spotID))
         info = list(self.cursor.fetchall()[0])
@@ -143,3 +154,7 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
         self.execute(Spot.setRating(spotId, rating, numReviews))
         self.cursor.execute('''SELECT rating FROM SPOTS WHERE id = \'1\';''')
         print self.cursor.fetchall()[0][0]
+
+    def updatePrice(self, spotID, price):
+        self.execute(Spot.updatePrice(spotID, price))
+

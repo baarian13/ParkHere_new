@@ -19,6 +19,7 @@ public class SentSpotDAO {
     private int isCovered;
     private int cancelationPolicy;
     private int isRecurring;
+    private int addressID;
 
     public SentSpotDAO(String address, String startTime, String endTime, String picture, String description, String price, String email, int spotType, int isCovered, int cancelationPolicy, int isRecurring) {
         this.address = address;
@@ -122,5 +123,13 @@ public class SentSpotDAO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getAddressID() {
+        return addressID;
+    }
+
+    public void setAddressID(int addressID) {
+        this.addressID = addressID;
     }
 }
