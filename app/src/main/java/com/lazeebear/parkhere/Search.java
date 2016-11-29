@@ -212,10 +212,10 @@ public class Search extends AppCompatActivity {
         String upperTime = time_button_upper.getText().toString();
         String upperDateTime = formatDateTime(upperDate, upperTime);
 
-        System.out.println("lowerDateTime: " + lowerDateTime);
-        System.out.println("upperDateTime: " + upperDateTime);
+        System.out.println("search_page lowerDateTime: " + lowerDateTime);
+        System.out.println("search_page upperDateTime: " + upperDateTime);
 
-        List<SpotDateDAO> spots = null;
+        List<SpotDateDAO> spots = null; //List<SpotDateDAO> spots = null;
         try {
 //            spots = ServerConnector.searchSpot(addressString);
             spots = ServerConnector.searchSpotDate(lowerDateTime, upperDateTime);
@@ -234,6 +234,8 @@ public class Search extends AppCompatActivity {
         }
         intent.putExtra("ids",spotIDs);
         intent.putExtra("addresses",spotAddresses);
+        intent.putExtra("lowerDateTime", lowerDateTime);
+        intent.putExtra("upperDateTime", upperDateTime);
         startActivity(intent);
     }
 

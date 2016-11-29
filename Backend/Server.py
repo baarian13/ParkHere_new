@@ -12,6 +12,7 @@ from Controller.UserHandlers.SingupHandler import SignUpHandler
 from Controller.SpotHandlers.PostSpotHandler import PostSpotHandler
 from Controller.SpotHandlers.SearchSpotHandler import SearchSpotHandler
 from Controller.SpotHandlers.SearchSpotDateTimeHandler import SearchSpotDateTimeHandler
+from Controller.SpotHandlers.SearchSpotLocationAndDateHandler import SearchSpotLocationAndDateHandler
 from Controller.SpotHandlers.BookSpotHandler import BookSpotHandler
 from Controller.SpotHandlers.DeleteSpotHandler import DeleteSpotHandler
 from Controller.SpotHandlers.ViewPostingsHandler import ViewPostingsHandler
@@ -48,6 +49,7 @@ application = tornado.web.Application([
     ("/delete/spot", DeleteSpotHandler),
     ("/search/spot/location", SearchSpotHandler),
     ("/search/spot/date", SearchSpotDateTimeHandler),
+    ("/search/spot/locationanddate", SearchSpotLocationAndDateHandler),
     ("/view/postings", ViewPostingsHandler),
     ("/view/rentals", ViewRentalsHandler),
     ("/view/spot", ViewSpotHandler),

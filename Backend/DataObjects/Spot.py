@@ -113,6 +113,13 @@ class Spot(DatabaseObject):
     FROM SPOTS WHERE start <= \'{0}\'  AND end >= \'{1}\' ORDER BY start;'''.format(start, end, maxResults)
 
     @classmethod
+    def searchByDisAndTimeQuery(cls, latitude, longitude, start, end, maxDistance=25, maxResults=20):
+        return '''SELECT ID, address, start, end, spotType, ownerEmail,
+        renterEmail, isRecurring, isCovered, cancelationPolicy,
+    ({0} * acos( cos( radians({1}) ) * cos( radians( latitude) ) * cos( radians(longitude) - radians({2}) ) + sin( radians({1}) ) * sin( radians( latitude ) ) ) ) AS distance
+    FROM SPOTS HAVING distance < {3} AND start <= \'{4}\'  AND end >= \'{5}\' ORDER BY distance LIMIT 0 , {6};'''.format(cls.MILES_MAGIC, latitude, longitude, maxDistance, start, end, maxResults)
+
+    @classmethod
     def searchIDByRenterEmailQuery(cls, renterEmail):
         return '''SELECT ID FROM {0} WHERE renterEmail=\'{1}\' AND end >= \'{2}\';'''.format(cls.TABLE_NAME, renterEmail, time.strftime("%Y-%m-%d %H:%M:%S"))
 

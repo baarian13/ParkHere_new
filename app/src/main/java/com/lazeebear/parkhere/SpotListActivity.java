@@ -36,6 +36,8 @@ import java.util.List;
  */
 public class SpotListActivity extends AppCompatActivity {
 
+    private String lowerDateTime, upperDateTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +45,11 @@ public class SpotListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         ArrayList<Integer> spotIDs = intent.getIntegerArrayListExtra("ids");
         ArrayList<String> spotAddresses = intent.getStringArrayListExtra("addresses");
+        lowerDateTime = intent.getStringExtra("lowerDateTime");
+        upperDateTime = intent.getStringExtra("upperDateTime");
+            // system.out.println
+        System.out.println("spotList_page lowerDateTime: " + lowerDateTime);
+        System.out.println("spotLIst_page upperDateTime: " + upperDateTime);
         int loop = spotIDs.size();
         System.out.println("Received intent for spot list includes " + loop + " spots");
         for (int i=0; i<loop; i++) {
@@ -89,6 +96,8 @@ public class SpotListActivity extends AppCompatActivity {
     private void goToSpotDetail(int id){
         Intent intent = new Intent(this, SpotDetailActivity.class);
         intent.putExtra("id",id+"");
+        intent.putExtra("lowerDateTime", lowerDateTime);
+        intent.putExtra("upperDateTime", upperDateTime);
         startActivity(intent);
     }
 
