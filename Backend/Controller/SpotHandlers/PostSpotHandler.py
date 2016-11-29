@@ -48,7 +48,8 @@ class PostSpotHandler(AbstractSpotHandler):
                 'start'             : self.get_argument("start", ""),
                 'end'               : self.get_argument("end", ""),
                 'description'       : self.get_argument("description", ""),
-                'isRecurring'       : bool(int(self.get_argument("isRecurring", "")))}
+                'isRecurring'       : bool(int(self.get_argument("isRecurring", ""))),
+                'addressID'         : int(self.get_argument("addressID",""))}
         spot = Spot(**args)
         try:
             self.db.insertIntoTable(spot)

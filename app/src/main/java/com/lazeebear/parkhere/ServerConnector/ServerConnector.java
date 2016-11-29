@@ -1130,7 +1130,7 @@ public class ServerConnector {
                 urlParameters = "email=" + spot.getEmail() + "&address=" + spot.getAddress() + "&spotType=" + spot.getSpotType()+ "&isCovered=" + spot.isCovered() +
                         "&cancelationPolicy=" + spot.getCancelationPolicy() + "&price=" + spot.getPrice() + "&start=" + spot.getStartTime()
                         + "&end=" + spot.getEndTime() + "&description=" + spot.getDescription() + "&isRecurring=" + spot.isRecurring()
-                        + "&picture=" + spot.getPicture();
+                        + "&picture=" + spot.getPicture() + "&addressID=" +spot.getAddressID();
 
                 // Send post request
                 con.setDoOutput(true);
