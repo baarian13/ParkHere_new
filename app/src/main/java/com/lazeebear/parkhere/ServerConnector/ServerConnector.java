@@ -542,6 +542,7 @@ public class ServerConnector {
                 spots = gson.fromJson(response.toString(), typeOfT);
                 //print result
                 success = true;
+                Log.i("STATE","owned spots success = true");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -561,7 +562,7 @@ public class ServerConnector {
         SpotsOwnedTask o = new SpotsOwnedTask(email);
         o.execute();
         while (!o.done)
-            ;
+            Thread.sleep(100);
         if (o.success) {
             return o.spots;
         }
