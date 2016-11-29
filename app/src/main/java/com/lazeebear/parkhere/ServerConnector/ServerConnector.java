@@ -1588,7 +1588,7 @@ public class ServerConnector {
         while(!s.done)
             Thread.sleep(100);//Log.i("SPAM","rate user");
         if(s.success)
-            return s.addressID;
+            return 200;//return s.addressID;
         else
             return 401;
     }

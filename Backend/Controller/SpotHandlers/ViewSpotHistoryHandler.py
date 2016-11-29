@@ -10,8 +10,6 @@ class ViewSpotHistoryHandler(AbstractSpotHandler):
         renterEmail = self.get_argument("email")
         if renterEmail:
             results = [{'id'       : res[0],
-                        'address'  : res[1],
-                        'start'    : str(res[2]),
-                        'end'      : str(res[3])}
+                        'address'  : res[1]}
             for res in self.db.getSpotHistoryRentedBy(renterEmail)]
             self.write(json.dumps(results))
