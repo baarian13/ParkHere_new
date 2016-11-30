@@ -7,6 +7,9 @@ class GetUserAddressHandler(AbstractAddressHandler):
     @tornado.gen.coroutine
     def get(self):
         ownerEmail = self.get_argument('email')
-        if ownerEmail:
-            results = self.db.getAddressIDsOwnedBy(ownerEmail)
-            self.write(json.dumps(results))
+        try:
+            if ownerEmail:
+                results = self.db.getAddressIDsOwnedBy(ownerEmail)
+                self.write(json.dumps(results))
+        except Exception as e:
+            print e
