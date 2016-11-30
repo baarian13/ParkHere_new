@@ -1801,7 +1801,7 @@ public class ServerConnector {
                 con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
                 String urlParameters = null;
 
-                urlParameters = "ownerEmail=" + ownerEmail + "&address=" + address +
+                urlParameters = "email=" + ownerEmail + "&address=" + address +
                                 "&description=" + description + "&spotType=" + spotType +
                                 "&isCovered=" + isCovered + "&picture=" + picture;
 
