@@ -126,7 +126,11 @@ public class CreateAddressActivity extends AppCompatActivity {
                         if (addressSelect.getChildCount() > 0) {
                             AddressDetailsDAO detailsDAO = addressDetailsDAOList.get(selectedPosition);
                             Log.i("STATE", "deleting the address " + detailsDAO.getAddress());
-                            //TODO ServerConnector.deleteAddress(detailsDAO.getID());
+                            try {
+                                ServerConnector.deleteAddress(addresses.get(selectedPosition));
+                            } catch (Exception e) {
+                                Log.i("STATE", "exception while deleting the address " + detailsDAO.getAddress());
+                            }
                         }
                     }
                 });
