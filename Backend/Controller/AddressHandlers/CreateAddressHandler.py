@@ -35,4 +35,5 @@ class CreateAddressHandler(AbstractAddressHandler):
                     print 'picture exception'
                     self.write('206')
         except Exception as e:
+            print e
             self.write('401')
