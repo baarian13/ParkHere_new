@@ -42,7 +42,7 @@ class Address(DatabaseObject):
         self.spotType          = spotType
         self.ownerEmail        = str(ownerEmail)
         self.isCovered         = isCovered
-        self.description       = description
+        self.description       = str(description)
         self.picturePath       = str(picturePath)
 
     def __iter__(self):
