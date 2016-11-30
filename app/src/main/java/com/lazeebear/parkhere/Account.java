@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,6 +23,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.content.res.Resources;
 
+import com.google.android.gms.vision.text.Line;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.AddressDetailsDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.ReturnedUserDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotButtonDAO;
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotDetailsDAO;
@@ -56,6 +60,10 @@ public class Account extends AppCompatActivity {
     private String prefName = "User Data";
     private String prefEmail = "email";
     private String prefPassword = "password";
+    // addresses
+    private List<SpotButtonDAO> addresses;
+    private List<String> addressList;
+    private int selectedPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,6 +222,7 @@ public class Account extends AppCompatActivity {
             System.out.println("In Account page0: " + uniqueID);
             ReturnedUserDAO userInfo = ServerConnector.userDetails(uniqueID);
             System.out.println("successfully grabbed user info from server");
+            Log.i("STATE","Getting current reservations");
             currentReservationsList = ServerConnector.viewRentals(uniqueID);
             if (currentReservationsList == null)
                 currentReservationsList = new ArrayList<>();
@@ -243,13 +252,6 @@ public class Account extends AppCompatActivity {
             TextView accountName = (TextView) findViewById(R.id.accountName_account);
             accountName.setText(getDisplayName(userInfo.getFirst(), userInfo.getLast()));
 
-            ImageView profilePic = (ImageView) findViewById(R.id.account_profile_picture);
-            //profilePic.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            Log.i("STATE","Getting Image...");
-            profilePic.setImageBitmap(ValidationFunctions.convertBase64StringToBitmap(userInfo.getPicture()));
-            Log.i("STATE","Successfully got image");
-            profilePic.setVisibility(View.VISIBLE);
-
             Log.i("STATE","getting other user info");
             RatingBar ratingOfUser = (RatingBar) findViewById(R.id.ratingBar);
             ratingOfUser.setRating(userInfo.getRating());
@@ -267,7 +269,14 @@ public class Account extends AppCompatActivity {
             Spinner editSpinner = (Spinner) findViewById(R.id.editUserTypeSpinner_account);
             editSpinner.setSelection(getUserType());
 
-            Log.i("STATE","Getting current reservations");
+            populateSpinnerWithAddresses();
+
+            ImageView profilePic = (ImageView) findViewById(R.id.account_profile_picture);
+            //profilePic.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            Log.i("STATE","Getting Image...");
+            profilePic.setImageBitmap(ValidationFunctions.convertBase64StringToBitmap(userInfo.getPicture()));
+            Log.i("STATE","Successfully got image");
+            profilePic.setVisibility(View.VISIBLE);
 
         } catch (Exception e){
             Log.i("ERROR", "Exception while getting user details opening account");
@@ -289,6 +298,7 @@ public class Account extends AppCompatActivity {
         addChangeProfilePicListener();
         addContactButtonListener();
         addEditAddressButtonListener();
+        addAddressSelectionListener();
     }
 
     private void addEditAddressButtonListener() {
@@ -320,6 +330,8 @@ public class Account extends AppCompatActivity {
         currentReservationsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 populateCurrentReservations();
+                findViewById(R.id.account_select_address).setVisibility(View.GONE);
+                setVisibilityOfAllSpots(View.VISIBLE);
             }
         });
     }
@@ -448,6 +460,8 @@ public class Account extends AppCompatActivity {
         spotHistoryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 populateSpotsHistory();
+                findViewById(R.id.account_select_address).setVisibility(View.GONE);
+                setVisibilityOfAllSpots(View.VISIBLE);
             }
         });
     }
@@ -759,5 +773,64 @@ public class Account extends AppCompatActivity {
         Intent intent = new Intent(this, ContactCustomerServiceActivity.class);
         intent.putExtra("id",uniqueID);
         startActivity(intent);
+    }
+
+    private void populateSpinnerWithAddresses() {
+        Log.i("STATE","populateSpinnerWithAddresses");
+        try {
+            addresses = ServerConnector.getAddressesOf(uniqueID);
+
+            addressList = new ArrayList<>();
+            for (int i = 0; i < addresses.size(); i++) {
+                Log.i("STATE","getting address details "+ i +
+                        ": addressID = " + addresses.get(i).getID() +
+                        " & address = " + addresses.get(i).getAddress());
+                addressList.add(addresses.get(i).getAddress());
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, addressList);
+
+            Spinner addressSelect = (Spinner) findViewById(R.id.account_select_address);
+            addressSelect.setAdapter(adapter);
+        } catch (Exception e) {
+            Log.i("STATE", "Error while getting the addresses of " + uniqueID);
+        }
+    }
+
+    private void addAddressSelectionListener() {
+        Spinner addressSelect = (Spinner) findViewById(R.id.account_select_address);
+        addressSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Resources res = getResources();
+                selectedPosition = parent.getSelectedItemPosition();
+                setVisibilityOfAllSpots(View.GONE);
+                setVisibilityOfSpotsWithText(addressList.get(selectedPosition), View.VISIBLE);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    private void setVisibilityOfSpotsWithText(String text, int visibility) {
+        LinearLayout spotList = (LinearLayout) findViewById(R.id.spotList_account);
+        int numChildren = spotList.getChildCount();
+        Button v = null;
+        for(int i=0; i < numChildren; i++) {
+            v = (Button) spotList.getChildAt(i);
+            if (v.getText().equals(text)) {
+                v.setVisibility(visibility);
+            }
+        }
+    }
+
+    private void setVisibilityOfAllSpots(int visibilityOfAllSpots){
+        LinearLayout spotList = (LinearLayout) findViewById(R.id.spotList_account);
+        Button v = null;
+        for(int i=0; i < spotList.getChildCount(); i++) {
+            v = (Button) spotList.getChildAt(i);
+            v.setVisibility(visibilityOfAllSpots);
+        }
     }
 }
