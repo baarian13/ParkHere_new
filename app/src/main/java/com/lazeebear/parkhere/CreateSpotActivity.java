@@ -52,6 +52,7 @@ public class CreateSpotActivity extends AppCompatActivity {
     //is needed for creating the spot
     //but to redirect the user back to the account page
     private String uniqueID;
+    private int addressID;
 
 
     @Override
@@ -299,6 +300,7 @@ public class CreateSpotActivity extends AppCompatActivity {
     // autofill information from the address
     private void autofillInformationFromAddress(Integer addressID) {
         try {
+            this.addressID = addressID;
             if (addressID == 0) {
                 //fill from intent
                 address.setText(bypassAddress);
@@ -406,7 +408,7 @@ public class CreateSpotActivity extends AppCompatActivity {
 
         //send data
         try {
-            SentSpotDAO newSpot = new SentSpotDAO(addressString, startString, endString, base64photo, description, price, email, spot_type, isCovered, cancellation, 0);
+            SentSpotDAO newSpot = new SentSpotDAO(addressString, startString, endString, base64photo, description, price, email, spot_type, isCovered, cancellation, 0, addressID);
             ServerConnector.createSpot(newSpot);
         } catch (Exception e){
             Log.i("ERROR", "Exception while creating spot");

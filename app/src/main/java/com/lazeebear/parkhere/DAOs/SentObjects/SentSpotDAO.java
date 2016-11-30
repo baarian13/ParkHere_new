@@ -21,7 +21,7 @@ public class SentSpotDAO {
     private int isRecurring;
     private int addressID;
 
-    public SentSpotDAO(String address, String startTime, String endTime, String picture, String description, String price, String email, int spotType, int isCovered, int cancelationPolicy, int isRecurring) {
+    public SentSpotDAO(String address, String startTime, String endTime, String picture, String description, String price, String email, int spotType, int isCovered, int cancelationPolicy, int isRecurring, int addressID) {
         this.address = address;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -33,6 +33,7 @@ public class SentSpotDAO {
         this.cancelationPolicy = cancelationPolicy;
         this.isRecurring = isRecurring;
         this.email = email;
+        this.addressID = addressID;
     }
 
     public int getSpotType() {
