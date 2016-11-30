@@ -1930,11 +1930,13 @@ public class ServerConnector {
     static class DeleteAddressTask extends AsyncTask<Void,Void,Void>
     {
         int addressID;
+        String email
         boolean done = false;
         boolean success = false;
 
-        public DeleteAddressTask(int addressID){
+        public DeleteAddressTask(int addressID String, email){
             this.addressID = addressID;
+            this.email = email
         }
 
         protected void onPreExecute() {
@@ -1953,7 +1955,7 @@ public class ServerConnector {
                 con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
                 String urlParameters = null;
 
-                urlParameters = "addressID=" + addressID;
+                urlParameters = "addressID=" + addressID + "&email=" + email;
 
                 // Send post request
                 con.setDoOutput(true);
@@ -2000,8 +2002,8 @@ public class ServerConnector {
         }
     }
 
-    public static int deleteAddress(int addressID) throws Exception{
-        DeleteAddressTask s = new DeleteAddressTask(addressID);
+    public static int deleteAddress(int addressID, String email) throws Exception{
+        DeleteAddressTask s = new DeleteAddressTask(addressID, email);
         s.execute();
         while(!s.done)
             Thread.sleep(100);

@@ -14,7 +14,7 @@ class DeleteAddressHandler(AbstractAddressHandler):
     def post(self):
         result = SUCCESS
         try:
-            ownerEmail = self.get_secure_cookie("user")
+            ownerEmail = self.get_argument("email","")
             addressID = self.get_argument("addressID", "")
             self.db.deleteAddress(ownerEmail, addressID)
         except:
