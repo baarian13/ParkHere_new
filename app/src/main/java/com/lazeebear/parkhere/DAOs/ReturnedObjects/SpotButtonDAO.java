@@ -5,11 +5,11 @@ package com.lazeebear.parkhere.DAOs.ReturnedObjects;
  */
 
 public class SpotButtonDAO {
-    private int ID;
+    private int id;
     private String address;
 
-    public int getID(){return this.ID;}
-    public void setId(int id){this.ID = id;}
+    public int getId(){return this.id;}
+    public void setId(int id){this.id = id;}
     public String getAddress(){return this.address;}
     public void setAddress(String address){this.address = address;}
 }

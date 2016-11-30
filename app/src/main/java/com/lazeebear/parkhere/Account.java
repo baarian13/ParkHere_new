@@ -406,7 +406,7 @@ public class Account extends AppCompatActivity {
 
     private Button createSpotButton(SpotButtonDAO dao) {
         String address = dao.getAddress();
-        final int finalID = dao.getID();
+        final int finalID = dao.getId();
         /*
         try {
             System.out.println("Getting spot DAO from spot ID...");
@@ -789,7 +789,7 @@ public class Account extends AppCompatActivity {
             addressList = new ArrayList<>();
             for (int i = 0; i < addresses.size(); i++) {
                 Log.i("STATE","getting address details "+ i +
-                        ": addressID = " + addresses.get(i).getID() +
+                        ": addressID = " + addresses.get(i).getId() +
                         " & address = " + addresses.get(i).getAddress());
                 addressList.add(addresses.get(i).getAddress());
             }

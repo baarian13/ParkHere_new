@@ -131,7 +131,7 @@ public class CreateAddressActivity extends AppCompatActivity {
                             SpotButtonDAO detailsDAO = addresses.get(selectedPosition);
                             Log.i("STATE", "deleting the address " + detailsDAO.getAddress());
                             try {
-                                ServerConnector.deleteAddress(addresses.get(selectedPosition).getID());
+                                ServerConnector.deleteAddress(addresses.get(selectedPosition).getId());
                             } catch (Exception e) {
                                 Log.i("STATE", "exception while deleting the address " + detailsDAO.getAddress());
                             }
@@ -184,7 +184,7 @@ public class CreateAddressActivity extends AppCompatActivity {
                         break;
                     case (ValidationFunctions.mode_edit_address):
                         try {
-                            SentAddressDAO editedAddress = new SentAddressDAO(addresses.get(selectedPosition).getID(),
+                            SentAddressDAO editedAddress = new SentAddressDAO(addresses.get(selectedPosition).getId(),
                                     address, base64photo, description, uniqueID, spotType, isCovered);
                             ServerConnector.modifyAddress(editedAddress);
                             // hide the stuff after the spot has been updated.
@@ -244,9 +244,9 @@ public class CreateAddressActivity extends AppCompatActivity {
             addressList = new ArrayList<>();
             for (int i = 0; i < addresses.size(); i++) {
                 Log.i("STATE","getting address details "+ i +
-                        ": addressID = " + addresses.get(i).getID() +
+                        ": addressID = " + addresses.get(i).getId() +
                         " & address = " + addresses.get(i).getAddress());
-                AddressDetailsDAO details = ServerConnector.AddressDetails(addresses.get(i).getID());
+                AddressDetailsDAO details = ServerConnector.AddressDetails(addresses.get(i).getId());
                 addressDetailsDAOList.add(details);
                 addressList.add(addresses.get(i).getAddress());
             }
@@ -343,7 +343,7 @@ public class CreateAddressActivity extends AppCompatActivity {
         intent.putExtra("id", uniqueID);
         intent.putExtra("description", address_input_description.getText());
         intent.putExtra("photo", base64photo);
-        intent.putExtra("addressID", addresses.get(selectedPosition).getID());
+        intent.putExtra("addressID", addresses.get(selectedPosition).getId());
         startActivity(intent);
     }
 
