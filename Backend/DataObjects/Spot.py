@@ -143,7 +143,7 @@ class Spot(DatabaseObject):
     @classmethod
     def viewSpotInfo(cls, spotID):
         return '''SELECT address, start, end, spotType, ownerEmail,
-        renterEmail, isRecurring, isCovered, cancelationPolicy, description, price FROM SPOTS WHERE ID = {0};'''.format(spotID)
+        renterEmail, isRecurring, isCovered, cancelationPolicy, description, price, rating FROM SPOTS WHERE ID = {0};'''.format(spotID)
 
     @classmethod
     def searchByOwnerEmailQuery(cls, ownerEmail):
