@@ -162,10 +162,14 @@ public class CreateAddressActivity extends AppCompatActivity {
                             int newAddressID = ServerConnector.createAddress(address, uniqueID, description, spotType, isCovered, base64photo);
 
                             //reload the spinner
-                            addressList.add(address);
-                            addresses.add(newAddressID);
+                            Log.i("STATE"," Reloading spinner....");
+                            populateSpinnerWithAddresses();
+                            /*addressList.add(address);
+                            addresses = ServerConnector.getAddressesOf(uniqueID);
                             adapter.notifyDataSetChanged();
                             addressSelect.setAdapter(adapter);
+                            */
+                            Log.i("STATE", "Finished reloading spinner.");
                             break;
                         } catch (Exception e) {
                             Log.i("STATE", "Error while creating new address");
@@ -226,12 +230,14 @@ public class CreateAddressActivity extends AppCompatActivity {
     }
 
     private void populateSpinnerWithAddresses() {
+        Log.i("STATE","populateSpinnerWithAddresses");
         try {
             addresses = ServerConnector.getAddressesOf(uniqueID);
 
             addressDetailsDAOList = new ArrayList<>();
             addressList = new ArrayList<>();
             for (int i = 0; i < addresses.size(); i++) {
+                Log.i("STATE","getting address details "+ i);
                 AddressDetailsDAO details = ServerConnector.AddressDetails(addresses.get(i));
                 addressDetailsDAOList.add(details);
                 addressList.add(details.getAddress());

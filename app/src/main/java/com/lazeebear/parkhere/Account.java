@@ -222,7 +222,7 @@ public class Account extends AppCompatActivity {
             if (ownedSpotList == null)
                 ownedSpotList = new ArrayList<>();
 
-           spotHistoryList = ServerConnector.viewSpotHistory(uniqueID);
+            spotHistoryList = ServerConnector.viewSpotHistory(uniqueID);
             if (spotHistoryList == null)
                 spotHistoryList = new ArrayList<>();
 
