@@ -4,18 +4,18 @@ from DataObjects.Address import Address
 '''Model > SpotDatabaseManager.py'''
 '''wrapper of queries to the database: getters'''
 class SQLAddressDatabaseManager(SQLDatabaseManager):
-	DB_OBJECT_CLASS = Address
+    DB_OBJECT_CLASS = Address
 
-	def __init__(self, host, user, password, port, db):
-		'''
+    def __init__(self, host, user, password, port, db):
+        '''
         :type host: str
         :type user: str
         :type password: str
         :type port: int
         :type db: str
         '''
-		super(SQLAddressDatabaseManager, self).__init__(host, user, password,
-			port, db, Address)
+        super(SQLAddressDatabaseManager, self).__init__(host, user, password,
+            port, db, Address)
 
     def submitPicture(self, pictureString, ownerEmail, address):
         '''

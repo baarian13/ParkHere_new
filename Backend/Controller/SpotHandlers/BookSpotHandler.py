@@ -34,6 +34,41 @@ class BookSpotHandler(AbstractSpotHandler):
                 renterEmail = self.get_argument("email", "")
                 spotID = self.get_argument("spotID", "")
                 self.db.bookSpot(renterEmail, spotID)
+                email = self.db.getOwnerEmail(spotID)
+
+                try:
+                    FROM = 'parkhere11b@gmail.com'
+                    TO = [email] # must be a list
+
+                    SUBJECT = "Spot Booked"
+
+                    TEXT = "your spot just got booked, contact us to receive $" + price
+
+                    # Prepare actual message
+
+                    message = """\
+                    From: %s
+                    To: %s
+                    Subject: %s
+
+                    %s
+                    """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+
+                    # Send the mail
+                    mail = smtplib.SMTP('smtp.gmail.com',587)
+
+                    mail.ehlo()
+
+                    mail.starttls()
+
+                    print 0
+                    mail.login('parkhere11b@gmail.com','dqIrS3zNNo')
+                    print 1
+                    mail.sendmail(email, TO, message)
+                    print 2
+                    mail.close()
+                except:
+                    result = PARTIAL
             else:
                 result = FAILURE
         except:

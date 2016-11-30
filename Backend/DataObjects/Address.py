@@ -3,26 +3,24 @@ from decimal import Decimal, ROUND_DOWN
 from FunctionalUtils import getLatitudeLongitude
 
 class Address(DatabaseObject):
-	TABLE_NAME = "ADDRESSES"
-	TABLE_CREATE_STATEMENT = '''CREATE TABLE IF NOT EXISTS {0}(
-					ID INT AUTO_INCREMENT,
-					ownerEmail VARCHAR(100) NOT NULL,
-					address VARCHAR(200) NOT NULL,
-					spotType SMALLINT NOT NULL,
-					isCovered BOOL NOT NULL,
-					description VARCHAR(300),
-					picturePath VARCHAR(300),
-					latitude FLOAT NOT NULL,
-					longitude FLOAT NOT NULL,
-					FOREIGN KEY (ownerEmail) REFERENCES USERS(email),
-					PRIMARY KEY (ID)
-				);'''.format(TABLE_NAME)
-	MILES_MAGIC = 3959
+    TABLE_NAME = "ADDRESSES"
+    TABLE_CREATE_STATEMENT = '''CREATE TABLE IF NOT EXISTS {0}(
+          ID INT AUTO_INCREMENT,
+          ownerEmail VARCHAR(100) NOT NULL,
+          address VARCHAR(200) NOT NULL,
+          spotType SMALLINT NOT NULL,
+          isCovered BOOL NOT NULL,
+          description VARCHAR(300),
+          picturePath VARCHAR(300),
+          FOREIGN KEY (ownerEmail) REFERENCES USERS(email),
+          PRIMARY KEY (ID)
+        );'''.format(TABLE_NAME)
+    MILES_MAGIC = 3959
     SPOT_TYPES = {0 : 'motorcycle',
                   1 : 'compact',
                   2 : 'regular car',
                   3 : 'truck'}
-     def __init__(self, address, spotType,
+    def __init__(self, address, spotType,
                  ownerEmail, isCovered, addressID,
                  description="", picturePath=""):
         '''
@@ -46,19 +44,16 @@ class Address(DatabaseObject):
         self.ownerEmail        = str(ownerEmail)
         self.isCovered         = isCovered
         self.description       = description
-        self.picturePath       = str(picturePath)\
-        self.latitude, self.longitude = getLatitudeLongitude(self.address)
+        self.picturePath       = str(picturePath)
 
-     def __iter__(self):
+    def __iter__(self):
         return iter([('address'          , self.address),
                      ('spotType'         , self.spotType),
                      ('ownerEmail'       , self.ownerEmail),
-                     ('latitude'         , self.latitude),
-                     ('longitude'        , self.longitude),
                      ('isCovered'        , self.isCovered),
                      ('picturePath'      , self.picturePath),
                      ('addressID'        , self.addressID),
-                     ('description'		 , self.description)])
+                     ('description'    , self.description)])
 
     @classmethod
     def addPicture(cls, path, ownerEmail, address):

@@ -176,7 +176,7 @@ class Spot(DatabaseObject):
    
     @classmethod
     def modifyPrice(cls, spotID, price):
-        return '''UPDATE {0} SET price = \'{1}\' WHERE spotID=\'{2}\';'''.format(cls.TABLE_NAME, price, spotID)
+        return '''UPDATE {0} SET price = \'{1}\' WHERE ID=\'{2}\';'''.format(cls.TABLE_NAME, price, spotID)
 
 
     def isValidSpot(self): 

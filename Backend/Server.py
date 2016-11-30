@@ -62,7 +62,7 @@ application = tornado.web.Application([
     ("/get/token", GetClientTokenHandler),
     ("/check/user", CheckUserHandler),
     ("/cancel/reservation", CancelReservationHandler),
-    ("/contact/service", ContactCustomerServiceHandler)#,
+    ("/contact/service", ContactCustomerServiceHandler),
     ("/create/address", CreateAddressHandler),
     ("/delete/address", DeleteAddressHandler),
     ("/get/address", GetUserAddressHandler),

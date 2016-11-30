@@ -3,10 +3,6 @@ from Controller.AddressHandlers.AbstractAddressHandler import AbstractAddressHan
 from DataObjects.Address import Address
 
 class CreateAddressHandler(AbstractAddressHandler):
-	'''
-    -Requests are posted here when a user is creating an account.
-    -All arguments are submitted as strings.
-    '''
     # @tornado.web.authenticated
     @tornado.gen.coroutine
     def post(self):

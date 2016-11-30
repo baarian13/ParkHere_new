@@ -2,7 +2,7 @@ import tornado.gen
 from Controller.AddressHandlers.AbstractAddressHandler import AbstractAddressHandler
 import json
 
-class ViewAddressHandler(AbstractAddressHandler):
+class GetUserAddressHandler(AbstractAddressHandler):
     @tornado.web.authenticated
     @tornado.gen.coroutine
     def get(self):
