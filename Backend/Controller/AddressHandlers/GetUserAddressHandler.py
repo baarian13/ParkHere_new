@@ -9,7 +9,7 @@ class GetUserAddressHandler(AbstractAddressHandler):
         ownerEmail = self.get_argument('email')
         try:
             if ownerEmail:
-                results = [{'id'       : res[0],
+                results = [{'id'       : int(res[0]),
                             'address'  : res[1]}
                            for res in self.db.getAddressesOwnedBy(ownerEmail)]
                 self.write(json.dumps(results))
