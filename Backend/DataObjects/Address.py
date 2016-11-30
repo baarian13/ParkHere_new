@@ -37,7 +37,6 @@ class Address(DatabaseObject):
             :type renterEmail: str or None
         '''
         assert spotType in self.SPOT_TYPES
-        assert cancelationPolicy in self.CANCELATION_POLICIES
         
         self.address           = str(address)
         self.spotType          = spotType
