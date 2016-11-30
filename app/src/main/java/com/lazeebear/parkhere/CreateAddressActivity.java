@@ -131,7 +131,7 @@ public class CreateAddressActivity extends AppCompatActivity {
                             SpotButtonDAO detailsDAO = addresses.get(selectedPosition);
                             Log.i("STATE", "deleting the address " + detailsDAO.getAddress());
                             try {
-                                ServerConnector.deleteAddress(addresses.get(selectedPosition).getId());
+                                ServerConnector.deleteAddress(addresses.get(selectedPosition).getId(), uniqueID);
                             } catch (Exception e) {
                                 Log.i("STATE", "exception while deleting the address " + detailsDAO.getAddress());
                             }

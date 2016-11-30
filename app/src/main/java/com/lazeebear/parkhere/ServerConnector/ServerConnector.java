@@ -1930,13 +1930,13 @@ public class ServerConnector {
     static class DeleteAddressTask extends AsyncTask<Void,Void,Void>
     {
         int addressID;
-        String email
+        String email;
         boolean done = false;
         boolean success = false;
 
-        public DeleteAddressTask(int addressID String, email){
+        public DeleteAddressTask(int addressID, String email){
             this.addressID = addressID;
-            this.email = email
+            this.email = email;
         }
 
         protected void onPreExecute() {
