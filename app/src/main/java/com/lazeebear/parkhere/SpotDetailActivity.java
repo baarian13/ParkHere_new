@@ -58,7 +58,7 @@ public class SpotDetailActivity extends AppCompatActivity {
     }
 
     private void hideInformation(){
-        if (!isSpotOwner()){ // is a Seeker
+        if (isSpotOwner()){ // is a Seeker
             Button reserveSpotButton = (Button) findViewById(R.id.reserveButton_spotDetail);
             reserveSpotButton.setVisibility(View.GONE);
             Button rateUserButton = (Button) findViewById(R.id.rateUserButton_spotDetail);
@@ -97,7 +97,7 @@ public class SpotDetailActivity extends AppCompatActivity {
             SpotDetailsDAO spot = ServerConnector.spotDetails(spotID);
             userUniqueID = spot.getOwnerEmail();
 
-            double price = 10.00;
+            double price = spot.getPrice();
             ReturnedUserDAO userInfo = ServerConnector.userDetails(userUniqueID);
             String firstName = userInfo.getFirst();
             int cancellationIndex = spot.getCancelationPolicy();
@@ -231,15 +231,11 @@ public class SpotDetailActivity extends AppCompatActivity {
         EditText priceEditText = (EditText) findViewById(R.id.priceEditText_spotDetail);
         String price = priceEditText.getText().toString();
         //update price
-        SpotDetailsDAO updatedSpot = new SpotDetailsDAO();
-//        ServerConnector.modifySpot(updateSpot);
-//        EditText priceEditText = (EditText) findViewById(R.id.priceEditText_spotDetail);
-//        String price = priceEditText.getText().toString();
-//        try {
-//            ServerConnector.modifyPrice(spotID, price);
-//        } catch (Exception e) {
-//            Log.i("ERROR", "Exception while modifying the price");
-//        }
+        try {
+            ServerConnector.modifyPrice(spotID, price);
+        } catch (Exception e) {
+            Log.i("ERROR", "Exception while modifying the price");
+        }
         refreshView();
 
     }
