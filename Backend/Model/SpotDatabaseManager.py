@@ -156,7 +156,7 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
         print self.cursor.fetchall()[0][0]
 
     def updatePrice(self, spotID, price):
-        self.execute(Spot.updatePrice(spotID, price))
+        self.execute(Spot.modifyPrice(spotID, price))
 
     def getOwnerEmail(self, spotID):
         self.cursor.execute('''SELECT ownerEmail FROM SPOTS WHERE ID = \'{0}\';'''.format(spotID))

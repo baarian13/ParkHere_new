@@ -3,6 +3,7 @@ package com.lazeebear.parkhere;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
@@ -57,7 +58,7 @@ public class SpotDetailActivity extends AppCompatActivity {
     }
 
     private void hideInformation(){
-        if (isSpotOwner()){
+        if (!isSpotOwner()){ // is a Seeker
             Button reserveSpotButton = (Button) findViewById(R.id.reserveButton_spotDetail);
             reserveSpotButton.setVisibility(View.GONE);
             Button rateUserButton = (Button) findViewById(R.id.rateUserButton_spotDetail);
@@ -231,7 +232,14 @@ public class SpotDetailActivity extends AppCompatActivity {
         String price = priceEditText.getText().toString();
         //update price
         SpotDetailsDAO updatedSpot = new SpotDetailsDAO();
-        //ServerConnector.modifySpot(updateSpot);
+//        ServerConnector.modifySpot(updateSpot);
+//        EditText priceEditText = (EditText) findViewById(R.id.priceEditText_spotDetail);
+//        String price = priceEditText.getText().toString();
+//        try {
+//            ServerConnector.modifyPrice(spotID, price);
+//        } catch (Exception e) {
+//            Log.i("ERROR", "Exception while modifying the price");
+//        }
         refreshView();
 
     }
