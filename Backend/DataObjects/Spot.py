@@ -178,6 +178,9 @@ class Spot(DatabaseObject):
     def modifyPrice(cls, spotID, price):
         return '''UPDATE {0} SET price = \'{1}\' WHERE ID=\'{2}\';'''.format(cls.TABLE_NAME, price, spotID)
 
+    @classmethod
+    def modifyCancellationPolicy(cls, spotID, cPolicy):
+        return '''UPDATE {0} SET cancelationPolicy = \'{1}\' WHERE ID = \'{2}\';'''.format(cls.TABLE_NAME, cPolicy, spotID)
 
     def isValidSpot(self): 
         return self.start < date.today() < self.end

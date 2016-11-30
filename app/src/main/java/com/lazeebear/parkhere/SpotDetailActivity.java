@@ -58,7 +58,7 @@ public class SpotDetailActivity extends AppCompatActivity {
     }
 
     private void hideInformation(){
-        if (isSpotOwner()){ // is a Seeker
+        if (isSpotOwner()){
             Button reserveSpotButton = (Button) findViewById(R.id.reserveButton_spotDetail);
             reserveSpotButton.setVisibility(View.GONE);
             Button rateUserButton = (Button) findViewById(R.id.rateUserButton_spotDetail);
@@ -281,8 +281,15 @@ public class SpotDetailActivity extends AppCompatActivity {
         Spinner cancellationPolicySpinner = (Spinner) findViewById(R.id.cancellationPolicySpinner_spotDetail);
         int index = cancellationPolicySpinner.getSelectedItemPosition();
 
-        SpotDetailsDAO updatedSpot = new SpotDetailsDAO();
+//        SpotDetailsDAO updatedSpot = new SpotDetailsDAO();
         //ServerConnector.modifySpot(updateSpot);
+        //update cancelation policy
+        try {
+            ServerConnector.modifyCancelationPolicy(spotID, index);
+        } catch (Exception e) {
+            Log.i("ERROR", "Exception while modifying the cancelation policy");
+        }
+
         refreshView();
     }
 

@@ -2217,6 +2217,94 @@ public class ServerConnector {
         return null;
     }
 
+    static class ModifyCancelationPolicyTask extends AsyncTask<Void,Void,Void>
+    {
+        int spotID;
+        int cPolicy;
+        boolean done = false;
+        boolean success = false;
+
+        public ModifyCancelationPolicyTask(int spotID, int cPolicy) {
+            this.spotID = spotID;
+            this.cPolicy = cPolicy;
+        }
+
+        protected void onPreExecute() {
+            //display progress dialog.
+
+        }
+        protected Void doInBackground(Void... params) {
+            try {
+                String url = formatURL("modify/cancelationpolicy");
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+                String urlParameters = null;
+                urlParameters = "spotID=" + spotID + "&cPolicy=" + cPolicy;
+
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+                Map<String, List<String>> headerFields = con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
+                }
+                con.connect();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+
+//            con.setDoOutput(false);
+//            con.setDoInput(true);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                success = true;
+                Log.i("STATE","modify cancelation policy - success = true");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            done = true;
+            Log.i("STATE","modify cancelation policy - done = true");
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            // dismiss progress dialog and update ui
+        }
+    }
+
+    public static int modifyCancelationPolicy(int spotID, int cPolicy) throws Exception{
+        ModifyCancelationPolicyTask s = new ModifyCancelationPolicyTask(spotID, cPolicy);
+        s.execute();
+        Log.i("STATE","waiting for modify price");
+        while(!s.done)
+            Thread.sleep(100);//Log.i("SPAM","modify user");
+        Log.i("STATE","finished waiting for modify price");
+        if(s.success)
+            return 200;
+        else
+            return 401;
+    }
+
     static class ModifyPriceTask extends AsyncTask<Void,Void,Void>
     {
         int spotID;
