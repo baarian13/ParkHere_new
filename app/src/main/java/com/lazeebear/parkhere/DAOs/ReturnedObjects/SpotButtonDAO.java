@@ -9,7 +9,7 @@ public class SpotButtonDAO {
     private String address;
 
     public int getID(){return this.ID;}
-    public void setID(int id){this.ID = id;}
+    public void setId(int id){this.ID = id;}
     public String getAddress(){return this.address;}
     public void setAddress(String address){this.address = address;}
 }
