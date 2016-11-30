@@ -194,6 +194,16 @@ def contactCustomerService(cookie, http_client, email, message):
     
     res = http_client.fetch(req)
     return res.body
+
+def getCount(cookie, http_client, addressID):
+    headers = {"Cookie": cookie}
+    url = 'http://{0}:8888/get/count'.format(ip)
+    args = urllib.urlencode({'addressID' : addressID})
+    url = url + '?' + args
+    req = httpclient.HTTPRequest(url, 'GET', headers=headers)
+
+    res = http_client.fetch(req)
+    return res.body
 # if __name__ == '__main__':
 #     http_client = httpclient.HTTPClient()
 #     #img = buildImgStr('/Users/henrylevy/Downloads/default.jpg')
@@ -409,6 +419,13 @@ class TestParkHereMethods(unittest.TestCase):
     #    res = contactCustomerService(cookie, http_client, "qwerty@.com", "testing")
     #    self.assertEqual(res,'200')
     #    http_client.close()
+
+    def test_get_count(self):
+        http_client = httpclient.HTTPClient()
+        cookie, code = signIn(http_client, 'qwerty@a.com', 'Password!1')
+        res = getCount(cookie, http_client, 1)
+        self.assertEqual(res,'1')
+        http_client.close()
 
 
 

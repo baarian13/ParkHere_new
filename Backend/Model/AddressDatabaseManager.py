@@ -60,3 +60,7 @@ class SQLAddressDatabaseManager(SQLDatabaseManager):
         '''
         self.cursor.execute(Address.searchByOwnerEmailQuery(userEmail))
         return self.cursor.fetchall()
+
+    def getCountForAddress(self, addressID):
+        self.cursor.execute(Address.getCount(addressID))
+        return self.cursor.fetchall()[0][0]

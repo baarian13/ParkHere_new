@@ -35,6 +35,7 @@ from Controller.AddressHandlers.DeleteAddressHandler import DeleteAddressHandler
 from Controller.AddressHandlers.GetUserAddressHandler import GetUserAddressHandler
 from Controller.AddressHandlers.ModifyAddressHandler import ModifyAddressHandler
 from Controller.AddressHandlers.ViewAddressHandler import ViewAddressHandler
+from Controller.AddressHandlers.GetRentalTimesHandler import GetRentalTimesHandler
 
 settings = {
     "cookie_secret": "ADSFGHARY3457fgSDFHSDFjusdfASDFGH2345h=sdg",
@@ -70,7 +71,8 @@ application = tornado.web.Application([
     ("/modify/address", ModifyAddressHandler),
     ("/view/address", ViewAddressHandler),
     ("/modify/price", ModifyPriceHandler),
-    ("/modify/cancelationpolicy", ModifyCancelationPolicyHandler)
+    ("/modify/cancelationpolicy", ModifyCancelationPolicyHandler),
+    ("/get/count", GetRentalTimesHandler)
 ], ssl_options={
     "certfile": os.path.join(data_dir, "server.crt"),
     "keyfile": os.path.join(data_dir, "server.key"),

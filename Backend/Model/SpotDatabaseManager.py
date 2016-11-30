@@ -115,7 +115,7 @@ class SQLSpotDatabaseManager(SQLDatabaseManager):
         return info
 
     def bookSpot(self, renterEmail, spotID):
-        self.execute(Spot.bookSpot(renterEmail, spotID, True))
+        self.execute(Spot.bookSpot(renterEmail, spotID, 1))
 
     def deleteSpot(self, ownerEmail, spotID):
         self.execute(Spot.deleteSpot(ownerEmail, spotID))
