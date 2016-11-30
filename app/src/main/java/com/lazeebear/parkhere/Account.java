@@ -270,6 +270,8 @@ public class Account extends AppCompatActivity {
             editSpinner.setSelection(getUserType());
 
             populateSpinnerWithAddresses();
+            findViewById(R.id.spotList_label).setVisibility(View.GONE);
+            findViewById(R.id.account_select_address).setVisibility(View.GONE);
 
             ImageView profilePic = (ImageView) findViewById(R.id.account_profile_picture);
             //profilePic.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
@@ -320,6 +322,8 @@ public class Account extends AppCompatActivity {
         Button ownedSpotsButton = (Button) findViewById(R.id.ownedSpotsButton);
         ownedSpotsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                findViewById(R.id.spotList_label).setVisibility(View.VISIBLE);
+                findViewById(R.id.account_select_address).setVisibility(View.VISIBLE);
                 populateOwnedSpots();
             }
         });
@@ -330,6 +334,7 @@ public class Account extends AppCompatActivity {
         currentReservationsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 populateCurrentReservations();
+                findViewById(R.id.spotList_label).setVisibility(View.GONE);
                 findViewById(R.id.account_select_address).setVisibility(View.GONE);
                 setVisibilityOfAllSpots(View.VISIBLE);
             }
@@ -460,6 +465,7 @@ public class Account extends AppCompatActivity {
         spotHistoryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 populateSpotsHistory();
+                findViewById(R.id.spotList_label).setVisibility(View.GONE);
                 findViewById(R.id.account_select_address).setVisibility(View.GONE);
                 setVisibilityOfAllSpots(View.VISIBLE);
             }
@@ -809,6 +815,7 @@ public class Account extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                setVisibilityOfAllSpots(View.VISIBLE);
             }
         });
     }
