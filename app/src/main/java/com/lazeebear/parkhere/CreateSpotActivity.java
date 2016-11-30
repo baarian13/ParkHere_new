@@ -47,6 +47,7 @@ public class CreateSpotActivity extends AppCompatActivity {
     public static final int GET_FROM_GALLERY = 3; //request code for opening the gallery
     private Integer selectedAddress;
     private ArrayList<String> addressList;
+    private String bypassDescription, bypassAddress;
 
     //is needed for creating the spot
     //but to redirect the user back to the account page
@@ -78,6 +79,8 @@ public class CreateSpotActivity extends AppCompatActivity {
         if (intent != null) {
             uniqueID = intent.getStringExtra("id");
             selectedAddress = intent.getIntExtra("addressID",0);
+            bypassDescription = intent.getStringExtra("description");
+            bypassAddress = intent.getStringExtra("address");
             base64photo = intent.getStringExtra("photo");
             setActionListeners();
             autofillInformationFromAddress(selectedAddress);
@@ -296,22 +299,30 @@ public class CreateSpotActivity extends AppCompatActivity {
     // autofill information from the address
     private void autofillInformationFromAddress(Integer addressID) {
         try {
-            AddressDetailsDAO addressDetailsDAO = ServerConnector.AddressDetails(addressID);
-            address.setText(addressDetailsDAO.getAddress());
-            description_field.setText(addressDetailsDAO.getDescription());
-            //spot type
+            if (addressID == 0) {
+                //fill from intent
+                address.setText(bypassAddress);
+                address.setEnabled(false);
+                description_field.setText(bypassDescription); //there won't be any...
 
-            // isCovered
-            boolean covered = (addressDetailsDAO.getIsCovered() == 1);
-            covered_checkbox.setChecked(covered);
+                //TODO remove this later and test the autofill with the server
+                upload_photo_image_view.setImageBitmap(ValidationFunctions.convertBase64StringToBitmap(base64photo));
+            } else {
+                AddressDetailsDAO addressDetailsDAO = ServerConnector.AddressDetails(addressID);
+                address.setText(addressDetailsDAO.getAddress());
+                description_field.setText(addressDetailsDAO.getDescription());
+                //spot type
 
-            // spot photo
-            Bitmap bitmap = ValidationFunctions.convertBase64StringToBitmap(addressDetailsDAO.getPicture());
-            upload_photo_image_view.setImageBitmap(bitmap);
+                // isCovered
+                boolean covered = (addressDetailsDAO.getIsCovered() == 1);
+                covered_checkbox.setChecked(covered);
 
-            //TODO remove this later and test the autofill with the server
-            upload_photo_image_view.setImageBitmap(ValidationFunctions.convertBase64StringToBitmap(base64photo));
+                // spot photo
+                Bitmap bitmap = ValidationFunctions.convertBase64StringToBitmap(addressDetailsDAO.getPicture());
+                upload_photo_image_view.setImageBitmap(bitmap);
+            }
             upload_photo_image_view.setVisibility(View.VISIBLE);
+            Log.i("STATE","finished loading information");
         } catch (Exception e){
             Log.i("STATE", "error while getting details about address");
         }

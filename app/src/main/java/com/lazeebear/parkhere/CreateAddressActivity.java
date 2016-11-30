@@ -54,6 +54,8 @@ public class CreateAddressActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_address);
 
+        base64photo = "";
+
         addressSelect = (Spinner) findViewById(R.id.address_selection);
         addressEnter = (Button) findViewById(R.id.address_submit_button);
 
@@ -241,7 +243,9 @@ public class CreateAddressActivity extends AppCompatActivity {
             addressDetailsDAOList = new ArrayList<>();
             addressList = new ArrayList<>();
             for (int i = 0; i < addresses.size(); i++) {
-                Log.i("STATE","getting address details "+ i);
+                Log.i("STATE","getting address details "+ i +
+                        ": addressID = " + addresses.get(i).getID() +
+                        " & address = " + addresses.get(i).getAddress());
                 AddressDetailsDAO details = ServerConnector.AddressDetails(addresses.get(i).getID());
                 addressDetailsDAOList.add(details);
                 addressList.add(addresses.get(i).getAddress());
@@ -262,8 +266,12 @@ public class CreateAddressActivity extends AppCompatActivity {
                 selectedPosition = parent.getSelectedItemPosition();
 
                 if (mode == ValidationFunctions.mode_edit_address) {
-                    createNewAddressLayout.setVisibility(View.VISIBLE);
+                    setVisibilityOfCreateNewAddressItems(View.VISIBLE);
                     fillInInformation(selectedPosition);
+                } else {
+                    setVisibilityOfCreateNewAddressItems(View.GONE);
+                    addressEnter.setVisibility(View.VISIBLE);
+                    address_create_new_button.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -331,7 +339,9 @@ public class CreateAddressActivity extends AppCompatActivity {
 
     private void startIntent() {
         Intent intent = new Intent(this, CreateSpotActivity.class);
+        intent.putExtra("address", addresses.get(selectedPosition).getAddress());
         intent.putExtra("id", uniqueID);
+        intent.putExtra("description", address_input_description.getText());
         intent.putExtra("photo", base64photo);
         intent.putExtra("addressID", addresses.get(selectedPosition).getID());
         startActivity(intent);
