@@ -51,7 +51,6 @@ class Address(DatabaseObject):
                      ('ownerEmail'       , self.ownerEmail),
                      ('isCovered'        , self.isCovered),
                      ('picturePath'      , self.picturePath),
-                     ('addressID'        , self.addressID),
                      ('description'    , self.description)])
 
     @classmethod
