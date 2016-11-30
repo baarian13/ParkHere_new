@@ -76,7 +76,7 @@ class Spot(DatabaseObject):
         self.startStr          = str(start)
         self.endStr            = str(end)
         self.isRecurring       = isRecurring
-        self.description       = description
+        self.description       = str(description)
         self.picturePath       = str(picturePath)
         self.addressID         = addressID
         self.latitude, self.longitude = getLatitudeLongitude(self.address)
