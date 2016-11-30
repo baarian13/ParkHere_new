@@ -89,6 +89,6 @@ class Address(DatabaseObject):
         return '''SELECT picturePath FROM ADDRESSES WHERE ID = {0};'''.format(addressID)
 
     @classmethod
-    def searchIDByOwnerEmailQuery(cls, ownerEmail):
-        return '''SELECT ID FROM {0} WHERE ownerEmail=\'{1}\';'''.format(cls.TABLE_NAME, ownerEmail)
+    def searchByOwnerEmailQuery(cls, ownerEmail):
+        return '''SELECT ID, address FROM {0} WHERE ownerEmail=\'{1}\';'''.format(cls.TABLE_NAME, ownerEmail)
 

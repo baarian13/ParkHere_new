@@ -53,10 +53,10 @@ class SQLAddressDatabaseManager(SQLDatabaseManager):
             print e
         return info
 
-    def getAddressIDsOwnedBy(self, userEmail):
+    def getAddressesOwnedBy(self, userEmail):
         '''
         :type userEmail: str
         :rtype: list
         '''
-        self.cursor.execute(Address.searchIDByOwnerEmailQuery(userEmail))
+        self.cursor.execute(Address.searchByOwnerEmailQuery(userEmail))
         return self.cursor.fetchall()

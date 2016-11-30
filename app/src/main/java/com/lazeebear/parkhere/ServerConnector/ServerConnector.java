@@ -1860,7 +1860,7 @@ public class ServerConnector {
 
     static class GetAddressesTask extends AsyncTask<Void,Void,Void>{
         String ownerEmail;
-        List<Integer> addresses = new ArrayList<>();
+        List<SpotButtonDAO> addresses = new ArrayList<>();
         boolean done = false, success = false;
 
         public GetAddressesTask(String ownerEmail){
@@ -1892,13 +1892,13 @@ public class ServerConnector {
                 in.close();
                 System.out.println("Getting gson object..");
                 Gson gson = new Gson();
-                Type typeOfT = new TypeToken<List<List<Integer>>>(){}.getType();
-                List<List<Integer>> addresses_temp = gson.fromJson(response.toString(), typeOfT);
+                Type typeOfT = new TypeToken<List<SpotButtonDAO>>(){}.getType();
+                addresses = gson.fromJson(response.toString(), typeOfT);
                 int size = addresses.size();
                 System.out.println("Returned object size: " + size);
-                for (int i=0; i<size; i++){
-                    addresses.add(addresses_temp.get(i).get(0));
-                }
+                /*for (int i=0; i<size; i++){
+                    addresses.add(addresses_temp.get(i));
+                }*/
                 //print result
                 success = true;
                 Log.i("STATE","view spot history - success = true");
@@ -1911,7 +1911,7 @@ public class ServerConnector {
         protected void onPostExecute() {}
     }
 
-    public static List<Integer> getAddressesOf(String email) throws Exception{
+    public static List<SpotButtonDAO> getAddressesOf(String email) throws Exception{
         //return returnPlaceholderAddressList();
         GetAddressesTask s = new GetAddressesTask(email);
         s.execute();

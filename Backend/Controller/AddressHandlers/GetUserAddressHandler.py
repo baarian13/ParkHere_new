@@ -9,7 +9,9 @@ class GetUserAddressHandler(AbstractAddressHandler):
         ownerEmail = self.get_argument('email')
         try:
             if ownerEmail:
-                results = self.db.getAddressIDsOwnedBy(ownerEmail)
-                self.write(json.dumps(results))
+                results = [{'id'       : res[0],
+                            'address'  : res[1]}
+                           for res in self.db.getAddressesOwnedBy(ownerEmail)]
+            self.write(json.dumps(results))
         except Exception as e:
             print e
