@@ -43,6 +43,7 @@ class Address(DatabaseObject):
         self.spotType          = spotType
         self.ownerEmail        = str(ownerEmail)
         self.isCovered         = isCovered
+        self.addressID         = addressID
         self.description       = description
         self.picturePath       = str(picturePath)
 
