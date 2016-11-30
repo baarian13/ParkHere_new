@@ -202,10 +202,16 @@
             android:text="Current Reservations"
             android:id="@+id/currentReservationsButton"/>
     </LinearLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/account_edit_address_button"
+                android:text="Edit Addresses"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/spotList_label" />
+                android:id="@+id/spotList_label"
+                android:text="Choose the spot's address"/>
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

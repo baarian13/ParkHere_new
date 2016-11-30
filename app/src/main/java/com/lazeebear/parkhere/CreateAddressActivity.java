@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.lazeebear.parkhere.DAOs.ReturnedObjects.AddressDetailsDAO;
+import com.lazeebear.parkhere.DAOs.ReturnedObjects.SpotButtonDAO;
 import com.lazeebear.parkhere.DAOs.SentObjects.SentAddressDAO;
 import com.lazeebear.parkhere.ServerConnector.ServerConnector;
 
@@ -39,7 +40,7 @@ public class CreateAddressActivity extends AppCompatActivity {
     private ImageView upload_photo_image_view;
     private LinearLayout createNewAddressLayout;
     private int selectedPosition;
-    private List<Integer> addresses;
+    private List<SpotButtonDAO> addresses;
     private String base64photo;
     private static final int GET_FROM_GALLERY = 3;
     private int mode; // "create" (0) or "edit" (1)
@@ -124,13 +125,16 @@ public class CreateAddressActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (addressSelect.getChildCount() > 0) {
-                            AddressDetailsDAO detailsDAO = addressDetailsDAOList.get(selectedPosition);
+                            //AddressDetailsDAO detailsDAO = addressDetailsDAOList.get(selectedPosition);
+                            SpotButtonDAO detailsDAO = addresses.get(selectedPosition);
                             Log.i("STATE", "deleting the address " + detailsDAO.getAddress());
                             try {
-                                ServerConnector.deleteAddress(addresses.get(selectedPosition));
+                                ServerConnector.deleteAddress(addresses.get(selectedPosition).getID());
                             } catch (Exception e) {
                                 Log.i("STATE", "exception while deleting the address " + detailsDAO.getAddress());
                             }
+                        } else {
+                            Log.i("STATE","There is no address selected to be deleted.");
                         }
                     }
                 });
@@ -178,7 +182,7 @@ public class CreateAddressActivity extends AppCompatActivity {
                         break;
                     case (ValidationFunctions.mode_edit_address):
                         try {
-                            SentAddressDAO editedAddress = new SentAddressDAO(addresses.get(selectedPosition),
+                            SentAddressDAO editedAddress = new SentAddressDAO(addresses.get(selectedPosition).getID(),
                                     address, base64photo, description, uniqueID, spotType, isCovered);
                             ServerConnector.modifyAddress(editedAddress);
                             // hide the stuff after the spot has been updated.
@@ -238,9 +242,9 @@ public class CreateAddressActivity extends AppCompatActivity {
             addressList = new ArrayList<>();
             for (int i = 0; i < addresses.size(); i++) {
                 Log.i("STATE","getting address details "+ i);
-                AddressDetailsDAO details = ServerConnector.AddressDetails(addresses.get(i));
+                AddressDetailsDAO details = ServerConnector.AddressDetails(addresses.get(i).getID());
                 addressDetailsDAOList.add(details);
-                addressList.add(details.getAddress());
+                addressList.add(addresses.get(i).getAddress());
             }
             adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, addressList);
 
@@ -329,7 +333,7 @@ public class CreateAddressActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CreateSpotActivity.class);
         intent.putExtra("id", uniqueID);
         intent.putExtra("photo", base64photo);
-        intent.putExtra("addressID", addresses.get(selectedPosition));
+        intent.putExtra("addressID", addresses.get(selectedPosition).getID());
         startActivity(intent);
     }
 

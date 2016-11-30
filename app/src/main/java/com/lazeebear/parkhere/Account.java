@@ -288,6 +288,22 @@ public class Account extends AppCompatActivity {
         addConfirmPhoneNumberListener();
         addChangeProfilePicListener();
         addContactButtonListener();
+        addEditAddressButtonListener();
+    }
+
+    private void addEditAddressButtonListener() {
+        Button editAddressButton = (Button) findViewById(R.id.account_edit_address_button);
+        editAddressButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                startIntentForEditAddress();
+            }
+        });
+    }
+    private void startIntentForEditAddress() {
+        Intent intent = new Intent(this, CreateAddressActivity.class);
+        intent.putExtra("id", uniqueID);
+        intent.putExtra("mode", ValidationFunctions.mode_edit_address);
+        startActivity(intent);
     }
 
     private void addOwnedSpotsButtonActionListener() {
