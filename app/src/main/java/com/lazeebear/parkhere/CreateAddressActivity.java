@@ -193,7 +193,7 @@ public class CreateAddressActivity extends AppCompatActivity {
     private boolean ValidationBoxes() {
         address_input_address.setError(null);
         address_input_description.setError(null);
-        //upload_photo_button.setError(null); photo not required.
+        upload_photo_button.setError(null);
 
         boolean cancel = false;
         View focusView = null;
@@ -209,6 +209,12 @@ public class CreateAddressActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(address_input_description.getText())) {
             address_input_description.setError("Description must not be empty!");
             focusView = address_input_description;
+            cancel = true;
+        }
+
+        if (base64photo.isEmpty()){
+            upload_photo_button.setError("You must have a photo!");
+            focusView = upload_photo_button;
             cancel = true;
         }
 
