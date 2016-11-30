@@ -12,6 +12,6 @@ class GetUserAddressHandler(AbstractAddressHandler):
                 results = [{'id'       : res[0],
                             'address'  : res[1]}
                            for res in self.db.getAddressesOwnedBy(ownerEmail)]
-            self.write(json.dumps(results))
+                self.write(json.dumps(results))
         except Exception as e:
             print e
