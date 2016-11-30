@@ -21,7 +21,7 @@ class Address(DatabaseObject):
                   2 : 'regular car',
                   3 : 'truck'}
     def __init__(self, address, spotType,
-                 ownerEmail, isCovered, addressID,
+                 ownerEmail, isCovered,
                  description="", picturePath=""):
         '''
             :type address: str
@@ -43,7 +43,6 @@ class Address(DatabaseObject):
         self.spotType          = spotType
         self.ownerEmail        = str(ownerEmail)
         self.isCovered         = isCovered
-        self.addressID         = addressID
         self.description       = description
         self.picturePath       = str(picturePath)
 
